@@ -13,7 +13,7 @@ _DATABASE_URL = os.environ['DATABASE_URL']
 _DATABASE_URL = _DATABASE_URL.replace('postgres://', 'postgresql://')
 
 #-----------------------------------------------------------------------
-_engine = sqlalchemy.create_engine(_DATABASE_URL, echo=True)
+engine = sqlalchemy.create_engine(_DATABASE_URL, echo=True)
 Base = sqlalchemy.orm.declarative_base()
 
 #-----------------------------------------------------------------------
@@ -44,7 +44,7 @@ class Professor(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_profs() -> List[Professor]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Professor) # SELECT * FROM Professor
         return query.all()
 
@@ -59,7 +59,7 @@ class Course(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_courses() -> List[Course]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Course) # SELECT * FROM Course
         return query.all()
 
@@ -75,7 +75,7 @@ class Student(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_students() -> List[Student]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Student) # SELECT * FROM Student
         return query.all()
 
@@ -88,7 +88,7 @@ class CoursesProfs(Base):
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
 def get_coursesprofs() -> List[CoursesProfs]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(CoursesProfs) # SELECT * FROM CoursesProfs
         return query.all()
 
@@ -101,7 +101,7 @@ class CoursesStudents(Base):
     student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
 def get_coursesstudents() -> List[CoursesStudents]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(CoursesStudents) # SELECT * FROM CoursesStudents
         return query.all()
 
@@ -119,7 +119,7 @@ class Prompt(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_prompts() -> List[Prompt]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Prompt) # SELECT * FROM Prompt
         return query.all()
 
@@ -135,7 +135,7 @@ class PracticePrompt(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_practiceprompts() -> List[PracticePrompt]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(PracticePrompt) # SELECT * FROM PracticePrompt
         return query.all()
 
@@ -154,7 +154,7 @@ class Conversation(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_conversations() -> List[Conversation]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Conversation) # SELECT * FROM Conversation
         return query.all()
 
