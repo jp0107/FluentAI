@@ -13,8 +13,7 @@ _DATABASE_URL = os.environ['DATABASE_URL']
 _DATABASE_URL = _DATABASE_URL.replace('postgres://', 'postgresql://')
 
 #-----------------------------------------------------------------------
-
-_engine = sqlalchemy.create_engine(_DATABASE_URL)
+_engine = sqlalchemy.create_engine(_DATABASE_URL, echo=True)
 Base = sqlalchemy.orm.declarative_base()
 
 #-----------------------------------------------------------------------
@@ -160,3 +159,26 @@ def get_conversations() -> List[Conversation]:
         return query.all()
 
 #-----------------------------------------------------------------------
+# testing
+# Base.metadata.create_all(_engine)
+
+# Session = sqlalchemy.orm.sessionmaker(bind=_engine)
+# session = Session()
+
+# new_prof = Professor(
+#     prof_id = 1234,
+#     first_name = "Bob",
+#     last_name = "Dondero",
+#     email = "bobdondero@cs.princeton.edu",
+#     created_at = sqlalchemy.func.now()
+# )
+
+# session.add(new_prof)
+
+# professors = session.query(Professor).all()
+
+# for prof in professors:
+#     print(prof.first_name)
+
+# session.commit()
+# session.close()
