@@ -33,7 +33,7 @@ def get_gpt_response(user_input, conversation_history):
         combined_input = conversation_history + "\nUser: " + user_input + "\nAI:"
         response = client.chat.completions.create(
             engine="gpt-3.5-turbo-0125",
-            prompt=combined_input,
+            prompt="placeholder",
             max_tokens=200
         )
         return response.choices[0].text.strip()
