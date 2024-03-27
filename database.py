@@ -20,14 +20,14 @@ Base = sqlalchemy.orm.declarative_base()
 # creates table storing superadmin info
 class SuperAdmin(Base):
     __tablename__ = 'superadmins'
-    admin_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    admin_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_superadmins() -> List[SuperAdmin]:
-    with sqlalchemy.orm.Session(_engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         query = session.query(SuperAdmin) # SELECT * FROM SuperAdmin
         return query.all()
 
@@ -36,7 +36,7 @@ def get_superadmins() -> List[SuperAdmin]:
 # creates table storing professor info
 class Professor(Base):
     __tablename__ = 'professors'
-    prof_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True) # prof net id
+    prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # prof net id
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
@@ -52,9 +52,10 @@ def get_profs() -> List[Professor]:
 # creates table storing course info
 class Course(Base):
     __tablename__ = 'courses'
-    course_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True) # e.g. SPA101
+    course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # e.g. SPA101
     course_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     course_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    owner = sqlalchemy.Column(sqlalchemy.VARCHAR)   # professor or superadmin netid
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_courses() -> List[Course]:
@@ -67,7 +68,7 @@ def get_courses() -> List[Course]:
 # creates table storing student info
 class Student(Base):
     __tablename__ = 'students'
-    student_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True) # student net id
+    student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # student net id
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
@@ -115,6 +116,7 @@ class Prompt(Base):
     prof_id = sqlalchemy.Column(sqlalchemy.Integer)
     is_live = sqlalchemy.Column(sqlalchemy.Boolean)
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
+    num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
 
 def get_prompts() -> List[Prompt]:
@@ -158,26 +160,3 @@ def get_conversations() -> List[Conversation]:
         return query.all()
 
 #-----------------------------------------------------------------------
-# testing
-# Base.metadata.create_all(_engine)
-
-# Session = sqlalchemy.orm.sessionmaker(bind=_engine)
-# session = Session()
-
-# new_prof = Professor(
-#     prof_id = 1234,
-#     first_name = "Bob",
-#     last_name = "Dondero",
-#     email = "bobdondero@cs.princeton.edu",
-#     created_at = sqlalchemy.func.now()
-# )
-
-# session.add(new_prof)
-
-# professors = session.query(Professor).all()
-
-# for prof in professors:
-#     print(prof.first_name)
-
-# session.commit()
-# session.close()
