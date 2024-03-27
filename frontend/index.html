@@ -32,6 +32,28 @@
                     <button class="button">SPA102</button>
                 </div>
             </div>
+
+            <!-- JP shenanigens -->
+
+            <div class="row">
+                <div class="col text-center">
+                    <a href="/fetch-conversation" class="btn btn-info">Fetch Conversation History</a>
+                </div>
+            </div>
+            
+            <form action="/process-gpt-request" method="post">
+                <input type="text" name="userInput" placeholder="Enter text here" style="width: 600px; height: 200px;">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <textarea id="gptResponse" readonly style="width: 100%; height: 200px; max-width: 600px; display: block;">{{ data }}</textarea>
+
+            <textarea readonly style="width: 600px; height: 200px; display: block;">
+                {% for conv_text in conversation_data %}
+                {{ conv_text }}
+                {% endfor %}
+            </textarea>
+            <!-- JP shenanigens -->
+
         </div>
     </body>
 </html>

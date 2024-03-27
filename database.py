@@ -2,14 +2,13 @@
 # database.py
 # Authors: Irene Kim, Jessie Wang, Jonathan Peixoto, Tinney Mak
 #-----------------------------------------------------------------------
-import os
 import sqlalchemy
 import sqlalchemy.orm
 from typing import List
 
 #-----------------------------------------------------------------------
 
-_DATABASE_URL = os.environ['DATABASE_URL']
+_DATABASE_URL = "postgres://fluentaidb_user:sPnl5btbepB6IRo1V709qocn3DIL76WN@dpg-cnsvg6q0si5c73f6jsv0-a.ohio-postgres.render.com/fluentaidb"
 _DATABASE_URL = _DATABASE_URL.replace('postgres://', 'postgresql://')
 
 #-----------------------------------------------------------------------
@@ -151,7 +150,7 @@ class Conversation(Base):
     prompt_id = sqlalchemy.Column(sqlalchemy.Integer)
     conv_text = sqlalchemy.Column(sqlalchemy.Text)
     score = sqlalchemy.Column(sqlalchemy.Integer)
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_conversations() -> List[Conversation]:
     with sqlalchemy.orm.Session(engine) as session:
