@@ -19,7 +19,7 @@ header img {
   position: absolute;
   top: 0;
   left: 0;
-  width: 12%; /* You can use pixels or percentages */
+  width: 12%; /* Can use pixels or percentages */
   height: auto; /* 'auto' will maintain the aspect ratio */
 }
 
