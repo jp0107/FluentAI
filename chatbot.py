@@ -69,6 +69,12 @@ def student_classes():
     return flask.render_template('student-classes.html')
 
 #-----------------------------------------------------------------------
+
+@app.route('/student-dashboard')
+def student_dashboard():
+    return flask.render_template('student-dashboard.html')
+
+#-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
 def fetch_conversation():
     hardcoded_student_id = 123  # Hardcoded value
@@ -76,7 +82,7 @@ def fetch_conversation():
     with Session() as session:
         conversations = session.query(Conversation).filter(Conversation.student_id == hardcoded_student_id).all()
         conversation_texts = [conv.conv_text for conv in conversations]
-        return flask.render_template('index.html', conversation_data=conversation_texts)
+        return flask.render_template('student-classes.html', conversation_data=conversation_texts)
 
 #-----------------------------------------------------------------------
 @app.route('/process-gpt-request', methods=['POST'])
