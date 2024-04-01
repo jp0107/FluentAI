@@ -14,16 +14,16 @@ FluentAI aims to solve the common problem in language learning of giving student
 
 Project leader: Jessie Wang: jessiewang@princeton.edu
 
-Team members:
-Irene Kim: irenekim@princeton.edu
-Tinney Mak: tm0261@princeton.edu
+Team members: <br>
+Irene Kim: irenekim@princeton.edu <br>
+Tinney Mak: tm0261@princeton.edu <br>
 Jonathan Peixoto: jp5998@princeton.edu
 
-Primary users and collaborators:
-Professor Adriana Merino (amerino@princeton.edu), Senior Lecturer in Spanish and Portuguese, Princeton University
+Primary users and collaborators: <br>
+Professor Adriana Merino (amerino@princeton.edu), Senior Lecturer in Spanish and Portuguese, Princeton University <br>
 Ben Johnston (benj@princeton.edu) Senior Educational Technologist, Digital Learning and Design, McGraw Center, Princeton University
 
-Lead instructor: Professor Dondero
+Lead instructor: Professor Dondero <br>
 TA adviser: Kuba Alicki
 
 
