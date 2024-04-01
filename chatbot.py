@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------
-# reg.py
+# chatbot.py
 # Authors: Irene Kim, Jessie Wang, Jonathan Peixoto, Tinney Mak
 #-----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ from database import (Student, Course, Conversation, CoursesStudents, engine, Ba
 
 #-----------------------------------------------------------------------
 
-app = flask.Flask(__name__, template_folder='frontend')
+app = flask.Flask(__name__)
 
 Base.metadata.create_all(engine)
 
@@ -58,8 +58,15 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
 #-----------------------------------------------------------------------
 
 @app.route('/')
+@app.route('/index')
 def home():
     return flask.render_template('index.html')
+
+#-----------------------------------------------------------------------
+
+@app.route('/student-classes')
+def student_classes():
+    return flask.render_template('student-classes.html')
 
 #-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
