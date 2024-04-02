@@ -53,6 +53,7 @@ def get_profs() -> List[Professor]:
 class Course(Base):
     __tablename__ = 'courses'
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # e.g. SPA101
+    course_code = sqlalchemy.Column(sqlalchemy.VARCHAR) # unique course code that gives students access
     course_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     course_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
     owner = sqlalchemy.Column(sqlalchemy.VARCHAR)   # professor or superadmin netid
