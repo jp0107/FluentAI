@@ -18,23 +18,25 @@ Base.metadata.create_all(engine)
 
 Session = sqlalchemy.orm.sessionmaker(bind = engine)
 
-gpt_api_key = "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"
+GPT_API_KEY = "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"
 app.secret_key = '1234567'  # hardcoded
 
 #-----------------------------------------------------------------------
 def get_gpt_response(user_input, conversation_history):
-    if not gpt_api_key:
+    if not GPT_API_KEY:
         print("GPT API key is missing", file=sys.stderr)
         return "Error: API key is missing."
 
     try:
-        client = OpenAI(api_key=gpt_api_key)
+        client = OpenAI(api_key=GPT_API_KEY)
         combined_input = conversation_history + "\nUser: " + user_input + "\nAI:"
         response = client.chat.completions.create(
             model="gpt-3.5-turbo-0125",
             # response_format={"type": "json_object"},
             messages=[
-                {"role": "system", "content": "You are a helpful spanish teacher. Please help me practice my spanish in really basic levels."},
+                {"role": "system",
+                 "content": "You are a helpful spanish teacher. \
+                    Please help me practice my spanish in really basic levels."},
                 {"role": "user", "content": combined_input}
             ]
         )
@@ -81,7 +83,8 @@ def home():
 @app.route('/student-classes')
 def student_classes():
     username = auth.authenticate()
-    html_code = flask.render_template('student-classes.html', username = username)
+    html_code = flask.render_template(
+        'student-classes.html', username = username)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
@@ -97,9 +100,13 @@ def fetch_conversation():
     hardcoded_student_id = 123  # Hardcoded value
 
     with Session() as session:
-        conversations = session.query(Conversation).filter(Conversation.student_id == hardcoded_student_id).all()
+        conversations = session.query(Conversation).filter(
+            Conversation.student_id == hardcoded_student_id).all()
         conversation_texts = [conv.conv_text for conv in conversations]
-        return flask.render_template('student-classes.html', username = username, conversation_data=conversation_texts)
+        return flask.render_template(
+            'student-classes.html', 
+            username = username,
+            conversation_data=conversation_texts)
 
 #-----------------------------------------------------------------------
 @app.route('/process-gpt-request', methods=['POST'])
@@ -111,8 +118,12 @@ def process_gpt_request():
     # Retrieve the GPT response (modify as needed)
     gpt_response = get_gpt_response(user_input, " ")
 
-    store_conversation(123, 456, 789, "User: " + user_input + "\nAI: " + gpt_response)
+    store_conversation(
+        123, 456, 789, "User: " + user_input + "\nAI: " + gpt_response)
 
     # Render index.html again with the GPT response
-    return flask.render_template('student-classes.html', username = username, data=gpt_response)
+    return flask.render_template(
+        'student-classes.html', 
+        username = username,
+        data=gpt_response)
 #-----------------------------------------------------------------------
