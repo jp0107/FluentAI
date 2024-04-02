@@ -30,7 +30,7 @@ def main():
         sys.exit(1)
 
     try:
-        chatbot.app.run(host = '0.0.0.0', port = port, debug = True)
+        chatbot.app.run(host = 'localhost', port = port, debug = True)
 
     except Exception as ex:
         print(ex, file = sys.stderr)

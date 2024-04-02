@@ -7,6 +7,7 @@ import sys
 from openai import OpenAI
 import flask
 import sqlalchemy
+import auth
 from database import (Student, Course, Conversation, CoursesStudents, engine, Base)
 
 #-----------------------------------------------------------------------
@@ -18,6 +19,7 @@ Base.metadata.create_all(engine)
 Session = sqlalchemy.orm.sessionmaker(bind = engine)
 
 gpt_api_key = "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"
+app.secret_key = '1234567'  # hardcoded
 
 #-----------------------------------------------------------------------
 def get_gpt_response(user_input, conversation_history):
@@ -57,10 +59,25 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
 
 #-----------------------------------------------------------------------
 
+# Routes for authentication.
+
+@app.route('/logoutapp', methods=['GET'])
+def logoutapp():
+    return auth.logoutapp()
+
+@app.route('/logoutcas', methods=['GET'])
+def logoutcas():
+    return auth.logoutcas()
+
+#-----------------------------------------------------------------------
+
 @app.route('/')
 @app.route('/index')
 def home():
-    return flask.render_template('index.html')
+    username = auth.authenticate()
+
+    html_code = flask.render_template('index.html', username = username)
+    return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
 
