@@ -93,16 +93,19 @@ def student_dashboard():
 #-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
 def fetch_conversation():
+    username = auth.authenticate()
     hardcoded_student_id = 123  # Hardcoded value
 
     with Session() as session:
         conversations = session.query(Conversation).filter(Conversation.student_id == hardcoded_student_id).all()
         conversation_texts = [conv.conv_text for conv in conversations]
-        return flask.render_template('student-classes.html', conversation_data=conversation_texts)
+        return flask.render_template('student-classes.html', username = username, conversation_data=conversation_texts)
 
 #-----------------------------------------------------------------------
 @app.route('/process-gpt-request', methods=['POST'])
 def process_gpt_request():
+    username = auth.authenticate()
+
     user_input = flask.request.form['userInput']
 
     # Retrieve the GPT response (modify as needed)
@@ -111,5 +114,5 @@ def process_gpt_request():
     store_conversation(123, 456, 789, "User: " + user_input + "\nAI: " + gpt_response)
 
     # Render index.html again with the GPT response
-    return flask.render_template('index.html', data=gpt_response)
+    return flask.render_template('student-classes.html', username = username, data=gpt_response)
 #-----------------------------------------------------------------------
