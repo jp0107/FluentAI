@@ -74,16 +74,15 @@ def logoutcas():
 @app.route('/')
 @app.route('/index')
 def home():
-    username = auth.authenticate()
-
-    html_code = flask.render_template('index.html', username = username)
-    return flask.make_response(html_code)
+    return flask.render_template('index.html')
 
 #-----------------------------------------------------------------------
 
 @app.route('/student-classes')
 def student_classes():
-    return flask.render_template('student-classes.html')
+    username = auth.authenticate()
+    html_code = flask.render_template('student-classes.html', username = username)
+    return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
 
