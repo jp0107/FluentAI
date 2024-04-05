@@ -84,7 +84,7 @@ h1 {
 }
 
 h2 {
-  font-size: 90px;
+  font-size: 6vw;
   margin-top: 20px;
   margin-bottom: -50px;
   position: relative; /* Add this to establish a positioning context */
@@ -105,3 +105,32 @@ h2 {
   transform: translateY(0);
   opacity: 1;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  header img {
+    width: 20%; /* Adjust the logo size for smaller screens */
+  }
+
+  h1 {
+    font-size: 30vw;
+  }
+
+  h2 {
+    margin-top: 40px;
+    font-size: 10vw; /* Larger percentage of the viewport width on smaller screens */
+  }
+
+  p {
+    font-size: 3vw;
+  }
+
+  .container2 {
+    padding: 30px; /* Reduce padding for smaller screens */
+  }
+
+  #loginButton {
+    padding: 8px 40px; /* Adjust button size */
+  }
+}
+
