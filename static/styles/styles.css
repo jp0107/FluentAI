@@ -1,25 +1,44 @@
+
+
+header img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12%; /* Can use pixels or percentages */
+  height: auto; /* 'auto' will maintain the aspect ratio */
+}
+
 body {
   background-color: #EAF2FF;
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 300;
+  font-weight: 500;
   font-style: normal;
   font-variation-settings:
     "slnt" 0;
 } 
+
 h1 {
   color: #1e1e1e;
-  font-weight: 500;
 }
+
+h2 {
+  font-size: 64px;
+}
+
 .button {
   background-color: #EAF2FF;
-  color: black;
-  border: 2px solid #555555;
+  color: 1E1E1E;
+  border: 2px solid #1E1E1E;
   padding: 15px 32px;
   text-align: center;
-  text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 28px;
   margin: 4px 2px;
   cursor: pointer;
+}
+
+.button:hover {
+  background-color: #1E1E1E;
+  color: #EAF2FF;
 }
