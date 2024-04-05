@@ -26,10 +26,10 @@ h2 {
   font-size: 64px;
 }
 
-.button {
+#class-button {
   background-color: #EAF2FF;
   color: 1E1E1E;
-  border: 3xpx solid #1E1E1E;
+  border: 3px solid #1E1E1E;
   padding: 15px 32px;
   text-align: center;
   display: inline-block;
@@ -38,7 +38,7 @@ h2 {
   cursor: pointer;
 }
 
-.button:hover {
+#class-button:hover {
   background-color: #1E1E1E;
   color: #EAF2FF;
 }

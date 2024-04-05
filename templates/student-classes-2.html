@@ -13,22 +13,34 @@
 
     <body>
         <div class="container-fluid">
-            {% include 'header.html' %}
-            <!-- also need to add netid button?-->
+            <!-- {% include 'header.html' %} -->
+            <img src="static/logo_dark.png">
+            <!-- also need to add profile dropdown?-->
         </div>
         <br>
         <div class="container-fluid">
-            <h2>My Classes</h2>
-            <!-- need add course button-->
+            <div class="row mt-4">
+                <div class="col offset-sm-1">
+                    <h2>My Classes</h2>
+                    <!-- need add course button-->
+                </div>
+            </div>
         </div>
         <br>
         <div class="container-fluid">
-            <div class="row">
+            <div class="row mt-4">
                 <!-- need to make dynamic -->
-                <div class="col-sm-3">
+                <div class="col-sm-2 offset-sm-1">
                     <a href="/student-dashboard">
-                        <button class="button">SPA101 <img src="static/arrow_dark_up.png" alt="arrow" /> </button>
+                        <button class="button" id="class-button">
+                            SPA101 
+                        </button>
                     </a>
+                </div>
+                <div class="col-sm-2">
+                    <button class="button" id="class-button">
+                        Add Class
+                    </button>
                 </div>
             </div>
         </div>
