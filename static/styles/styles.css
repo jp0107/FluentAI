@@ -17,6 +17,7 @@
 
 .nav-button:hover {
   background-color: #1E1E1E;
+  padding:5px;
   color: #EAF2FF;
 }
 body {
