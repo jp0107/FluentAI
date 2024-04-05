@@ -101,13 +101,28 @@ def student_classes_2():
 @app.route('/student-dashboard')
 def student_dashboard():
     username = auth.authenticate()
-    return flask.render_template('student-dashboard.html', username = username)
+    return flask.render_template('student-dashboard.html', 
+                                 username = username)
 
 #-----------------------------------------------------------------------
 
 @app.route('/student-assignments')
 def student_assignments():
     return flask.render_template('student-assignments.html')
+
+
+#-----------------------------------------------------------------------
+
+@app.route('/student-practice')
+def student_practice():
+    return flask.render_template('student-practice.html')
+
+
+#-----------------------------------------------------------------------
+
+@app.route('/student-scores')
+def student_scores():
+    return flask.render_template('student-scores.html')
 
 #-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
