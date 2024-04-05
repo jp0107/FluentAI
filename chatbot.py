@@ -105,7 +105,7 @@ def student_dashboard():
 #-----------------------------------------------------------------------
 
 @app.route('/student-assignments')
-def student_dashboard():
+def student_assignments():
     return flask.render_template('student-assignments.html')
 
 #-----------------------------------------------------------------------
