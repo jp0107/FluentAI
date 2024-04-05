@@ -5,6 +5,14 @@ body, html {
   background-color: #1E1E1E;
 }
 
+.navbar {
+  background-color: #1E1E1E !important; /* Ensure this overrides Bootstrap styles */
+}
+
+.nav-link:hover {
+  color: #EAF2FF; 
+}
+
 .container1 {
   height: 100%;
   display: flex;
@@ -13,14 +21,6 @@ body, html {
   align-items: center;
   background-color: #1E1E1E;
   color: #EAF2FF;
-}
-
-header img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 12%; /* Can use pixels or percentages */
-  height: auto; /* 'auto' will maintain the aspect ratio */
 }
 
 h1 {
