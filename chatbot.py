@@ -100,7 +100,8 @@ def student_classes_2():
 
 @app.route('/student-dashboard')
 def student_dashboard():
-    return flask.render_template('student-dashboard.html')
+    username = auth.authenticate()
+    return flask.render_template('student-dashboard.html', username = username)
 
 #-----------------------------------------------------------------------
 
