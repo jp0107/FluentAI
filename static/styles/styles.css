@@ -1,7 +1,10 @@
 
-
 .navbar {
   background-color: #EAF2FF !important; /* Ensure this overrides Bootstrap styles */
+}
+
+.nav-link {
+  color: #5E5E5E; 
 }
 
 .nav-link:hover {
@@ -41,4 +44,12 @@ h2 {
 #class-button:hover {
   background-color: #1E1E1E;
   color: #EAF2FF;
+}
+
+.btn-primary {
+  border-color: #1E1E1E !important; /* Optionally, if you want to change the border color */
+}
+
+.btn-primary.text-white {
+  color: #1E1E1E !important; /* New text color */
 }
