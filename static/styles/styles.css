@@ -19,11 +19,11 @@ body {
 } 
 
 h1 {
-  color: #1e1e1e;
+  font-size: 64px;
 }
 
 h2 {
-  font-size: 64px;
+  font-size: 48px;
 }
 
 #class-button {
