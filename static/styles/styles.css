@@ -9,6 +9,8 @@
 
 .nav-link:hover {
   color: #1E1E1E; 
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .nav-button {
