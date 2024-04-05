@@ -103,6 +103,12 @@ def student_dashboard():
     return flask.render_template('student-dashboard.html')
 
 #-----------------------------------------------------------------------
+
+@app.route('/student-assignments')
+def student_dashboard():
+    return flask.render_template('student-assignments.html')
+
+#-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
 def fetch_conversation():
     username = auth.authenticate()
