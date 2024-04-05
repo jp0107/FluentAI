@@ -11,6 +11,14 @@
   color: #1E1E1E; 
 }
 
+.nav-button {
+  color:#1E1E1E;
+}
+
+.nav-button:hover {
+  background-color: #1E1E1E;
+  color: #EAF2FF;
+}
 body {
   background-color: #EAF2FF;
   font-family: "Inter", sans-serif;
