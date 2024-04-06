@@ -1,8 +1,5 @@
 Flask
 SQLAlchemy
-urllib.request
-urllib.parse
-re
 ssl
 openai
 argparse
