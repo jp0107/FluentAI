@@ -17,6 +17,7 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
 .nav-button {
   color:#1E1E1E;
 }
@@ -26,6 +27,22 @@
   padding:5px;
   color: #EAF2FF;
 }
+
+.nav-button:active, .nav-button:focus {
+  color: #EAF2FF !important; 
+  padding:5px;
+  background-color: #1E1E1E;
+}
+
+.dropdown-menu {
+  max-width:30px;
+}
+
+.dropdown-item:active {
+  background-color: #1E1E1E; /* Background color for active state */
+  color: #EAF2FF; /* Text color for active state */
+}
+
 body {
   background-color: #EAF2FF;
   font-family: "Inter", sans-serif;
@@ -61,10 +78,36 @@ h2 {
   color: #EAF2FF;
 }
 
-.btn-primary {
-  border-color: #1E1E1E !important; /* Optionally, if you want to change the border color */
+.class-button {
+  background-color: #EFF7FF;
+  color: #1E1E1E;
+  border: 3px solid #1E1E1E;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 100%; /* Ensures each button stretches to the full width of its container */
+  box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+  text-decoration: none;
 }
 
-.btn-primary.text-white {
-  color: #1E1E1E !important; /* New text color */
+.class-button:hover {
+  background-color: #1E1E1E;
+  color: #EAF2FF;
+}
+
+.btn-primary {
+  background-color: #5E5E5E; 
+  border-color: #5E5E5E; 
+  color: #EAF2FF;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: #1E1E1E;
+  border-color: #1E1E1E;
+  color: #EAF2FF;
 }

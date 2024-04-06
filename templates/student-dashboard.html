@@ -22,8 +22,13 @@
                 </button>
                 <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link btn nav-button" href="#">Sign Out</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{username}}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">Sign Out</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
