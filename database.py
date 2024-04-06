@@ -2,6 +2,8 @@
 # database.py
 # Authors: Irene Kim, Jessie Wang, Jonathan Peixoto, Tinney Mak
 #-----------------------------------------------------------------------
+
+import os
 import sqlalchemy
 import sqlalchemy.orm
 from typing import List
