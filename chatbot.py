@@ -3,6 +3,7 @@
 # Authors: Irene Kim, Jessie Wang, Jonathan Peixoto, Tinney Mak
 #-----------------------------------------------------------------------
 
+import os
 import sys
 from openai import OpenAI
 import flask
@@ -18,7 +19,7 @@ Base.metadata.create_all(engine)
 
 Session = sqlalchemy.orm.sessionmaker(bind = engine)
 
-GPT_API_KEY = "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"
+GPT_API_KEY = os.environ['GPT_API_KEY']
 app.secret_key = '1234567'  # hardcoded
 
 #-----------------------------------------------------------------------

@@ -8,7 +8,7 @@ from typing import List
 
 #-----------------------------------------------------------------------
 
-_DATABASE_URL = "postgres://fluentaidb_user:sPnl5btbepB6IRo1V709qocn3DIL76WN@dpg-cnsvg6q0si5c73f6jsv0-a.ohio-postgres.render.com/fluentaidb"
+_DATABASE_URL = os.environ['DATABASE_URL']
 _DATABASE_URL = _DATABASE_URL.replace('postgres://', 'postgresql://')
 
 #-----------------------------------------------------------------------
