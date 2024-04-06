@@ -3,3 +3,4 @@ SQLAlchemy
 openai
 argparse
 gunicorn
+psycopg2

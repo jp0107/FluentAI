@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 import sys
 import argparse
-import chatbot
+import fluentai
 
 #-----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ def main():
         sys.exit(1)
 
     try:
-        chatbot.app.run(host = 'localhost', port = port, debug = True)
+        fluentai.app.run(host = 'localhost', port = port, debug = True)
 
     except Exception as ex:
         print(ex, file = sys.stderr)
