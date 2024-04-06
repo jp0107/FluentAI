@@ -8,6 +8,7 @@ from typing import List
 
 #-----------------------------------------------------------------------
 
+import os
 _DATABASE_URL = os.environ['DATABASE_URL']
 _DATABASE_URL = _DATABASE_URL.replace('postgres://', 'postgresql://')
 
