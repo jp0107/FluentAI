@@ -70,6 +70,7 @@ h1 {
   background-color: transparent;
   color: #EAF2FF;
   cursor: pointer;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
 }
 
 #loginButton:hover {
@@ -123,6 +124,8 @@ h2 {
     font-size: 32vw;
     margin-top: 35vw;
     margin-bottom: 10vw;
+    display: flex;
+    justify-content: center;
   }
 
   h2 {
