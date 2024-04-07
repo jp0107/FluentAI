@@ -99,11 +99,11 @@ def student_all_classes():
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-classes-2')
+@app.route('/student-prototype')
 def student_classes_2():
     username = auth.authenticate()
     html_code = flask.render_template(
-        'student-classes-2.html', username = username)
+        'student-prototype.html', username = username)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------

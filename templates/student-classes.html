@@ -75,23 +75,23 @@
         </nav>
 
         <br>
-        <div class="container-fluid">
-            <div class="row mt-4">
-                <div class="col offset-sm-1">
-                    <h1>My Courses</h1>
-                    <!-- need add course button-->
-                </div>
-            </div>
-        </div>
-
-        <br>
 
         <div class="container">
+            <div class="row mt-4">
+                <div class="row mt-4 align-items-center">
+                    <h1>My Courses</h1>
+            </div>
+            <br>
             <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
               <!-- Each .col div acts as a container for a button, ensuring equal height -->
               <div class="col d-flex">
                 <a href="/student-dashboard" class="class-button" role="button">
                     <h3>SPA 101</h3>Beginner's Spanish I
+                </a>
+              </div>
+              <div class="col d-flex">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">
+                    <h3><img src="static/add_course_light.png" alt="Join a Course" width="35"/></h3> Join a Course
                 </a>
               </div>
               <!-- Add more .col divs with class-button for each additional course -->
