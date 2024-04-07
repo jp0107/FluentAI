@@ -1,4 +1,6 @@
 
+
+
 .navbar {
   background-color: #EAF2FF !important; /* Ensure this overrides Bootstrap styles */
 }
@@ -121,6 +123,26 @@ h2 {
   display: none;
 }
 
+#assignments {
+  background-color: #EAF2FF;
+  color: #EAF2FF;
+}
+
+.table th, .table td {
+  background-color: #EAF2FF !important;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.score-table {
+  width: 80%;
+  margin-top: 1rem;
+}
+
+.score-table thead {
+  border-bottom: 2px #5E5E5E;
+}
+
 /* Responsive styling*/
 @media (max-width: 768px) {
   .small-screen-layout {
@@ -134,5 +156,10 @@ h2 {
   #dashboard-welcome {
     font-size: 5vw;
     text-align: center;
+  }
+
+  .score-table {
+    width: 100%;
+    margin-top: 1rem;
   }
 }
