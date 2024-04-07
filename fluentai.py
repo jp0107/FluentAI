@@ -141,6 +141,14 @@ def student_scores():
                                  username = username)
 
 #-----------------------------------------------------------------------
+
+@app.route('/conversation-history')
+def conversation_history():
+    username = auth.authenticate()
+    return flask.render_template('conversation-history.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
 def fetch_conversation():
     username = auth.authenticate()
@@ -151,7 +159,7 @@ def fetch_conversation():
             Conversation.student_id == hardcoded_student_id).all()
         conversation_texts = [conv.conv_text for conv in conversations]
         return flask.render_template(
-            'student-classes.html', 
+            'student-prototype.html', 
             username = username,
             conversation_data=conversation_texts)
 

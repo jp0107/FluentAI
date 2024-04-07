@@ -143,6 +143,34 @@ h2 {
   border-bottom: 2px #5E5E5E;
 }
 
+.small-button {
+  background-color: #EFF7FF;
+  color: #1E1E1E;
+  border: 2px solid #1E1E1E;
+  padding: 12px 16px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
+}
+
+.subcontainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: justify;
+  font-size: 19px;
+  align-items: center;
+  background-color: #EAF2FF;
+  color: #1E1E1E;
+  padding: 3vw 9.5vw; /* Add 20px padding to the left and right */
+}
+
 /* Responsive styling*/
 @media (max-width: 768px) {
   .small-screen-layout {
@@ -161,5 +189,16 @@ h2 {
   .score-table {
     width: 100%;
     margin-top: 1rem;
+  }
+
+  .subcontainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: justify;
+    font-size: 16px;
+    align-items: center;
+    padding: 3vw 3vw; /* Add 20px padding to the left and right */
   }
 }
