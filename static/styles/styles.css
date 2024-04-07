@@ -96,9 +96,8 @@ h2 {
   color: #EAF2FF;
 }
 
-
-.btn-class .content-box {
-  background-color: #EAF2FF;
+#dashboard-btn #dashboard-box {
+  background-color: #EFF7FF;
   color: #1E1E1E;
   border: 3px solid #1E1E1E;
   padding: 30px 32px;
@@ -113,16 +112,23 @@ h2 {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
 }
 
-.btn-class .content-box:hover {
+#dashboard-btn #dashboard-box:hover {
   background-color: #1E1E1E;
   color: #EAF2FF;
 }
 
-/* Responsive styling */
+.small-screen-layout {
+  display: none;
+}
+
+/* Responsive styling*/
 @media (max-width: 768px) {
-  .btn-class .content-box {
-    width: 100%; /* Full width on smaller screens */
-    padding: 10px;
+  .small-screen-layout {
+    display: block;
+  }
+
+  .large-screen-layout {
+    display: none;
   }
 
   #dashboard-welcome {

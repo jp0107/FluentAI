@@ -50,22 +50,44 @@
                 </div>
             </div>
             <br>
-            <div class="row justify-content-center">
-                <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
-                <div class="col-auto">
-                  <a href="/student-assignments" class="btn-class text-decoration-none">
-                    <div class="content-box">Assignments</div>
-                  </a>
+            <div class="large-screen-layout">
+                <div class="row justify-content-center">
+                    <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
+                    <div class="col-auto">
+                    <a href="/student-assignments" id="dashboard-btn" class="text-decoration-none">
+                        <div id="dashboard-box">Assignments</div>
+                    </a>
+                    </div>
+                    <div class="col-auto">
+                    <a href="/student-practice" id="dashboard-btn" class="text-decoration-none">
+                        <div id="dashboard-box">Practice</div>
+                    </a>
+                    </div>
+                    <div class="col-auto">
+                    <a href="/student-scores" id="dashboard-btn" class="text-decoration-none">
+                        <div id="dashboard-box">Scores</div>
+                    </a>
+                    </div>
                 </div>
-                <div class="col-auto">
-                  <a href="/student-practice" class="btn-class text-decoration-none">
-                    <div class="content-box">Practice</div>
-                  </a>
-                </div>
-                <div class="col-auto">
-                  <a href="/student-scores" class="btn-class text-decoration-none">
-                    <div class="content-box">Scores</div>
-                  </a>
+            </div>
+            
+            <div class="small-screen-layout">
+                <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
+                    <div class="col d-flex">
+                      <a href="/student-assignments" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                        Assignments
+                      </a>
+                    </div>
+                    <div class="col d-flex">
+                      <a href="/student-practice" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                        Practice
+                      </a>
+                    </div>
+                    <div class="col d-flex">
+                      <a href="/student-scores" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                        Scores
+                      </a>
+                    </div>
                 </div>
             </div>
         </div>
