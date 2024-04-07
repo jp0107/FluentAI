@@ -1,0 +1,69 @@
+body{
+    background:#EAF2FF;
+    margin-top:20px;
+}
+
+.job-box {
+  justify-content: space-between;
+  align-items: center;
+  background:#EAF2FF;
+  -webkit-box-shadow: 0 0 35px 0 rgba(130, 130, 130, 0.2);
+          box-shadow: 0 0 35px 0 rgba(130, 130, 130, 0.2);
+  padding: 10px 35px;
+  border: 1px solid #1E1E1E;
+}
+  
+.job-right {
+  display: flex; /* This will place buttons next to each other */
+  gap: 10px; /* Adds space between buttons */
+}
+
+ul {
+  list-style: none; 
+}
+
+@media (min-width: 992px) {
+  .job-overview {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 70px;
+  }
+}
+
+@media (min-width: 768px) {
+  .job-content ul li {
+    border-bottom: 0;
+    padding: 0;
+  }
+}
+
+.job-content ul li i {
+  font-size: 20px;
+  position: relative;
+  top: 1px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.assignments-button {
+  background-color: #EFF7FF;
+  color: #1E1E1E;
+  border: 2px solid #1E1E1E;
+  padding: 5px 30px;
+  text-align: center;
+  display: inline-block;
+  font-size: 20px;
+  cursor: pointer;
+  width: 100%; /* Ensures each button stretches to the full width of its container */
+  box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
+}
+
+#deadline-text {
+  color: #5E5E5E;
+  font-size: 16px;
+}
