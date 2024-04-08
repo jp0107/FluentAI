@@ -83,15 +83,7 @@
         readonly style="width: 100%; height: 10vw; display: flex; background-color: #EAF2FF; margin-bottom: 30px;">
           {{ data }}
       </textarea>
-
-      <h5 class="text-center" style="margin-bottom: 20px;">Conversation History</h5>
-      <a href="/fetch-conversation" class="small-button" style="margin-bottom: 20px;">Fetch Conversation History</a>
-      <textarea class="form-control" readonly style="width: 100%; height: 40vw; display: flex; background-color: #EAF2FF; margin-bottom: 30px;">
-          {% for conv_text in conversation_data %}
-          {{ conv_text }}
-          {% endfor %}
-      </textarea>
     </div>
-    
+   
   </body>
 </html>
