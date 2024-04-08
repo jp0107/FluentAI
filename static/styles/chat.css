@@ -1,0 +1,82 @@
+
+.navbar-dark {
+  background-color: #1E1E1E !important; /* Ensure this overrides Bootstrap styles */
+}
+
+.nav-link {
+  color: #C0C7D6; 
+}
+
+.nav-link:hover {
+  color: #EAF2FF; 
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.nav-button {
+  color:#EAF2FF;
+}
+
+.nav-button:hover, .nav-button:active, .nav-button:focus {
+  background-color: #EAF2FF;
+  color: #1E1E1E;
+}
+
+.nav-link.dropdown-toggle:active,
+.nav-link.dropdown-toggle:focus{
+  background-color: #EAF2FF !important; /* Background color for active state */
+  color: #1E1E1E !important; /* Text color for active state */
+}
+
+.small-button {
+  background-color: #1E1E1E;
+  color: #EAF2FF;
+  border: 2px solid #EAF2FF;
+  padding: 12px 16px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
+}
+
+.small-button:hover, .small-button:active, .small-button:focus {
+  background-color: #EAF2FF;
+  color: #1E1E1E;
+}
+
+.chat-button {
+  background-color: #1E1E1E;
+  color: #EAF2FF;
+  border: 2px solid #EAF2FF;
+  padding: 12px 16px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
+}
+
+.chat-button:hover, .chat-button:active, .chat-button:focus {
+  background-color: #EAF2FF;
+  color: #1E1E1E;
+}
+
+#welcome-message {
+  max-width: 80vw;
+  margin: 1vw auto;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #EAF2FF;
+  background-color: #1E1E1E;
+  -webkit-box-shadow: 0 0 35px 0 #5E5E5E;
+          box-shadow: 0 0 35px 0 #5E5E5E;
+}

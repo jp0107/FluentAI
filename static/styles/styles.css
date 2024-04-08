@@ -1,6 +1,4 @@
 
-
-
 .navbar {
   background-color: #EAF2FF !important; /* Ensure this overrides Bootstrap styles */
 }
@@ -26,7 +24,6 @@
 
 .nav-button:hover, .nav-button:active, .nav-button:focus {
   background-color: #1E1E1E;
-  padding:5px;
   color: #EAF2FF;
 }
 
@@ -34,13 +31,25 @@
   max-width:30px;
 }
 
-.dropdown-item:active {
-  background-color: #1E1E1E; /* Background color for active state */
-  color: #EAF2FF; /* Text color for active state */
+.nav-link.dropdown-toggle:active,
+.nav-link.dropdown-toggle:focus{
+  background-color: #1E1E1E !important; /* Background color for active state */
+  color: #EAF2FF !important; /* Text color for active state */
 }
 
 body {
   background-color: #EAF2FF;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0;
+} 
+
+.dark {
+  background-color: #1E1E1E;
+  color: #EAF2FF;
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;

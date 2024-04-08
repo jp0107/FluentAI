@@ -157,6 +157,14 @@ def assignment_chat():
                                  username = username)
 
 #-----------------------------------------------------------------------
+
+@app.route('/practice-chat')
+def practice_chat():
+    username = auth.authenticate()
+    return flask.render_template('practice-chat.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
 def fetch_conversation():
     username = auth.authenticate()
