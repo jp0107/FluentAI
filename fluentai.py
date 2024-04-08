@@ -165,6 +165,14 @@ def practice_chat():
                                  username = username)
 
 #-----------------------------------------------------------------------
+
+@app.route('/prof-classes')
+def prof_classes():
+    username = auth.authenticate()
+    return flask.render_template('prof-classes.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
 def fetch_conversation():
     username = auth.authenticate()
