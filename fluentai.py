@@ -9,6 +9,7 @@ from openai import OpenAI
 import flask
 import sqlalchemy
 import auth
+from req_lib import ReqLib
 from database import (Student, Course, Conversation, CoursesStudents, engine, Base)
 
 #-----------------------------------------------------------------------
@@ -111,8 +112,16 @@ def student_classes_2():
 @app.route('/student-dashboard')
 def student_dashboard():
     username = auth.authenticate()
+
+    req_lib = ReqLib()
+
+    req = req_lib.getJSON(
+        req_lib.configs.USERS,
+        uid=username
+    )
+
     return flask.render_template('student-dashboard.html', 
-                                 username = username)
+                                 username = req)
 
 #-----------------------------------------------------------------------
 
