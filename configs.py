@@ -6,7 +6,7 @@ class Configs:
     def __init__(self):
         self.CONSUMER_KEY = "VlRLViOAPGRg7QWiChy621lwr60a"
         self.CONSUMER_SECRET = "bwH8RCynRb_afcFEMAqznLL2p0Ia"
-        self.BASE_URL="https://api.princeton.edu:443/active-directory/1.0.2"
+        self.BASE_URL="https://api.princeton.edu:443/active-directory/1.0.5"
         self.USERS = "/users"
         self.USERS_BASIC = "/users/basic"
         self.USERS_FULL = "/users/full"
