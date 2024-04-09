@@ -61,6 +61,7 @@ class Course(Base):
     course_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
     owner = sqlalchemy.Column(sqlalchemy.VARCHAR)   # professor or superadmin netid
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
 def get_courses() -> List[Course]:
     with sqlalchemy.orm.Session(engine) as session:
@@ -118,7 +119,8 @@ class Prompt(Base):
     prompt_title = sqlalchemy.Column(sqlalchemy.VARCHAR)
     course_id = sqlalchemy.Column(sqlalchemy.Integer)
     prof_id = sqlalchemy.Column(sqlalchemy.Integer)
-    is_live = sqlalchemy.Column(sqlalchemy.Boolean)
+    deadline = sqlalchemy.Column(sqlalchemy.DateTime)
+    past_deadline = sqlalchemy.Column(sqlalchemy.Boolean)
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
