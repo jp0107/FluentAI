@@ -129,7 +129,8 @@ def student_dashboard():
         full_name = "Default User"
 
     return flask.render_template('student-dashboard.html', 
-                                 username = full_name)
+                                 username = username,
+                                 full_name = full_name)
 
 #-----------------------------------------------------------------------
 
