@@ -127,10 +127,12 @@ def student_dashboard():
         full_name = user_info.get("displayname", "Default User")
     else:
         full_name = "Default User"
+    
+    first_name = full_name.split()[0]
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
-                                 full_name = full_name)
+                                 first_name = first_name)
 
 #-----------------------------------------------------------------------
 
