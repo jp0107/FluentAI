@@ -120,8 +120,10 @@ def student_dashboard():
         uid=username
     )
 
+    full_name = req["displayname"]
+
     return flask.render_template('student-dashboard.html', 
-                                 username = req)
+                                 username = full_name)
 
 #-----------------------------------------------------------------------
 
