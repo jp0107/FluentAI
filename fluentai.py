@@ -120,10 +120,16 @@ def student_dashboard():
         uid=username
     )
 
-    # full_name = req.get("displayname", "Default User")
+    # check if req is list and extract first item
+    # otherwise, handle case with no user info or wrong format
+    if req and isinstance(req, list):
+        user_info = req[0]  
+        full_name = user_info.get("displayname", "Default User")
+    else:
+        full_name = "Default User"
 
     return flask.render_template('student-dashboard.html', 
-                                 username = req)
+                                 username = full_name)
 
 #-----------------------------------------------------------------------
 
