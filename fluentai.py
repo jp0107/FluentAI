@@ -135,6 +135,42 @@ def student_classes():
 @app.route('/student-all-classes')
 def student_all_classes():
     username = auth.authenticate()
+
+    # if new user, store user info in database
+    user_type = check_user_type(username)
+
+    if user_type is None:
+        req_lib = ReqLib()
+
+        req = req_lib.getJSON(
+            req_lib.configs.USERS,
+            uid=username
+        )
+
+        # get user first/last name, email, and pustatus from netid
+        user_info = req[0]  
+
+        full_name = user_info.get("displayname")
+        temp = full_name.split()
+        first_name = temp[0]
+        last_name = temp[-1]
+
+        pustatus = user_info.get("pustatus")
+        email = user_info.get("mail")
+
+        # store user info in corresponding table
+        store_userinfo(username, first_name, last_name, pustatus, email)
+    
+    # direct user to the correct page based on user type
+    # if user_type == "Student":
+    #     # Fetch student-specific data and render the student dashboard
+    #     pass
+
+    # elif user_type == "Professor":
+    #     return flask.redirect('/prof-classes')
+    # else:
+    #     return flask.redirect('/admin-classes')
+
     html_code = flask.render_template(
         'student-all-classes.html', username = username)
     return flask.make_response(html_code)
@@ -153,45 +189,9 @@ def student_classes_2():
 @app.route('/student-dashboard')
 def student_dashboard():
     username = auth.authenticate()
-
-    # if new user, store user info in database
-    user_type = check_user_type(username)
-
-    if user_type is None:
-        req_lib = ReqLib()
-
-        req = req_lib.getJSON(
-            req_lib.configs.USERS,
-            uid=username
-        )
-
-        # get user first/last name, email, and pustatus from netid
-        user_info = req[0]  
-
-        full_name = user_info.get("displayname", "Default User")
-        temp = full_name.split()
-        first_name = temp[0]
-        last_name = temp[-1]
-
-        pustatus = user_info.get("pustatus")
-        email = user_info.get("mail")
-
-        # store user info in corresponding table
-        store_userinfo(username, first_name, last_name, pustatus, email)
     
     # get user's first name to display on dashboard
     first_name = get_firstname(username)
-
-    # direct user to the correct page based on user type
-    # if user_type == "Student":
-    #     # Fetch student-specific data and render the student dashboard
-    #     pass
-
-
-    # elif user_type == "Professor":
-    #     return flask.redirect('/prof-dashboard')
-    # else:
-    #     return flask.redirect('/admin-dashboard')
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,

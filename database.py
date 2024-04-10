@@ -86,6 +86,9 @@ def get_students() -> List[Student]:
 def get_firstname(student_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Student.first_name).filter(Student.student_id == student_id).one_or_none()
+
+        if query is None:
+            return "Default"
         
         return query.all()
 
