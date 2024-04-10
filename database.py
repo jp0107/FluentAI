@@ -59,7 +59,7 @@ class Course(Base):
     course_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     course_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
     owner = sqlalchemy.Column(sqlalchemy.VARCHAR)   # professor or superadmin netid
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now)
     language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
 def get_courses() -> List[Course]:

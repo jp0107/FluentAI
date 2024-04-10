@@ -68,29 +68,23 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
 def store_userinfo(user_id, first_name, last_name, pustatus, email):
     with Session() as session:
         if pustatus == "undergraduate":
-            # Check if student already exists
-            existing_student = session.query(Student).filter_by(student_id=user_id).first()
-            if not existing_student:
-                new_student = Student(
-                    student_id=user_id,
-                    first_name=first_name,
-                    last_name=last_name,
-                    email=email
-                )
-                session.add(new_student)
-                session.commit()
+            new_student = Student(
+                student_id=user_id,
+                first_name=first_name,
+                last_name=last_name,
+                email=email
+            )
+            session.add(new_student)
+            session.commit()
         elif pustatus == "faculty":
-            # Check if professor already exists
-            existing_prof = session.query(Professor).filter_by(prof_id=user_id).first()
-            if not existing_prof:
-                new_prof = Professor(
-                    prof_id=user_id,
-                    first_name=first_name,
-                    last_name=last_name,
-                    email=email
-                )
-                session.add(new_prof)
-                session.commit()
+            new_prof = Professor(
+                prof_id=user_id,
+                first_name=first_name,
+                last_name=last_name,
+                email=email
+            )
+            session.add(new_prof)
+            session.commit()
 
 #-----------------------------------------------------------------------
 
@@ -160,7 +154,7 @@ def student_dashboard():
     # if new user, store user info in database
     user_type = check_user_type(username)
 
-    if user_type == None:
+    if user_type is None:
         req_lib = ReqLib()
 
         req = req_lib.getJSON(
@@ -309,13 +303,15 @@ def process_gpt_request():
 
 @app.route('/add-course', methods=['POST'])
 def add_course():
-    # Extract course details from the request
-    course_id = flask.request.form['course_id']
-    course_name = flask.request.form['course_name']
-    course_description = flask.request.form['course_description']
-    language = flask.request.form['language']
+    course_id = flask.request.form.get('course_id')
+    course_name = flask.request.form.get('course_name')
+    course_description = flask.request.form.get('course_description')
+    language = flask.request.form.get('language')
 
-    # Fetch the professor's ID (e.g., from the session)
+    # Validation (example: check if course_id or course_name is empty)
+    if not course_id or not course_name:
+        return flask.jsonify({"message": "Course ID and name are required."}), 400
+
     prof_id = flask.session.get('username')
 
     # Check if the user is a professor or superadmin
