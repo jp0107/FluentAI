@@ -54,10 +54,18 @@
     </nav>
 
     <div>
-       Assignments
+        <h1>Students in {{ course_id }}</h1>
+        {% if students %}
+        <ul>
+        {% for student in students %}
+            <li>{{ student }}</li>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <p>No students found for this course.</p>
+        {% endif %}
     </div>
 
         
   </body>
 </html>
-
