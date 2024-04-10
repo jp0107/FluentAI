@@ -353,7 +353,7 @@ def add_course():
         return flask.jsonify({"message": "You are not allowed to create a course"}), 403
 
     # Add the course to the database
-    new_course = Course(course_id=course_id, course_name=course_name, course_description=course_description, language=language, created_at=datetime.datetime.fromisoformat(created_at))
+    new_course = Course(course_id=course_id, course_name=course_name, course_description=course_description, language=language, created_at=datetime.datetime.fromisoformat(str(created_at)))
     with sqlalchemy.orm.Session(engine) as session:
         session.add(new_course)
         session.flush()  # Flush to get the new course ID if it's auto-generated
