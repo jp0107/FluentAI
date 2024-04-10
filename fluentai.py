@@ -201,7 +201,7 @@ def prof_dashboard():
 #-----------------------------------------------------------------------
 
 @app.route('/admin-dashboard')
-def prof_dashboard():
+def admin_dashboard():
     username = auth.authenticate()
     return flask.render_template('admin-dashboard.html',
                                  username = username)
