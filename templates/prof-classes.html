@@ -148,13 +148,13 @@
                         $('#addCourseModal').modal('hide');
                         $('#add-course-form')[0].reset();
     
-                        // Dynamically add the new course to the page
+                       // Dynamically add the new course to the page
                         var newCourseHtml = '<div class="col d-flex">' +
-                                            '<a href="/course/' + courseId + '" class="class-button" role="button">' +
-                                            '<h3>' + courseName + '</h3>'
+                                            '<a href="/prof-dashboard" class="class-button" role="button">' +
+                                            '<h3>' + courseId + '</h3>' + courseName +
                                             '</a>' +
                                             '</div>';
-    
+
                         $(".row-cols-md-3").append(newCourseHtml); // Adjust this selector to match your HTML structure
                         },
                         error: function(xhr, status, error) {
