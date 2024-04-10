@@ -268,6 +268,14 @@ def prof_classes():
                                  username = username)
 
 #-----------------------------------------------------------------------
+
+@app.route('/prof-roster')
+def prof_roster():
+    username = auth.authenticate()
+    return flask.render_template('prof-roster.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
 def fetch_conversation():
     username = auth.authenticate()
