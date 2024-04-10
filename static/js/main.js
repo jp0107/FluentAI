@@ -1,15 +1,21 @@
+// Keeps track of number of characters typed in course description
+document.addEventListener('DOMContentLoaded', function () {
+    var courseDescription = document.getElementById('course-description');
+    var charCount = document.getElementById('char-count');
+    var maxLength = 500;
 
-// Model to join a course 
-var exampleModal = document.getElementById('exampleModal')
-exampleModal.addEventListener('show.bs.modal', function (event) {
-    // Button that triggered the modal
-    var button = event.relatedTarget;
-    // Extract info from data-bs-* attributes
-    var recipient = button.getAttribute('data-whatever');
-    // Update the modal's content.
-    var modalTitle = exampleModal.querySelector('.modal-title');
-    var modalBodyInput = exampleModal.querySelector('.modal-body input');
+    function updateCharCount() {
+        var currentLength = courseDescription.value.length;
+        var remaining = maxLength - currentLength;
+        charCount.textContent = remaining >= 0 ? remaining : 0;
 
-    modalTitle.textContent = 'New message to ' + recipient;
-    modalBodyInput.value = recipient;
+        // Truncate the value if it exceeds the max length
+        if (currentLength > maxLength) {
+            courseDescription.value = courseDescription.value.substr(0, maxLength);
+            console.log("Input exceeded 500 characters and was truncated.");
+        }
+    }
+
+    courseDescription.addEventListener('input', updateCharCount);
+    updateCharCount(); // Initial call to set the correct initial value
 });

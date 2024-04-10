@@ -211,6 +211,10 @@ h2 {
           box-shadow: 0 0 35px 0 rgba(130, 130, 130, 0.2);
 }
 
+#message-text::placeholder {
+  color: #b3b3b3; /* Light grey color; adjust as needed */
+}
+
 /* Responsive styling*/
 @media (max-width: 768px) {
   .small-screen-layout {
