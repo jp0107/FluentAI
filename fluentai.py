@@ -10,7 +10,7 @@ import flask
 import sqlalchemy
 import auth
 from req_lib import ReqLib
-from database import (Student, Course, Conversation, CoursesStudents, engine, Base)
+from database import (Student, Professor, SuperAdmin, Course, Conversation, CoursesStudents, engine, Base, check_user_type)
 
 #-----------------------------------------------------------------------
 
@@ -59,6 +59,44 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
             conv_text=conv_text,
         )
         session.add(new_conversation)
+        session.commit()
+
+#-----------------------------------------------------------------------
+
+# function for storing student and prof info in the database
+def store_userinfo(user_id, first_name, last_name, pustatus, email):
+    with Session() as session:       
+        if pustatus == "undergraduate":
+            new_student = Student(
+                student_id=user_id,
+                first_name = first_name,
+                last_name = last_name,
+                email = email
+            )
+            session.add(new_student)
+            session.commit()
+        elif pustatus == "faculty":
+            new_prof = Professor(
+                prof_id=user_id,
+                first_name = first_name,
+                last_name = last_name,
+                email = email
+            )
+            session.add(new_prof)
+            session.commit()
+
+#-----------------------------------------------------------------------
+
+# function for storing admin info in the database
+def store_admininfo(user_id, first_name, last_name, email):
+    with Session() as session:       
+        new_admin = SuperAdmin(
+            admin_id=user_id,
+            first_name = first_name,
+            last_name = last_name,
+            email = email
+        )
+        session.add(new_admin)
         session.commit()
 
 #-----------------------------------------------------------------------
@@ -113,28 +151,60 @@ def student_classes_2():
 def student_dashboard():
     username = auth.authenticate()
 
-    req_lib = ReqLib()
+    # if new user, store user info in database
+    user_type = check_user_type(username)
 
-    req = req_lib.getJSON(
-        req_lib.configs.USERS,
-        uid=username
-    )
+    if user_type == None:
+        req_lib = ReqLib()
 
-    # check if req is list and extract first item
-    # otherwise, handle case with no user info or wrong format
-    if req and isinstance(req, list):
+        req = req_lib.getJSON(
+            req_lib.configs.USERS,
+            uid=username
+        )
+
+        # get user first/last name, email, and pustatus from netid
         user_info = req[0]  
+
         full_name = user_info.get("displayname", "Default User")
+        temp = full_name.split()
+        first_name = temp[0]
+        last_name = temp[len(temp) - 1]
+
         pustatus = user_info.get("pustatus")
+        email = user_info.get("mail")
+
+        # store user info in corresponding table
+        store_userinfo(username, first_name, last_name, pustatus, email)
+
+    # direct user to the correct page based on user type
+    if user_type == "Student":
+        # Fetch student-specific data and render the student dashboard
+        pass
+    elif user_type == "Professor":
+        return flask.redirect('/prof-dashboard')
     else:
-        full_name = "Default User"
-    
-    first_name = full_name.split()[0]
+        return flask.redirect('/admin-dashboard')
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
                                  first_name = first_name,
-                                 pustatus = pustatus)
+                                )
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-dashboard')
+def prof_dashboard():
+    username = auth.authenticate()
+    return flask.render_template('prof-dashboard.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/admin-dashboard')
+def prof_dashboard():
+    username = auth.authenticate()
+    return flask.render_template('admin-dashboard.html',
+                                 username = username)
 
 #-----------------------------------------------------------------------
 
