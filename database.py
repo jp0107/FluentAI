@@ -83,6 +83,12 @@ def get_students() -> List[Student]:
         query = session.query(Student) # SELECT * FROM Student
         return query.all()
 
+def get_firstname(student_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = session.query(Student.first_name).filter(Student.student_id == student_id).one_or_none()
+        
+        return query.all()
+
 #-----------------------------------------------------------------------
 
 # creates table mapping courses to professors

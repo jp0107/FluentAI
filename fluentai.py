@@ -13,7 +13,8 @@ import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs, 
-                      get_superadmins, check_user_type, get_students_by_course)
+                      get_superadmins, check_user_type, get_students_by_course,
+                      get_firstname)
 
 #-----------------------------------------------------------------------
 
@@ -177,6 +178,9 @@ def student_dashboard():
 
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus, email)
+    
+    # get user's first name to display on dashboard
+    first_name = get_firstname(username)
 
     # direct user to the correct page based on user type
     # if user_type == "Student":
@@ -191,7 +195,7 @@ def student_dashboard():
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
-                                 first_name = 'default',
+                                 first_name = first_name,
                                 )
 
 #-----------------------------------------------------------------------
