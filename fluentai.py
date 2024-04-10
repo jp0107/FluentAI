@@ -316,7 +316,7 @@ def add_course():
     language = flask.request.form['language']
 
     # Fetch the professor's ID (e.g., from the session)
-    prof_id = flask.session.get('prof_id')
+    prof_id = flask.session.get('username')
 
     # Check if the user is a professor or superadmin
     if not any(prof.prof_id == prof_id for prof in get_profs()) and \
