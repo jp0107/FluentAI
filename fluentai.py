@@ -66,31 +66,37 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
 
 # function for storing student and prof info in the database
 def store_userinfo(user_id, first_name, last_name, pustatus, email):
-    with Session() as session:       
+    with Session() as session:
         if pustatus == "undergraduate":
-            new_student = Student(
-                student_id=user_id,
-                first_name = first_name,
-                last_name = last_name,
-                email = email
-            )
-            session.add(new_student)
-            session.commit()
+            # Check if student already exists
+            existing_student = session.query(Student).filter_by(student_id=user_id).first()
+            if not existing_student:
+                new_student = Student(
+                    student_id=user_id,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email
+                )
+                session.add(new_student)
+                session.commit()
         elif pustatus == "faculty":
-            new_prof = Professor(
-                prof_id=user_id,
-                first_name = first_name,
-                last_name = last_name,
-                email = email
-            )
-            session.add(new_prof)
-            session.commit()
+            # Check if professor already exists
+            existing_prof = session.query(Professor).filter_by(prof_id=user_id).first()
+            if not existing_prof:
+                new_prof = Professor(
+                    prof_id=user_id,
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email
+                )
+                session.add(new_prof)
+                session.commit()
 
 #-----------------------------------------------------------------------
 
 # function for storing admin info in the database
 def store_admininfo(user_id, first_name, last_name, email):
-    with Session() as session:       
+    with Session() as session:
         new_admin = SuperAdmin(
             admin_id=user_id,
             first_name = first_name,
@@ -99,15 +105,6 @@ def store_admininfo(user_id, first_name, last_name, email):
         )
         session.add(new_admin)
         session.commit()
-
-#-----------------------------------------------------------------------
-
-def status_check(prof_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        # Query for a professor with the given prof_id
-        with sqlalchemy.orm.Session(engine) as session:
-            prof = session.query(Professor).filter(Professor.status == prof_id).first()
-            return prof is not None
 
 #-----------------------------------------------------------------------
 # Routes for authentication.
