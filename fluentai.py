@@ -125,6 +125,7 @@ def student_dashboard():
     if req and isinstance(req, list):
         user_info = req[0]  
         full_name = user_info.get("displayname", "Default User")
+        pustatus = user_info.get("pustatus")
     else:
         full_name = "Default User"
     
@@ -132,7 +133,8 @@ def student_dashboard():
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
-                                 first_name = first_name)
+                                 first_name = first_name,
+                                 pustatus = pustatus)
 
 #-----------------------------------------------------------------------
 
