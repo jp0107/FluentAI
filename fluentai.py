@@ -10,7 +10,8 @@ import flask
 import sqlalchemy
 import auth
 from req_lib import ReqLib
-from database import (Student, Course, Conversation, CoursesStudents, engine, Base)
+from database import (Student, Professor, Course, Conversation,
+                      CoursesStudents, CoursesProfs, engine, Base, get_profs, get_superadmins)
 
 #-----------------------------------------------------------------------
 
@@ -63,6 +64,14 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
 
 #-----------------------------------------------------------------------
 
+def status_check(prof_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # Query for a professor with the given prof_id
+        with sqlalchemy.orm.Session(engine) as session:
+            prof = session.query(Professor).filter(Professor.status == prof_id).first()
+            return prof is not None
+
+#-----------------------------------------------------------------------
 # Routes for authentication.
 
 @app.route('/logoutapp', methods=['GET'])
@@ -125,7 +134,6 @@ def student_dashboard():
     if req and isinstance(req, list):
         user_info = req[0]  
         full_name = user_info.get("displayname", "Default User")
-        pustatus = user_info.get("pustatus")
     else:
         full_name = "Default User"
     
@@ -133,8 +141,7 @@ def student_dashboard():
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
-                                 first_name = first_name,
-                                 pustatus = pustatus)
+                                 first_name = first_name)
 
 #-----------------------------------------------------------------------
 
@@ -228,3 +235,37 @@ def process_gpt_request():
         username = username,
         data=gpt_response)
 #-----------------------------------------------------------------------
+
+@app.route('/add-course', methods=['POST'])
+def add_course():
+    # Extract course details from the request
+    course_id = flask.request.form['course_id']
+    course_name = flask.request.form['course_name']
+    course_description = flask.request.form['course_description']
+    language = flask.request.form['language']
+
+    # Fetch the professor's ID (e.g., from the session)
+    prof_id = flask.session.get('prof_id')
+
+    # Check if the user is a professor or superadmin
+    if not any(prof.prof_id == prof_id for prof in get_profs()) and \
+       not any(admin.admin_id == prof_id for admin in get_superadmins()):
+        return flask.jsonify({"message": "You are not allowed to create a course"}), 403
+
+    # Add the course to the database
+    new_course = Course(course_id=course_id, course_name=course_name, course_description=course_description, language=language)
+    with sqlalchemy.orm.Session(engine) as session:
+        session.add(new_course)
+        session.flush()  # Flush to get the new course ID if it's auto-generated
+
+        # Link the course with the professor in CoursesProfs table
+        course_prof_link = CoursesProfs(course_id=new_course.course_id, prof_id=prof_id)
+        session.add(course_prof_link)
+
+        session.commit()
+
+    # Return an appropriate response
+    return flask.jsonify({"message": "Course added successfully"})
+
+#-----------------------------------------------------------------------
+

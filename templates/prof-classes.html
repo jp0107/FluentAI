@@ -115,5 +115,48 @@
             </div>
         </div>
 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#add-course-button").click(function(){
+                var courseId = $("#course-id").val();
+                var courseName = $("#course-name").val();
+                var courseDescription = $("#course-description").val();
+                var language = $("#department-select").val();
+        
+                $.ajax({
+                    url: '/add-course',
+                    method: 'POST',
+                    data: {
+                        course_id: courseId,
+                        course_name: courseName,
+                        course_description: courseDescription,
+                        language: language
+                    },
+                    success: function(response){
+                        alert(response.message);
+                        $('#addCourseModal').modal('hide');
+                        $('#add-course-form')[0].reset();
+    
+                        // Dynamically add the new course to the page
+                        var newCourseHtml = '<div class="col d-flex">' +
+                                            '<a href="/course/' + courseId + '" class="class-button" role="button">' +
+                                            '<h3>' + courseName + '</h3>' + courseDescription +
+                                            '</a>' +
+                                            '</div>';
+    
+                        $(".row-cols-md-3").append(newCourseHtml); // Adjust this selector to match your HTML structure
+                        },
+                        error: function(xhr, status, error) {
+                            // Display an error message
+                            var errorMessage = xhr.status + ': ' + xhr.statusText
+                            alert('Error - ' + errorMessage);
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
+
+
+    
