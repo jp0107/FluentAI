@@ -168,7 +168,7 @@ def student_dashboard():
         full_name = user_info.get("displayname", "Default User")
         temp = full_name.split()
         first_name = temp[0]
-        last_name = temp[len(temp) - 1]
+        last_name = temp[-1]
 
         pustatus = user_info.get("pustatus")
         email = user_info.get("mail")
@@ -176,18 +176,18 @@ def student_dashboard():
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus, email)
 
-    # # direct user to the correct page based on user type
-    # if user_type == "Student":
-    #     # Fetch student-specific data and render the student dashboard
-    #     pass
-    # elif user_type == "Professor":
-    #     return flask.redirect('/prof-dashboard')
-    # else:
-    #     return flask.redirect('/admin-dashboard')
+    # direct user to the correct page based on user type
+    if user_type == "Student":
+        # Fetch student-specific data and render the student dashboard
+        pass
+    elif user_type == "Professor":
+        return flask.redirect('/prof-dashboard')
+    else:
+        return flask.redirect('/admin-dashboard')
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
-                                 first_name = first_name,
+                                 first_name = 'default',
                                 )
 
 #-----------------------------------------------------------------------
