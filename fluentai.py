@@ -12,7 +12,8 @@ import sqlalchemy
 import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
-                      CoursesStudents, CoursesProfs, engine, Base, get_profs, get_superadmins, check_user_type)
+                      CoursesStudents, CoursesProfs, engine, Base, get_profs, 
+                      get_superadmins, check_user_type, get_students_by_course)
 
 #-----------------------------------------------------------------------
 
@@ -272,8 +273,15 @@ def prof_classes():
 @app.route('/prof-roster')
 def prof_roster():
     username = auth.authenticate()
+    hardcoded_courseid = "cos333"  # Hardcoded value
+
+    roster = get_students_by_course(hardcoded_courseid)
+
     return flask.render_template('prof-roster.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = hardcoded_courseid,
+                                 students = roster
+                                 )
 
 #-----------------------------------------------------------------------
 @app.route('/fetch-conversation')

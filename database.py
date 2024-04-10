@@ -109,6 +109,14 @@ def get_coursesstudents() -> List[CoursesStudents]:
         query = session.query(CoursesStudents) # SELECT * FROM CoursesStudents
         return query.all()
 
+def get_students_by_course(course_id):
+     with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Student.first_name, Student.last_name)
+                 .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
+                 .filter(CoursesStudents.course_id == course_id))
+        full_names = [f"{first} {last}" for first, last in query.all()]
+        return full_names
+
 #-----------------------------------------------------------------------
 
 # creates table storing assignment prompts
