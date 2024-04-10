@@ -65,7 +65,7 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
 
 # Routes for authentication.
 
-@app.route('/logoutapp', methods=['GET'])
+@app.route('/logout', methods=['GET'])
 def logoutapp():
     return auth.logoutapp()
 

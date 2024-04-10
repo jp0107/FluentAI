@@ -32,8 +32,8 @@ body, html {
 
 h1 {
   font-size: 12vw;
-  margin-top: 15vw;
-  margin-bottom: 5vw;
+  margin-top: 180px;
+  margin-bottom: 80px;
   position: relative; /* Add this to establish a positioning context */
   display: flex;
   justify-content: center;
@@ -64,7 +64,7 @@ h1 {
   animation-delay: 4s;
 }
 
-#loginButton {
+.button {
   padding: 10px 50px;
   border: 3px solid #EAF2FF;
   background-color: transparent;
@@ -73,7 +73,7 @@ h1 {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out; /* Smooth transition for hover effects */
 }
 
-#loginButton:hover {
+.button:hover {
   background-color: #EAF2FF;
   color: #1E1E1E;
 }
@@ -121,9 +121,9 @@ h2 {
   }
 
   h1 {
-    font-size: 32vw;
-    margin-top: 35vw;
-    margin-bottom: 10vw;
+    font-size: 150px;
+    margin-top: 30vw;
+    margin-bottom: 8vw;
     display: flex;
     justify-content: center;
   }
@@ -141,7 +141,19 @@ h2 {
     padding: 30px; /* Reduce padding for smaller screens */
   }
 
-  #loginButton {
+  .button {
     padding: 8px 40px; /* Adjust button size */
+  }
+
+  #goodbye {
+    font-size: 100px;
+    margin-top: 32vw;
+    margin-bottom: 0vw;
+    display: flex;
+    justify-content: center;
+  }
+
+  #goodbye-message {
+    font-size: small;
   }
 }
