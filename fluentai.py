@@ -6,6 +6,8 @@
 import datetime
 import os
 import sys
+import random
+import string
 from openai import OpenAI
 import flask
 import sqlalchemy
@@ -28,6 +30,11 @@ GPT_API_KEY = os.environ['GPT_API_KEY']
 app.secret_key = '1234567'  # hardcoded
 
 #-----------------------------------------------------------------------
+def generate_course_code(length=6):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for i in range(length))
+#-----------------------------------------------------------------------
+
 def get_gpt_response(user_input, conversation_history):
     if not GPT_API_KEY:
         print("GPT API key is missing", file=sys.stderr)
@@ -338,33 +345,36 @@ def add_course():
     course_id = flask.request.form.get('course_id')
     course_name = flask.request.form.get('course_name')
     course_description = flask.request.form.get('course_description')
-    language = flask.request.form.get('language')
+    language = flask.request.form.get('language_text')  # Get the actual language text
 
-    # Validation (example: check if course_id or course_name is empty)
     if not course_id or not course_name:
         return flask.jsonify({"message": "Course ID and name are required."}), 400
 
-    prof_id = flask.session.get('username')
+    prof_id = flask.session.get('username')  # Assuming this is set correctly in the session
 
-    # Check if the user is a professor or superadmin
     if not any(prof.prof_id == prof_id for prof in get_profs()) and \
        not any(admin.admin_id == prof_id for admin in get_superadmins()):
         return flask.jsonify({"message": "You are not allowed to create a course"}), 403
 
-    # Add the course to the database
-    new_course = Course(course_id=course_id, course_name=course_name, course_description=course_description, language=language, created_at=datetime.datetime.now())
+    course_code = generate_course_code()  # Generate a random course code
+    new_course = Course(course_id=course_id, course_code=course_code, course_name=course_name, course_description=course_description, owner=prof_id, language=language)
+
     with sqlalchemy.orm.Session(engine) as session:
         session.add(new_course)
-        session.flush()  # Flush to get the new course ID if it's auto-generated
-
-        # Link the course with the professor in CoursesProfs table
+        session.flush()
         course_prof_link = CoursesProfs(course_id=new_course.course_id, prof_id=prof_id)
         session.add(course_prof_link)
-
         session.commit()
 
-    # Return an appropriate response
     return flask.jsonify({"message": "Course added successfully"})
+
+#-----------------------------------------------------------------------
+
+@app.route('/get-courses', methods=['GET'])
+def get_courses():
+    # Fetch courses from the database
+    courses = ...  # Retrieve courses from the database
+    return flask.jsonify(courses)
 
 #-----------------------------------------------------------------------
 

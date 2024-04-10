@@ -126,8 +126,8 @@
                 var courseId = $("#course-id").val();
                 var courseName = $("#course-name").val();
                 var courseDescription = $("#course-description").val();
-                var language = $("#department-select").val();
-                
+                var language = $("#department-select option:selected").text(); 
+
                 if(!courseId || !courseName) {
                     alert("Course ID and name are required.");
                     return; // Prevent AJAX call if validation fails
