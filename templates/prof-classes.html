@@ -117,11 +117,17 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+            // Define the function to get the current timestamp
+            function getCurrentTimestamp() {
+                var now = new Date();
+                return now.toISOString();
+            }
             $("#add-course-button").click(function(){
                 var courseId = $("#course-id").val();
                 var courseName = $("#course-name").val();
                 var courseDescription = $("#course-description").val();
                 var language = $("#department-select").val();
+                var timestamp = getCurrentTimestamp();
 
                 if(!courseId || !courseName) {
                     alert("Course ID and name are required.");
