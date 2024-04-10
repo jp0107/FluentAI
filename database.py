@@ -26,7 +26,7 @@ class SuperAdmin(Base):
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_superadmins() -> List[SuperAdmin]:
     with sqlalchemy.orm.Session(engine) as session:
@@ -42,7 +42,7 @@ class Professor(Base):
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_profs() -> List[Professor]:
     with sqlalchemy.orm.Session(engine) as session:
@@ -59,7 +59,7 @@ class Course(Base):
     course_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     course_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
     owner = sqlalchemy.Column(sqlalchemy.VARCHAR)   # professor or superadmin netid
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
 def get_courses() -> List[Course]:
@@ -76,7 +76,7 @@ class Student(Base):
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_students() -> List[Student]:
     with sqlalchemy.orm.Session(engine) as session:
@@ -122,7 +122,7 @@ class Prompt(Base):
     past_deadline = sqlalchemy.Column(sqlalchemy.Boolean)
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_prompts() -> List[Prompt]:
     with sqlalchemy.orm.Session(engine) as session:
@@ -138,7 +138,7 @@ class PracticePrompt(Base):
     course_id = sqlalchemy.Column(sqlalchemy.Integer)
     prof_id = sqlalchemy.Column(sqlalchemy.Integer)
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_practiceprompts() -> List[PracticePrompt]:
     with sqlalchemy.orm.Session(engine) as session:
@@ -165,3 +165,26 @@ def get_conversations() -> List[Conversation]:
         return query.all()
 
 #-----------------------------------------------------------------------
+
+# check if user exists in students, profs, or superadmin tables
+def in_students(user_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        return session.query(Student.student_id).filter_by(student_id=user_id).first() is not None
+
+def in_profs(user_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        return session.query(Professor.prof_id).filter_by(prof_id=user_id).first() is not None
+
+def in_superadmins(user_id: str):
+    with sqlalchemy.orm.Session(engine) as session:
+        return session.query(SuperAdmin.admin_id).filter_by(admin_id=user_id).first() is not None
+
+# return user type or None if not found
+def check_user_type(user_id: str):
+    if in_students(user_id):
+        return "Student"
+    elif in_profs(user_id):
+        return "Professor"
+    elif in_superadmins(user_id):
+        return "SuperAdmin"
+    return None
