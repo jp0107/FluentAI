@@ -186,13 +186,15 @@ def student_dashboard():
         store_userinfo(username, first_name, last_name, pustatus, email)
 
     # direct user to the correct page based on user type
-    if user_type == "Student":
-        # Fetch student-specific data and render the student dashboard
-        pass
-    elif user_type == "Professor":
-        return flask.redirect('/prof-dashboard')
-    else:
-        return flask.redirect('/admin-dashboard')
+    # if user_type == "Student":
+    #     # Fetch student-specific data and render the student dashboard
+    #     pass
+
+
+    # elif user_type == "Professor":
+    #     return flask.redirect('/prof-dashboard')
+    # else:
+    #     return flask.redirect('/admin-dashboard')
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
@@ -214,7 +216,6 @@ def admin_dashboard():
     username = auth.authenticate()
     return flask.render_template('admin-dashboard.html',
                                  username = username)
-                                 first_name = first_name)
 
 #-----------------------------------------------------------------------
 
