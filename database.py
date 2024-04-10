@@ -166,25 +166,12 @@ def get_conversations() -> List[Conversation]:
 
 #-----------------------------------------------------------------------
 
-# check if user exists in students, profs, or superadmin tables
-def in_students(user_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        return session.query(Student.student_id).filter_by(student_id=user_id).first() is not None
-
-def in_profs(user_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        return session.query(Professor.prof_id).filter_by(prof_id=user_id).first() is not None
-
-def in_superadmins(user_id: str):
-    with sqlalchemy.orm.Session(engine) as session:
-        return session.query(SuperAdmin.admin_id).filter_by(admin_id=user_id).first() is not None
-
 # return user type or None if not found
 def check_user_type(user_id: str):
     if in_students(user_id):
         return "Student"
-    elif in_profs(user_id):
+    if in_profs(user_id):
         return "Professor"
-    elif in_superadmins(user_id):
+    if in_superadmins(user_id):
         return "SuperAdmin"
     return None
