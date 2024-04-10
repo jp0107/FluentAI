@@ -121,19 +121,11 @@ def logoutcas():
 def home():
     return flask.render_template('index.html')
 
+#----------------------   STUDENT PAGES   ------------------------------
 #-----------------------------------------------------------------------
 
 @app.route('/student-classes')
 def student_classes():
-    username = auth.authenticate()
-    html_code = flask.render_template(
-        'student-classes.html', username = username)
-    return flask.make_response(html_code)
-
-#-----------------------------------------------------------------------
-
-@app.route('/student-all-classes')
-def student_all_classes():
     username = auth.authenticate()
 
     # if new user, store user info in database
@@ -172,6 +164,16 @@ def student_all_classes():
     #     return flask.redirect('/admin-classes')
 
     html_code = flask.render_template(
+        'student-classes.html', username = username)
+    return flask.make_response(html_code)
+
+#-----------------------------------------------------------------------
+
+@app.route('/student-all-classes')
+def student_all_classes():
+    username = auth.authenticate()
+
+    html_code = flask.render_template(
         'student-all-classes.html', username = username)
     return flask.make_response(html_code)
 
@@ -200,28 +202,11 @@ def student_dashboard():
 
 #-----------------------------------------------------------------------
 
-@app.route('/prof-dashboard')
-def prof_dashboard():
-    username = auth.authenticate()
-    return flask.render_template('prof-dashboard.html',
-                                 username = username)
-
-#-----------------------------------------------------------------------
-
-@app.route('/admin-dashboard')
-def admin_dashboard():
-    username = auth.authenticate()
-    return flask.render_template('admin-dashboard.html',
-                                 username = username)
-
-#-----------------------------------------------------------------------
-
 @app.route('/student-assignments')
 def student_assignments():
     username = auth.authenticate()
     return flask.render_template('student-assignments.html',
                                  username = username)
-
 
 #-----------------------------------------------------------------------
 
@@ -231,7 +216,6 @@ def student_practice():
     return flask.render_template('student-practice.html',
                                  username = username)
 
-
 #-----------------------------------------------------------------------
 
 @app.route('/student-scores')
@@ -240,6 +224,56 @@ def student_scores():
     return flask.render_template('student-scores.html',
                                  username = username)
 
+#------------------------  PROFESSOR PAGES   ---------------------------
+#-----------------------------------------------------------------------
+
+@app.route('/prof-classes')
+def prof_classes():
+    username = auth.authenticate()
+    return flask.render_template('prof-classes.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-dashboard')
+def prof_dashboard():
+    username = auth.authenticate()
+    return flask.render_template('prof-dashboard.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-assignments')
+def prof_assignments():
+    username = auth.authenticate()
+    return flask.render_template('prof-assignments.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-roster')
+def prof_roster():
+    username = auth.authenticate()
+    hardcoded_courseid = "cos333"  # Hardcoded value
+
+    roster = get_students_by_course(hardcoded_courseid)
+
+    return flask.render_template('prof-roster.html',
+                                 username = username,
+                                 course_id = hardcoded_courseid,
+                                 students = roster
+                                 )
+                                
+#----------------------      ADMIN PAGES    ----------------------------
+#-----------------------------------------------------------------------
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    username = auth.authenticate()
+    return flask.render_template('admin-dashboard.html',
+                                 username = username)
+
+#------------------------   OTHER PAGES   ------------------------------
 #-----------------------------------------------------------------------
 
 @app.route('/conversation-history')
@@ -263,29 +297,6 @@ def practice_chat():
     username = auth.authenticate()
     return flask.render_template('practice-chat.html',
                                  username = username)
-
-#-----------------------------------------------------------------------
-
-@app.route('/prof-classes')
-def prof_classes():
-    username = auth.authenticate()
-    return flask.render_template('prof-classes.html',
-                                 username = username)
-
-#-----------------------------------------------------------------------
-
-@app.route('/prof-roster')
-def prof_roster():
-    username = auth.authenticate()
-    hardcoded_courseid = "cos333"  # Hardcoded value
-
-    roster = get_students_by_course(hardcoded_courseid)
-
-    return flask.render_template('prof-roster.html',
-                                 username = username,
-                                 course_id = hardcoded_courseid,
-                                 students = roster
-                                 )
 
 #-----------------------------------------------------------------------
 @app.route('/fetch-conversation')
