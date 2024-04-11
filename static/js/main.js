@@ -1,21 +1,23 @@
 // Keeps track of number of characters typed in course description
 document.addEventListener('DOMContentLoaded', function () {
-    var courseDescription = document.getElementById('course-description');
-    var charCount = document.getElementById('char-count');
-    var maxLength = 500;
-
-    function updateCharCount() {
-        var currentLength = courseDescription.value.length;
-        var remaining = maxLength - currentLength;
-        charCount.textContent = remaining >= 0 ? remaining : 0;
-
-        // Truncate the value if it exceeds the max length
+    const textAreas = document.querySelectorAll('textarea[data-max-length]');
+    
+    function updateCharCount(textArea) {
+        const maxLength = textArea.getAttribute('data-max-length');
+        const charCountId = `char-count-${textArea.id}`;
+        const charCountEl = document.getElementById(charCountId);
+        const currentLength = textArea.value.length;
+        const remaining = maxLength - currentLength;
+        charCountEl.textContent = remaining >= 0 ? remaining : 0;
+        
         if (currentLength > maxLength) {
-            courseDescription.value = courseDescription.value.substr(0, maxLength);
-            console.log("Input exceeded 500 characters and was truncated.");
+            textArea.value = textArea.value.substr(0, maxLength);
+            console.log(`Input exceeded ${maxLength} characters and was truncated.`);
         }
     }
-
-    courseDescription.addEventListener('input', updateCharCount);
-    updateCharCount(); // Initial call to set the correct initial value
+    
+    textAreas.forEach((textArea) => {
+        updateCharCount(textArea); // Initial update for each text area
+        textArea.addEventListener('input', () => updateCharCount(textArea));
+    });
 });
