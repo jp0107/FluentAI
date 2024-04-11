@@ -149,7 +149,8 @@
                                             '</a></div>';
                     $.each(courses, function(index, course) {
                         courseListHtml += '<div class="col d-flex">' +
-                        '<a href="/course-details/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' + // Using URL parameters
+                        '<a href="/prof-dashboard/' + encodeURIComponent(course.course_id) + 
+                        '" class="class-button" role="button">' + // Using URL parameters
                         '<h3>' + course.course_id + '</h3>' + course.course_name +
                         '</a></div>';
                     });
