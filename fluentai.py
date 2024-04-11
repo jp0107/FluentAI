@@ -257,35 +257,43 @@ def prof_dashboard(course_id):
 
 #-----------------------------------------------------------------------
 
-@app.route('/prof-assignments')
-def prof_assignments():
+@app.route('/prof-assignments/<course_id>')
+def prof_assignments(course_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
+
     return flask.render_template('prof-assignments.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #-----------------------------------------------------------------------
 
-@app.route('/prof-roster')
-def prof_roster():
+@app.route('/prof-roster/<course_id>')
+def prof_roster(course_id):
     username = auth.authenticate()
-    hardcoded_courseid = "cos333"  # Hardcoded value
 
-    roster = get_students_by_course(hardcoded_courseid)
+    flask.session['course_id'] = course_id
+
+    roster = get_students_by_course(course_id)
 
     return flask.render_template('prof-roster.html',
                                  username = username,
-                                 course_id = hardcoded_courseid,
+                                 course_id = course_id,
                                  students = roster
                                  )
 
 #-----------------------------------------------------------------------
 
-@app.route('/prof-scores')
-def prof_scores():
+@app.route('/prof-scores/<course_id>')
+def prof_scores(course_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
 
     return flask.render_template('prof-scores.html',
                                  username = username,
+                                 course_id = course_id
                                  )
                                 
 #----------------------      ADMIN PAGES    ----------------------------
