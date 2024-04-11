@@ -16,7 +16,7 @@ from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
-                      get_prof_firstname)
+                      get_prof_firstname, get_courses, get_student_courses)
 
 #-----------------------------------------------------------------------
 
@@ -409,11 +409,34 @@ def add_course():
 
 #-----------------------------------------------------------------------
 
-@app.route('/get-my-courses')
-def get_my_courses():
+@app.route('/get-prof-courses')
+def get_prof_courses():
     id = flask.session.get('username') 
     course_data = get_professor_courses(id)
     return flask.jsonify(course_data)
+
+#-----------------------------------------------------------------------
+
+@app.route('/get-stu-courses')
+def get_stu_courses():
+    id = flask.session.get('username') 
+    course_data = get_student_courses(id)
+    return flask.jsonify(course_data)
+
+#-----------------------------------------------------------------------
+
+@app.route('/all-courses')
+def all_courses():
+    courses = get_courses()  # Assuming get_courses() fetches all courses
+    course_data = []
+    for course in courses:
+        course_info = {
+            "course_id": course.course_id,
+            "course_name": course.course_name
+        }
+        course_data.append(course_info)
+    return flask.jsonify(course_data)
+
 
 #-----------------------------------------------------------------------
 

@@ -97,5 +97,43 @@
             </div>
         </div>
 
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                // Fetch and display student courses
+                function fetchStudentCourses() {
+                    $.ajax({
+                        url: '/get-student-courses', // Flask route to fetch student courses
+                        method: 'GET',
+                        success: function(response) {
+                            displayStudentCourses(response);
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error fetching courses: ' + xhr.statusText);
+                        }
+                    });
+                }
+        
+                // Display the courses for the student
+                function displayStudentCourses(courses) {
+                    var courseListHtml = '';
+                    if(courses.length === 0) {
+                        courseListHtml = '<p>No courses enrolled yet.</p>';
+                    } else {
+                        courses.forEach(function(course) {
+                            courseListHtml += '<div class="col d-flex">' +
+                                              '<a href="/student-dashboard/'+course.course_id+'" class="class-button" role="button">' +
+                                              '<h3>' + course.course_id + '</h3>' + course.course_name +
+                                              '</a></div>';
+                        });
+                    }
+                    $("#student-courses-container").html(courseListHtml);
+                }
+        
+                // Initial fetch of student courses when the page loads
+                fetchStudentCourses();
+            });
+        </script>
     </body>
 </html>
