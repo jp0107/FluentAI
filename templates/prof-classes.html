@@ -138,10 +138,7 @@
 
                 // Function to display courses
                 function displayCourses(courses) {
-                    var courseListHtml = '<div class="col d-flex">' +
-                                            '<a data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">' +
-                                            '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Create New Course' +
-                                            '</a></div>';
+                    var courseListHtml = '';
                     $.each(courses, function(index, course) {
                         courseListHtml += '<div class="col d-flex">' +
                         '<a href="/prof-dashboard/' + encodeURIComponent(course.course_id) + 
@@ -149,6 +146,10 @@
                         '<h3>' + course.course_id + '</h3>' + course.course_name +
                         '</a></div>';
                     });
+                    courseListHtml += '<div class="col d-flex">' +
+                                            '<a data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">' +
+                                            '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Create New Course' +
+                                            '</a></div>';
                     $(".row-cols-md-3").html(courseListHtml);
                 }
 
