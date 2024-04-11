@@ -260,3 +260,25 @@ def get_student_courses(student_id):
 
         return course_data
 #-----------------------------------------------------------------------
+
+# Function to enroll a student in a course using the course code
+def enroll_student_in_course(student_id, course_code):
+    with sqlalchemy.orm.Session(engine) as session:
+        # Retrieve the course using the course code
+        course = session.query(Course).filter_by(course_code=course_code).first()
+        if not course:
+            return {"status": "error", "message": "Invalid course code"}
+
+        # Check if the student is already enrolled
+        existing_enrollment = session.query(CoursesStudents).filter_by(course_id=course.course_id, student_id=student_id).first()
+        if existing_enrollment:
+            return {"status": "error", "message": "Already enrolled in this course"}
+
+        # Enroll the student in the course
+        new_enrollment = CoursesStudents(course_id=course.course_id, student_id=student_id)
+        session.add(new_enrollment)
+        session.commit()
+
+        return {"status": "success", "message": "Course joined successfully"}
+
+#-----------------------------------------------------------------------

@@ -3,7 +3,6 @@
 # Authors: Irene Kim, Jessie Wang, Jonathan Peixoto, Tinney Mak
 #-----------------------------------------------------------------------
 
-import datetime
 import os
 import sys
 import random
@@ -16,7 +15,7 @@ from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
-                      get_prof_firstname, get_courses, get_student_courses)
+                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course)
 
 #-----------------------------------------------------------------------
 
@@ -440,3 +439,18 @@ def all_courses():
 
 #-----------------------------------------------------------------------
 
+@app.route('/join-course', methods=['POST'])
+def join_course():
+    course_code = flask.request.form.get('course_code')
+    student_id = flask.session.get('username')  # Assuming student's username is in the session
+
+    # Call the function from database.py
+    result = enroll_student_in_course(student_id, course_code)
+
+    if result["status"] == "error":
+        return flask.jsonify({"message": result["message"]}), 400
+
+    return flask.jsonify({"message": result["message"]})
+
+
+#-----------------------------------------------------------------------
