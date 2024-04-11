@@ -275,6 +275,16 @@ def prof_roster():
                                  course_id = hardcoded_courseid,
                                  students = roster
                                  )
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-scores')
+def prof_scores():
+    username = auth.authenticate()
+
+    return flask.render_template('prof-scores.html',
+                                 username = username,
+                                 )
                                 
 #----------------------      ADMIN PAGES    ----------------------------
 #-----------------------------------------------------------------------
