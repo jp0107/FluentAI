@@ -14,9 +14,9 @@ import sqlalchemy
 import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
-                      CoursesStudents, CoursesProfs, engine, Base, get_profs, 
-                      get_superadmins, check_user_type, get_students_by_course,
-                      get_student_firstname, get_prof_firstname)
+                      CoursesStudents, CoursesProfs, engine, Base, get_profs,
+                      get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
+                      get_prof_firstname)
 
 #-----------------------------------------------------------------------
 
@@ -409,11 +409,11 @@ def add_course():
 
 #-----------------------------------------------------------------------
 
-@app.route('/get-courses', methods=['GET'])
-def get_courses():
-    # Fetch courses from the database
-    courses = ...  # Retrieve courses from the database
-    return flask.jsonify(courses)
+@app.route('/get-my-courses')
+def get_my_courses():
+    id = flask.session.get('username') 
+    course_data = get_professor_courses(id)
+    return flask.jsonify(course_data)
 
 #-----------------------------------------------------------------------
 

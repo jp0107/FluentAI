@@ -101,7 +101,7 @@
             <br>
             <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
               <!-- Each .col div acts as a container for a button, ensuring equal height -->
-              <div class="col d-flex">
+              <!-- <div class="col d-flex">
                 <a href="/prof-dashboard" class="class-button" role="button">
                     <h3>SPA 101</h3>Beginner's Spanish I
                 </a>
@@ -110,61 +110,83 @@
                 <a href="#" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">
                     <h3><img src="static/img/add_course_light.png" width="35"/></h3> Create New Course
                 </a>
-              </div>
+              </div> -->
               <!-- Add more .col divs with class-button for each additional course -->
             </div>
         </div>
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-            // Define the function to get the current timestamp
-            function getCurrentTimestamp() {
-                var now = new Date();
-                return now.toISOString();
-            }
-            $("#add-course-button").click(function(){
-                var courseId = $("#course-id").val();
-                var courseName = $("#course-name").val();
-                var courseDescription = $("#course-description").val();
-                var language = $("#department-select option:selected").val();
-
-                if(!courseId || !courseName) {
-                    alert("Course ID and name are required.");
-                    return; // Prevent AJAX call if validation fails
-                }
-        
-                $.ajax({
-                    url: '/add-course',
-                    method: 'POST',
-                    data: {
-                        course_id: courseId,
-                        course_name: courseName,
-                        course_description: courseDescription,
-                        language: language
-                    },
-                    success: function(response){
-                        alert(response.message);
-                        $('#addCourseModal').modal('hide');
-                        $('#add-course-form')[0].reset();
-    
-                       // Dynamically add the new course to the page
-                        var newCourseHtml = '<div class="col d-flex">' +
-                                            '<a href="/prof-dashboard" class="class-button" role="button">' +
-                                            '<h3>' + courseId + '</h3>' + courseName +
-                                            '</a>' +
-                                            '</div>';
-
-                        $(".row-cols-md-3").append(newCourseHtml); // Adjust this selector to match your HTML structure
-                        },
-                        error: function(xhr, status, error) {
-                            // Display an error message
-                            var errorMessage = xhr.status + ': ' + xhr.statusText
-                            alert('Error - ' + errorMessage);
-                        }
-                    });
-                });
-            });
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
         </script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // Function to fetch updated course list
+        function fetchCourses() {
+            $.ajax({
+                url: '/get-my-courses',
+                method: 'GET',
+                success: function(response) {
+                    displayCourses(response); // Update the course list on the page
+                },
+                error: function(xhr, status, error) {
+                    alert('Error fetching courses: ' + xhr.statusText);
+                }
+            });
+        }
+
+        // Function to display courses
+        function displayCourses(courses) {
+            var courseListHtml = '<div class="col d-flex">' +
+                                     '<a href="#" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">' +
+                                     '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Create New Course' +
+                                     '</a></div>';
+            $.each(courses, function(index, course) {
+                courseListHtml += '<div class="col d-flex">' +
+                                  '<a href="/prof-dashboard" class="class-button" role="button">' +
+                                  '<h3>' + course.course_id + '</h3>' + course.course_name +
+                                  '</a></div>';
+            });
+            $(".row-cols-md-3").html(courseListHtml);
+        }
+
+        // Add course button click event
+        $("#add-course-button").click(function(){
+            var courseId = $("#course-id").val();
+            var courseName = $("#course-name").val();
+            var courseDescription = $("#course-description").val();
+            var language = $("#department-select").find(":selected").text();
+
+            if(!courseId || !courseName) {
+                alert("Course ID and name are required.");
+                return;
+            }
+    
+            $.ajax({
+                url: '/add-course',
+                method: 'POST',
+                data: {
+                    course_id: courseId,
+                    course_name: courseName,
+                    course_description: courseDescription,
+                    language: language
+                },
+                success: function(response) {
+                    alert(response.message);
+                    $('#addCourseModal').modal('hide');
+                    $('#add-course-form')[0].reset();
+                    fetchCourses();  // Fetch and update the course list
+                },
+                error: function(xhr, status, error) {
+                    alert('Error adding course: ' + xhr.statusText);
+                }
+            });
+        });
+
+        // Initial fetch of courses when the page loads
+        fetchCourses();
+    });
+</script>
+        
     </body>
 </html>
 

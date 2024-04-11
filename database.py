@@ -142,9 +142,9 @@ class Prompt(Base):
     __tablename__ = 'prompts'
     prompt_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
     prompt_title = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    course_id = sqlalchemy.Column(sqlalchemy.Integer)
-    prof_id = sqlalchemy.Column(sqlalchemy.Integer)
-    deadline = sqlalchemy.Column(sqlalchemy.DateTime)
+    course_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    deadline = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
     past_deadline = sqlalchemy.Column(sqlalchemy.Boolean)
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
@@ -214,6 +214,8 @@ def in_profs(user_id):
 def in_superadmins(user_id: str):
     with sqlalchemy.orm.Session(engine) as session:
         return session.query(SuperAdmin.admin_id).filter_by(admin_id=user_id).first() is not None
+    
+#-----------------------------------------------------------------------
 
 # return user type or None if not found
 def check_user_type(user_id: str):
@@ -224,3 +226,21 @@ def check_user_type(user_id: str):
     if in_superadmins(user_id):
         return "SuperAdmin"
     return None
+
+#-----------------------------------------------------------------------
+
+def get_professor_courses(prof_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        my_courses = session.query(CoursesProfs).filter(CoursesProfs.prof_id == prof_id).all()
+
+        course_data = []
+        for course_prof in my_courses:
+            course = session.query(Course).filter(Course.course_id == course_prof.course_id).first()
+            if course:
+                course_data.append({
+                    'course_id': course.course_id,
+                    'course_name': course.course_name
+                })
+
+        return course_data
+#-----------------------------------------------------------------------
