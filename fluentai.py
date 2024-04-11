@@ -15,8 +15,7 @@ import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs,
-                      get_superadmins, check_user_type, get_students_by_course,
-                      get_firstname, get_professor_courses)
+                      get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses)
 
 #-----------------------------------------------------------------------
 
@@ -200,7 +199,7 @@ def student_dashboard():
     username = auth.authenticate()
     
     # get user's first name to display on dashboard
-    first_name = get_firstname(username)
+    first_name = get_student_firstname(username)
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
@@ -245,8 +244,13 @@ def prof_classes():
 @app.route('/prof-dashboard')
 def prof_dashboard():
     username = auth.authenticate()
+
+    # get user's first name to display on dashboard
+    first_name = get_prof_firstname(username)
+
     return flask.render_template('prof-dashboard.html',
-                                 username = username)
+                                 username = username,
+                                 first_name = first_name)
 
 #-----------------------------------------------------------------------
 
@@ -270,6 +274,16 @@ def prof_roster():
                                  course_id = hardcoded_courseid,
                                  students = roster
                                  )
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-scores')
+def prof_scores():
+    username = auth.authenticate()
+
+    return flask.render_template('prof-scores.html',
+                                 username = username,
+                                 )
                                 
 #----------------------      ADMIN PAGES    ----------------------------
 #-----------------------------------------------------------------------
@@ -278,6 +292,30 @@ def prof_roster():
 def admin_dashboard():
     username = auth.authenticate()
     return flask.render_template('admin-dashboard.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/admin-courses')
+def admin_courses():
+    username = auth.authenticate()
+    return flask.render_template('admin-courses.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/admin-prof-roster')
+def admin_prof_roster():
+    username = auth.authenticate()
+    return flask.render_template('admin-prof-roster.html',
+                                 username = username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/admin-student-roster')
+def admin_student_roster():
+    username = auth.authenticate()
+    return flask.render_template('admin-student-roster.html',
                                  username = username)
 
 #------------------------   OTHER PAGES   ------------------------------
