@@ -277,10 +277,12 @@ def prof_roster(course_id):
 
     roster = get_students_by_course(course_id)
 
+    full_names = [f"{first} {last}" for student_id, first, last in roster]
+
     return flask.render_template('prof-roster.html',
                                  username = username,
                                  course_id = course_id,
-                                 students = roster
+                                 students = full_names
                                  )
 
 #-----------------------------------------------------------------------
