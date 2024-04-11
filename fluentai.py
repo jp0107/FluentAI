@@ -345,7 +345,7 @@ def add_course():
     course_id = flask.request.form.get('course_id')
     course_name = flask.request.form.get('course_name')
     course_description = flask.request.form.get('course_description')
-    language = flask.request.form.get('language_text')  # Get the actual language text
+    language = flask.request.form.get('language')  # Get the actual language text
 
     if not course_id or not course_name:
         return flask.jsonify({"message": "Course ID and name are required."}), 400
