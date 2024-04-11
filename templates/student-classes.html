@@ -15,11 +15,11 @@
     </head>
 
     <body>
-        <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+        <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog" aria-labelledby="joinCourseModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addCourseModalLabel">Join a Course</h5>
+                    <h5 class="modal-title" id="joinCourseModalLabel">Join a Course</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Add course</button>
+                    <button type="button" class="btn btn-primary">Join course</button>
                 </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                           <a class="nav-link" href="/student-all-classes">All Courses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addCourseModal">Join a Course</a>
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal">Join a Course</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav d-flex flex-row ms-auto">
@@ -92,7 +92,7 @@
                 </a>
               </div>
               <div class="col d-flex">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">
                     <h3><img src="static/img/add_course_light.png" width="35"/></h3> Join a Course
                 </a>
               </div> -->
@@ -123,7 +123,7 @@
                 // Function to display student courses
                 function displayStudentCourses(courses) {
                     var courseListHtml = '<div class="col d-flex">' +
-                                            '<a href="#" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">' +
+                                            '<a href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">' +
                                             '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Join a Course' +
                                             '</a></div>';
                     $.each(courses, function(index, course) {
@@ -150,7 +150,7 @@
                         data: { course_code: courseCode },
                         success: function(response) {
                             alert(response.message);
-                            $('#addCourseModal').modal('hide'); // Hide the modal
+                            $('#joinCourseModal').modal('hide'); // Hide the modal
                             fetchStudentCourses(); // Re-fetch courses to update the list
                         },
                         error: function(xhr, status, error) {
