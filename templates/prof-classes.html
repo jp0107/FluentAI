@@ -175,7 +175,7 @@
                             alert(response.message);
                             $('#addCourseModal').modal('hide');
                             $('#add-course-form')[0].reset();
-                            fetchCourses();  // Fetch and update the course list
+                            location.reload();
                         },
                         error: function(xhr, status, error) {
                             alert('Error adding course: ' + xhr.statusText);
