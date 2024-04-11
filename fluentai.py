@@ -241,16 +241,19 @@ def prof_classes():
 
 #-----------------------------------------------------------------------
 
-@app.route('/prof-dashboard')
-def prof_dashboard():
+@app.route('/prof-dashboard/<course_id>')
+def prof_dashboard(course_id):
     username = auth.authenticate()
 
     # get user's first name to display on dashboard
     first_name = get_prof_firstname(username)
 
+    flask.session['course_id'] = course_id
+
     return flask.render_template('prof-dashboard.html',
                                  username = username,
-                                 first_name = first_name)
+                                 first_name = first_name,
+                                 course_id = course_id)
 
 #-----------------------------------------------------------------------
 
