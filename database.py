@@ -85,6 +85,13 @@ def get_courses() -> List[Course]:
         query = session.query(Course) # SELECT * FROM Course
         return query.all()
 
+# get course code given course_id
+def get_course_code(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Course.course_code)
+                .filter(Course.course_id == course_id)) 
+        return query.all()
+
 #-----------------------------------------------------------------------
 
 # creates table storing student info
