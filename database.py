@@ -150,9 +150,11 @@ class Prompt(Base):
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-def get_prompts() -> List[Prompt]:
+# get all assignments for a given course
+def get_assignments(course_id) -> List[Prompt]:
     with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(Prompt) # SELECT * FROM Prompt
+        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
+                .filter(Prompt.course_id == course_id))
         return query.all()
 
 #-----------------------------------------------------------------------
@@ -166,9 +168,11 @@ class PracticePrompt(Base):
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-def get_practiceprompts() -> List[PracticePrompt]:
+# get all practice prompts for a given course
+def get_practice_prompts(course_id) -> List[Prompt]:
     with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(PracticePrompt) # SELECT * FROM PracticePrompt
+        query = (session.query(PracticePrompt.prompt_id, PracticePrompt.prompt_title, PracticePrompt.created_at)
+                .filter(PracticePrompt.course_id == course_id))
         return query.all()
 
 #-----------------------------------------------------------------------
@@ -193,10 +197,7 @@ def get_conversations() -> List[Conversation]:
 def get_score(student_id, prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Conversation.score)
-                .filter(Conversation.student_id == student_id and Conversation.prompt_id == prompt_id)).one_or_none() 
-        
-        if query is None:
-            return "-"
+                .filter(Conversation.student_id == student_id and Conversation.prompt_id == prompt_id)) 
 
         return query.all()
 
