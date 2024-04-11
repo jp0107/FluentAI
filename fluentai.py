@@ -13,7 +13,7 @@ import sqlalchemy
 import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
-                      CoursesStudents, CoursesProfs, engine, Base, get_profs,
+                      CoursesStudents, CoursesProfs, engine, Base, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course)
 
@@ -320,7 +320,9 @@ def admin_courses():
 @app.route('/admin-prof-roster')
 def admin_prof_roster():
     username = auth.authenticate()
+    prof_list = get_all_profs()
     return flask.render_template('admin-prof-roster.html',
+                                 prof_list = prof_list,
                                  username = username)
 
 #-----------------------------------------------------------------------

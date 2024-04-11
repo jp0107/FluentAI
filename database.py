@@ -64,7 +64,7 @@ def get_all_profs():
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Professor.prof_id, Professor.first_name, Professor.last_name, CoursesProfs.course_id)
                 .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
-                .order_by(sqlalchemy.asc(Professor.first_name))) 
+                .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name))) 
         return query.all()
 
 #-----------------------------------------------------------------------
@@ -101,7 +101,7 @@ def get_all_students():
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Student.student_id, Student.first_name, Student.last_name, CoursesStudents.course_id)
                 .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
-                .order_by(sqlalchemy.asc(Student.first_name))) 
+                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
         return query.all()
 
 # gets student first name based on their netid
@@ -159,11 +159,37 @@ class Prompt(Base):
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# get all assignments for a given course
-def get_assignments(course_id) -> List[Prompt]:
+# get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
+# mark whether assignment has been completed or not
+def get_current_assignments_for_student(student_id, course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # check if the assignment has been completed (see if it has been stored in Conversation table)
+        subquery = (session.query(Conversation.prompt_id)  
+            .filter(Conversation.prompt_id == Prompt.id, 
+                    Conversation.student_id == student_id)  
+            .exists())  
+
+        # main query
+        query = (session.query(Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at, subquery.label("completed")) 
+                 .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)  
+                 .order_by(sqlalchemy.asc(Prompt.deadline)))  
+
+        return query.all()
+
+# get all current assignments for a given course, with the earliest deadline first (FOR PROFESSOR ASSIGNMENTS PAGE)
+def get_current_assignments_for_prof(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
+                .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
+                .order_by(sqlalchemy.asc(Prompt.deadline)))
+        return query.all()
+
+# get all past assignments for a given course, with the most recent assignment first
+def get_past_assignments(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
-                .filter(Prompt.course_id == course_id))
+                .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
+                .order_by(sqlalchemy.asc(Prompt.deadline)))
         return query.all()
 
 #-----------------------------------------------------------------------
@@ -177,11 +203,12 @@ class PracticePrompt(Base):
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# get all practice prompts for a given course
+# get all practice prompts for a given course, ordered by most to least recently created
 def get_practice_prompts(course_id) -> List[Prompt]:
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(PracticePrompt.prompt_id, PracticePrompt.prompt_title, PracticePrompt.created_at)
-                .filter(PracticePrompt.course_id == course_id))
+                .filter(PracticePrompt.course_id == course_id)
+                .order_by(sqlalchemy.desc(PracticePrompt.created_at)))
         return query.all()
 
 #-----------------------------------------------------------------------
@@ -207,15 +234,17 @@ def get_conversations() -> List[Conversation]:
 def get_score_for_student(student_id, prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Conversation.score)
-                .filter(Conversation.student_id == student_id and Conversation.prompt_id == prompt_id)) 
+                .filter(Conversation.student_id == student_id, Conversation.prompt_id == prompt_id)) 
 
         return query.all()
 
-# gets all student scores for an assignment given the assignment id
+# gets all student scores in alphabetical order for an assignment given the assignment id
 def get_all_scores(prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Conversation.score)
-                .filter(Conversation.prompt_id == prompt_id)) 
+        query = (session.query(Student.first_name, Student.last_name, Conversation.score)
+                .join(Conversation, Conversation.student_id == Student.student_id)
+                .filter(Conversation.prompt_id == prompt_id)
+                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
 
         return query.all()
 
