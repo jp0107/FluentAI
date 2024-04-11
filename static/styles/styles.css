@@ -1,3 +1,23 @@
+body {
+  background-color: #EAF2FF;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0;
+} 
+
+.dark {
+  background-color: #1E1E1E;
+  color: #EAF2FF;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0;
+} 
 
 .navbar {
   background-color: #EAF2FF !important; /* Ensure this overrides Bootstrap styles */
@@ -27,36 +47,11 @@
   color: #EAF2FF;
 }
 
-.dropdown-menu {
-  max-width:30px;
-}
-
 .nav-link.dropdown-toggle:active,
 .nav-link.dropdown-toggle:focus{
   background-color: #1E1E1E !important; /* Background color for active state */
   color: #EAF2FF !important; /* Text color for active state */
 }
-
-body {
-  background-color: #EAF2FF;
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  font-variation-settings:
-    "slnt" 0;
-} 
-
-.dark {
-  background-color: #1E1E1E;
-  color: #EAF2FF;
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  font-variation-settings:
-    "slnt" 0;
-} 
 
 h1 {
   font-size: 64px;
@@ -99,6 +94,35 @@ h2 {
   background-color: #1E1E1E;
   border-color: #1E1E1E;
   color: #EAF2FF;
+}
+
+.btn-course-dropdown {
+  background-color: #EAF2FF;
+  color: #1E1E1E;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-course-dropdown.dropdown-toggle::after {
+  display: none;
+}
+
+/* Position the Font Awesome icon */
+.btn-course-dropdown h1 .fa-caret-down {
+  font-size: 24px; 
+  vertical-align: middle;
+  margin-left: 0.5em;
+}
+
+#delete-btn {
+  background-color: brown;
+}
+
+#delete-btn:hover {
+  background-color: #1E1E1E;
 }
 
 #dashboard-btn #dashboard-box {
