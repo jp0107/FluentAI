@@ -190,6 +190,16 @@ def get_conversations() -> List[Conversation]:
         query = session.query(Conversation) # SELECT * FROM Conversation
         return query.all()
 
+def get_score(student_id, prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Conversation.score)
+                .filter(Conversation.student_id == student_id and Conversation.prompt_id == prompt_id)).one_or_none() 
+        
+        if query is None:
+            return "-"
+
+        return query.all()
+
 #-----------------------------------------------------------------------
 
 # check if user exists in students, profs, or superadmin tables
