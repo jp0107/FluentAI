@@ -244,3 +244,19 @@ def get_professor_courses(prof_id):
 
         return course_data
 #-----------------------------------------------------------------------
+
+def get_student_courses(student_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        my_courses = session.query(CoursesStudents).filter(CoursesStudents.student_id == student_id).all()
+
+        course_data = []
+        for student in my_courses:
+            course = session.query(Course).filter(Course.course_id == student.course_id).first()
+            if course:
+                course_data.append({
+                    'course_id': course.course_id,
+                    'course_name': course.course_name
+                })
+
+        return course_data
+#-----------------------------------------------------------------------

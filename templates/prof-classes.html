@@ -123,8 +123,9 @@
                 // Function to fetch updated course list
                 function fetchCourses() {
                     $.ajax({
-                        url: '/get-my-courses',
+                        url: '/get-prof-courses',
                         method: 'GET',
+                        cache: false,
                         success: function(response) {
                             displayCourses(response); // Update the course list on the page
                         },
