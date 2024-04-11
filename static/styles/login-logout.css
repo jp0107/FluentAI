@@ -121,9 +121,9 @@ h2 {
   }
 
   h1 {
-    font-size: 150px;
-    margin-top: 30vw;
-    margin-bottom: 8vw;
+    font-size: 130px;
+    margin-top: 170px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
   }
@@ -146,14 +146,16 @@ h2 {
   }
 
   #goodbye {
-    font-size: 100px;
-    margin-top: 32vw;
-    margin-bottom: 0vw;
+    font-size: 80px;
+    margin-top: 170px;
+    margin-bottom: -20px;
     display: flex;
     justify-content: center;
   }
 
   #goodbye-message {
-    font-size: small;
+    font-size: 11px;
+    justify-content: center;
+    text-align: justify;
   }
 }
