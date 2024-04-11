@@ -99,16 +99,17 @@
 
         <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
         </script>
-        ></script>
+        </script>
         <script type="text/javascript">
             $(document).ready(function(){
-                // Fetch and display student courses
+                // Function to fetch updated student course list
                 function fetchStudentCourses() {
                     $.ajax({
-                        url: '/get-stu-courses', // Flask route to fetch student courses
+                        url: '/get-stu-courses',  // Endpoint for fetching student courses
                         method: 'GET',
+                        cache: false,
                         success: function(response) {
-                            displayStudentCourses(response);
+                            displayStudentCourses(response); // Update the course list on the page
                         },
                         error: function(xhr, status, error) {
                             alert('Error fetching courses: ' + xhr.statusText);
@@ -116,39 +117,37 @@
                     });
                 }
         
-                // Display the courses for the student
+                // Function to display student courses
                 function displayStudentCourses(courses) {
                     var courseListHtml = '<div class="col d-flex">' +
                                             '<a href="#" data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">' +
                                             '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Join a Course' +
                                             '</a></div>';
-        
-                    courses.forEach(function(course) {
+                    $.each(courses, function(index, course) {
                         courseListHtml += '<div class="col d-flex">' +
-                                          '<a href="/student-dashboard/'+course.course_id+'" class="class-button" role="button">' +
+                                          '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
                                           '<h3>' + course.course_id + '</h3>' + course.course_name +
                                           '</a></div>';
                     });
-        
-                    $("#student-courses-container").html(courseListHtml);
+                    $(".row-cols-md-3").html(courseListHtml);
                 }
         
-                // Join course functionality
-                $("#join-course-button").click(function() {
-                    var courseCode = $("#course-code").val();
+                // Join course button click event from the modal
+                $("#join-course-button").click(function(){
+                    var courseCode = $("#course-code").val();  // Assumes input for course code is available
         
-                    if (!courseCode) {
+                    if(!courseCode) {
                         alert("Course code is required.");
                         return;
                     }
-        
+            
                     $.ajax({
                         url: '/join-course',
                         method: 'POST',
                         data: { course_code: courseCode },
                         success: function(response) {
                             alert(response.message);
-                            $('#addCourseModal').modal('hide');
+                            $('#addCourseModal').modal('hide'); // Hide the modal
                             fetchStudentCourses(); // Re-fetch courses to update the list
                         },
                         error: function(xhr, status, error) {
@@ -161,6 +160,5 @@
                 fetchStudentCourses();
             });
         </script>
-        
     </body>
 </html>
