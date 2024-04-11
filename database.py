@@ -44,6 +44,11 @@ class Professor(Base):
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
+def get_profs():
+     with sqlalchemy.orm.Session(engine) as session:
+        query = session.query(Professor) # SELECT * FROM Professor
+        return query.all()
+
 # gets prof first name given their netid
 def get_prof_firstname(prof_id):
     with sqlalchemy.orm.Session(engine) as session:
