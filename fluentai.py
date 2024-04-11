@@ -15,7 +15,8 @@ import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs,
-                      get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses)
+                      get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
+                      get_prof_firstname)
 
 #-----------------------------------------------------------------------
 
