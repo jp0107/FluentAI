@@ -27,16 +27,16 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href= "/prof-assignments" id="underlined">Assignments</a>
+              <a class="nav-link" href= "/prof-assignments/{{ course_id }}" id="underlined">Assignments</a>
             </li>
             <li class="nav-item">
               <a class="nav-link">Create</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/prof-scores">Scores</a>
+              <a class="nav-link" href="/prof-scores/{{ course_id }}">Scores</a>
             </li>    
             <li class="nav-item">
-                <a class="nav-link" href="/prof-roster">Students</a>
+                <a class="nav-link" href="/prof-roster/{{ course_id }}">Students</a>
               </li>   
           </ul>
           <ul class="navbar-nav d-flex flex-row ms-auto">
@@ -54,7 +54,7 @@
     </nav>
 
     <div>
-       Scores
+      {{ course_id }} Scores
     </div>
 
         
