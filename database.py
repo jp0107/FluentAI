@@ -44,11 +44,7 @@ class Professor(Base):
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-def get_profs() -> List[Professor]:
-    with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(Professor) # SELECT * FROM Professor
-        return query.all()
-
+# gets prof first name given their netid
 def get_prof_firstname(prof_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Professor.first_name).filter(Professor.prof_id == prof_id).one_or_none()
@@ -56,6 +52,14 @@ def get_prof_firstname(prof_id):
         if query is None:
             return "Default"
         
+        return query.all()
+
+# gets prof info and the courses they teach in alphabetical order by prof first name
+def get_all_profs():
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Professor.prof_id, Professor.first_name, Professor.last_name, CoursesProfs.course_id)
+                .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
+                .order_by(sqlalchemy.asc(Professor.first_name))) 
         return query.all()
 
 #-----------------------------------------------------------------------
@@ -87,11 +91,15 @@ class Student(Base):
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-def get_students() -> List[Student]:
+# gets student info and the courses they belong to in alphabetical order by student first name
+def get_all_students():
     with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(Student) # SELECT * FROM Student
+        query = (session.query(Student.student_id, Student.first_name, Student.last_name, CoursesStudents.course_id)
+                .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
+                .order_by(sqlalchemy.asc(Student.first_name))) 
         return query.all()
 
+# gets student first name based on their netid
 def get_student_firstname(student_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Student.first_name).filter(Student.student_id == student_id).one_or_none()
@@ -109,9 +117,10 @@ class CoursesProfs(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
-def get_coursesprofs() -> List[CoursesProfs]:
+# get all courses and the professors that teach them
+def get_coursesprofs():
     with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(CoursesProfs) # SELECT * FROM CoursesProfs
+        query = session.query(CoursesProfs.course_id, CoursesProfs.prof_id)
         return query.all()
 
 #-----------------------------------------------------------------------
@@ -122,11 +131,7 @@ class CoursesStudents(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
-def get_coursesstudents() -> List[CoursesStudents]:
-    with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(CoursesStudents) # SELECT * FROM CoursesStudents
-        return query.all()
-
+# gets all students in a course given course id
 def get_students_by_course(course_id):
      with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Student.student_id, Student.first_name, Student.last_name)
@@ -193,10 +198,19 @@ def get_conversations() -> List[Conversation]:
         query = session.query(Conversation) # SELECT * FROM Conversation
         return query.all()
 
-def get_score(student_id, prompt_id):
+# gets the score given a student net id and the assignment id
+def get_score_for_student(student_id, prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Conversation.score)
                 .filter(Conversation.student_id == student_id and Conversation.prompt_id == prompt_id)) 
+
+        return query.all()
+
+# gets all student scores for an assignment given the assignment id
+def get_all_scores(prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Conversation.score)
+                .filter(Conversation.prompt_id == prompt_id)) 
 
         return query.all()
 
@@ -229,6 +243,7 @@ def check_user_type(user_id: str):
 
 #-----------------------------------------------------------------------
 
+# get all courses that a professor teaches given the prof_id
 def get_professor_courses(prof_id):
     with sqlalchemy.orm.Session(engine) as session:
         my_courses = session.query(CoursesProfs).filter(CoursesProfs.prof_id == prof_id).all()
@@ -245,6 +260,7 @@ def get_professor_courses(prof_id):
         return course_data
 #-----------------------------------------------------------------------
 
+# get all courses that a student is in given their student id
 def get_student_courses(student_id):
     with sqlalchemy.orm.Session(engine) as session:
         my_courses = session.query(CoursesStudents).filter(CoursesStudents.student_id == student_id).all()
