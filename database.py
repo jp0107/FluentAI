@@ -41,7 +41,7 @@ def get_admin_firstname(admin_id):
         if query is None:
             return "Default"
         
-        return query.all()
+        return query[0]
 
 #-----------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ def get_prof_firstname(prof_id):
         if query is None:
             return "Default"
         
-        return query.all()
+        return query[0]
 
 # gets prof info and the courses they teach in alphabetical order by prof first name
 def get_all_profs():
@@ -141,7 +141,7 @@ def get_student_firstname(student_id):
         if query is None:
             return "Default"
         
-        return query.all()
+        return query[0]
 
 #-----------------------------------------------------------------------
 
