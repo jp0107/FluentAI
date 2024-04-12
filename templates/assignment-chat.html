@@ -90,25 +90,25 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#chatForm').submit(function(event) {
-                event.preventDefault();
-                const userInput = $('input[name="userInput"]').val();
-                
-                $.ajax({
-                    url: '/process-input',
-                    type: 'POST',
-                    data: { userInput: userInput },
-                    success: function(response) {
-                        $('#gptResponse').val(response.gpt_response);
-                        $('input[name="userInput"]').val(''); // Clear the input field after submission
-                    },
-                    error: function() {
-                        alert('Error processing the request');
-                    }
-                });
-            });
-        });
+        (document).ready(function() {
+          $('#chatForm').submit(function(event) {
+              event.preventDefault();
+              const userInput = $('input[name="userInput"]').val();
+              
+              $.ajax({
+                  url: '/process-input',  // Make sure this URL is correct
+                  type: 'POST',
+                  data: { userInput: userInput },
+                  success: function(response) {
+                      $('#gptResponse').val(response.gpt_response);  // Update the textarea
+                      $('input[name="userInput"]').val(''); // Clear the input field
+                  },
+                  error: function(xhr, status, error) {
+                      alert('Error processing the request: ' + error);
+                  }
+              });
+          });
+      });
     </script>
 
   </body>

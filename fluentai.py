@@ -6,6 +6,7 @@
 import os
 import sys
 import random
+import jsonify
 import string
 from openai import OpenAI
 import flask
