@@ -390,7 +390,8 @@ def assignment_chat(prompt_id):
         # Handle cases where no prompt is found for the given ID
         return "Prompt not found", 404
     
-    session['prompt_used'] = False  # Initialize prompt usage state
+    flask.session['prompt_used'] = False  # Initialize prompt usage state
+    flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('assignment-chat.html',  initial_data=initial_response, prompt=prompt.prompt_text, username=username)
@@ -401,16 +402,16 @@ def assignment_chat(prompt_id):
 def process_input():
     user_input = flask.request.form.get('userInput', '')
     if not user_input:
-        return jsonify({'error': 'No input provided'}), 400
+        return flask.jsonify({'error': 'No input provided'}), 400
 
-    if not session.get('prompt_used', False):
-        prompt_text = get_prompt_by_id(some_id).prompt_text  # Fetch the prompt text only the first time
-        session['prompt_used'] = True
+    if not flask.session.get('prompt_used', False):
+        prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
+        flask.session['prompt_used'] = True  # Mark the prompt as used
     else:
         prompt_text = ""
 
     response_text = get_gpt_response(prompt_text, user_input)
-    return jsonify({'gpt_response': response_text})
+    return flask.jsonify({'gpt_response': response_text})
 
 #-----------------------------------------------------------------------
 
