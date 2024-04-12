@@ -90,13 +90,13 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        (document).ready(function() {
+      $(document).ready(function() {
           $('#chatForm').submit(function(event) {
               event.preventDefault();
               const userInput = $('input[name="userInput"]').val();
               
               $.ajax({
-                  url: '/process-input',  // Make sure this URL is correct
+                  url: '/process-input',  // Ensure this matches your Flask route
                   type: 'POST',
                   data: { userInput: userInput },
                   success: function(response) {
@@ -109,7 +109,8 @@
               });
           });
       });
-    </script>
+  </script>
+  
 
   </body>
 </html>
