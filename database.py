@@ -7,6 +7,7 @@ import os
 import sqlalchemy
 import sqlalchemy.orm
 from typing import List
+from datetime import datetime, timedelta
 
 #-----------------------------------------------------------------------
 
@@ -224,7 +225,17 @@ def get_current_assignments_for_student(student_id, course_id):
                  .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)  
                  .order_by(sqlalchemy.asc(Prompt.deadline)))  
 
-        return query.all()
+        results = query.all()
+
+        if not results:
+            now = datetime
+            defaults = [
+                ('Assignment 1: Default', now + timedelta(days=10), False, now, False),
+                ('Assignment 2: Default', now + timedelta(days=5), False, now, True),
+            ]
+            return defaults
+
+        return results
 
 # get all current assignments for a given course, with the earliest deadline first (FOR PROFESSOR ASSIGNMENTS PAGE)
 def get_current_assignments_for_prof(course_id):
@@ -240,7 +251,16 @@ def get_past_assignments(course_id):
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
                 .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
                 .order_by(sqlalchemy.asc(Prompt.deadline)))
-        return query.all()
+        
+        results = query.all()
+
+        if not results:
+            now = datetime
+            default = [('Assignment 0: Default', now - timedelta(days=3), True, now - timedelta(days=5), True)]
+
+            return default
+
+        return results
 
 #-----------------------------------------------------------------------
 
