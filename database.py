@@ -215,7 +215,7 @@ class Prompt(Base):
 def get_current_assignments_for_student(student_id, course_id):
     with sqlalchemy.orm.Session(engine) as session:
         subquery = (session.query(Conversation.prompt_id)
-                    .filter(Conversation.prompt_id == Prompt.id, Conversation.student_id == student_id)
+                    .filter(Conversation.prompt_id == Prompt.course_id, Conversation.student_id == student_id)
                     .exists()).label("completed")
 
         query = (session.query(Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at, subquery)
