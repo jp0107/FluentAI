@@ -34,33 +34,68 @@
                 </div>
             </div>
         </nav>
+
+        <br>
+        
+        <div class="container-fluid">
+            <div class="row mt-4">
+                <div class="col offset-sm-1">
+                    <h1>Manage</h1> <!-- eventually replace w classid-->
+                </div>
+            </div>
+        </div>
+
         <br>
 
         <div class="container">
-            <div class="row mt-4">
-                <div class="row mt-4 align-items-center">
-                    <h1>Manage</h1>
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-auto mt-5">
+                    <h2 id="dashboard-welcome">Hi {{first_name}}, what would you like to manage?</h2>
                 </div>
-                <br> 
+            </div>
+            <br>
+            <div class="large-screen-layout">
+                <div class="row justify-content-center">
+                    <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
+                    <div class="col-auto">
+                    <a href="/admin-courses" id="dashboard-btn" class="text-decoration-none">
+                        <div id="dashboard-box">Courses</div>
+                    </a>
+                    </div>
+                    <div class="col-auto">
+                    <a href="/admin-prof-roster" id="dashboard-btn" class="text-decoration-none">
+                        <div id="dashboard-box">Professors</div>
+                    </a>
+                    </div>
+                    <div class="col-auto">
+                    <a href="/admin-students-roster" id="dashboard-btn" class="text-decoration-none">
+                        <div id="dashboard-box">Students</div>
+                    </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="small-screen-layout">
                 <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
-                    <!-- Each .col div acts as a container for a button, ensuring equal height -->
                     <div class="col d-flex">
-                      <a href="/admin-courses" class="class-button" role="button">
-                          <h3>Courses</h3>
+                      <a href="/admin-courses" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                        Courses
                       </a>
                     </div>
                     <div class="col d-flex">
-                      <a href="/admin-prof-roster" class="class-button" role="button">
-                          <h3>Professors</h3>
+                      <a href="/admin-prof-roster" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                        Professors
                       </a>
                     </div>
                     <div class="col d-flex">
-                         <a href="/admin-students-roster" class="class-button" role="button">
-                          <h3>Students</h3>
+                      <a href="/admin-students-roster" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                        Students
                       </a>
                     </div>
-                  </div>
+                </div>
             </div>
         </div>
+      </div>  
+      
     </body>
 </html>
