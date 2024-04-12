@@ -19,7 +19,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="joinCourseModalLabel">Join a Course</h5>
+                    <h5 class="modal-title" id="joinCourseModalLabel">Join Course</h5>
                     <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -29,7 +29,7 @@
                     <div class="form-group">
                         <label for="message-text" class="col-form-label">Course Code:</label>
                         <textarea class="form-control" id="course-code" rows="1"  data-max-length="6"
-                        placeholder="Type Course Code"></textarea>
+                        placeholder="Type course code"></textarea>
                         <small>Characters left: <span id="char-count-course-code">6</span></small>
                     </div>
                     </form>
@@ -59,7 +59,7 @@
                           <a class="nav-link" href="/student-all-classes">All Courses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#joinCourseModal">Join a Course</a>
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal">Join Course</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav d-flex flex-row ms-auto">
@@ -93,7 +93,7 @@
               </div>
               <div class="col d-flex">
                 <a data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">
-                    <h3><img src="static/img/add_course_light.png" width="35"/></h3> Join a Course
+                    <h3><img src="static/img/add_course_light.png" width="35"/></h3> Join Course
                 </a>
               </div> -->
               <!-- Add more .col divs with class-button for each additional course -->
@@ -131,7 +131,7 @@
                     });
                     courseListHtml += '<div class="col d-flex">' +
                                             '<a data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">' +
-                                            '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Join a Course' +
+                                            '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Join Course' +
                                             '</a></div>';
                     $(".row-cols-md-3").html(courseListHtml);
                 }

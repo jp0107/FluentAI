@@ -44,7 +44,7 @@
                 <div class="col offset-sm-1">
                     <div class="dropdown">
                         <button class="btn btn-course-dropdown dropdown-toggle" type="button" id="dropdownMenuCourse" data-bs-toggle="dropdown" aria-expanded="false">
-                            <h1>{{ course_id }}<i class="fa fa-caret-down"></i></h1>
+                            <h1 id="course-id-display">{{ course_id }}<i class="fa fa-caret-down"></i></h1>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuCourse">
                             <li>
@@ -85,7 +85,6 @@
             </div>
         </div>
 
-        <input type="hidden" id="hidden-course-id" value="{{ course_id }}">
         <div class="modal fade" id="editCourseCodeModal" tabindex="-1" role="dialog" aria-labelledby="editCourseCodeModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -223,7 +222,7 @@
             // edit course code click event
             $("#edit-course-code-button").click(function() {
                 var newCourseCode = $("#edit-course-code").val().trim();
-                var courseId = $("#hidden-course-id").val();
+                var courseId = $("#course-id-display").text();
                 
                 if (!newCourseCode) {
                     alert("Course code cannot be empty");
@@ -247,6 +246,27 @@
                     }
                 });
             });
+
+            // delete button click event
+            $("#delete-btn").click(function() {
+            var courseId = $("#course-id-display").text(); 
+
+            $.ajax({
+                url: '/delete-course',
+                type: 'POST',
+                data: {
+                    'course_id': courseId 
+                },
+                contentType: 'application/json;charset=UTF-8',
+                success: function(response) {
+                    alert('Course deleted successfully');
+                    location.href = '/prof-classes';
+                },
+                error: function(xhr, status, error) {
+                    alert('Error deleting course: ' + xhr.responseText);
+                }
+            });
+        });
     
         });
 

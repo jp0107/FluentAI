@@ -15,7 +15,8 @@ from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
-                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code, edit_course_code, get_admin_firstname, get_prompt_by_id)
+                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
+                      edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id)
 
 #-----------------------------------------------------------------------
 
@@ -499,7 +500,7 @@ def join_course():
 #-----------------------------------------------------------------------
 
 @app.route('/edit-course-code', methods=['POST'])
-def update_course_code():
+def update_course_code_click():
     course_id = flask.request.form.get('course_id')
     new_code = flask.request.form.get('new_course_code')
 
@@ -516,3 +517,14 @@ def update_course_code():
 
 #-----------------------------------------------------------------------
 
+@app.route('/delete-course', methods=['POST'])
+def delete_course_click():
+    course_id = flask.request.form.get('course_id')
+
+    try:
+        if delete_course(course_id):
+            return flask.jsonify({'message': 'Course deleted successfully'}), 200
+        else:
+            return flask.jsonify({'message': 'Error deleting course'}), 200
+    except Exception as e:
+        return flask.jsonify({'message': str(e)}), 500
