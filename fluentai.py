@@ -15,8 +15,7 @@ from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
-                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
-                      edit_course_code)
+                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code, edit_course_code, get_admin_firstname, get_prompt_by_id)
 
 #-----------------------------------------------------------------------
 
@@ -35,26 +34,23 @@ def generate_course_code(length=6):
     return ''.join(random.choice(characters) for i in range(length))
 #-----------------------------------------------------------------------
 
-def get_gpt_response(user_input, conversation_history):
+def get_gpt_response(prompt_text):
     if not GPT_API_KEY:
         print("GPT API key is missing", file=sys.stderr)
         return "Error: API key is missing."
 
     try:
         client = OpenAI(api_key=GPT_API_KEY)
-        combined_input = conversation_history + "\nUser: " + user_input + "\nAI:"
+        # combined_input = conversation_history + "\nUser: " + user_input + "\nAI:"
         response = client.chat.completions.create(
             model="gpt-3.5-turbo-0125",
             # response_format={"type": "json_object"},
             messages=[
-                {"role": "system",
-                 "content": "You are a helpful spanish teacher. \
-                    Please help me practice my spanish in really basic levels."},
-                {"role": "user", "content": combined_input}
+                {"role": "system", "content": prompt_text},
+                {"role": "user", "content": ""}
             ]
         )
-        response_json = response.choices[0].message.content
-        return response_json
+        return response.choices[0].message.content
 
     except Exception as ex:
         print("An error occurred: ", ex, file=sys.stderr)
@@ -309,8 +305,13 @@ def prof_scores(course_id):
 @app.route('/admin-dashboard')
 def admin_dashboard():
     username = auth.authenticate()
+
+    # get user's first name to display on dashboard
+    first_name = get_admin_firstname(username)
+
     return flask.render_template('admin-dashboard.html',
-                                 username = username)
+                                 username = username,
+                                 first_name = first_name)
 
 #-----------------------------------------------------------------------
 
@@ -352,10 +353,32 @@ def conversation_history():
 @app.route('/assignment-chat')
 def assignment_chat():
     username = auth.authenticate()
-    return flask.render_template('assignment-chat.html',
-                                 username = username)
+    # Fetch the prompt_id from query parameters
+    prompt_id = flask.request.args.get('prompt_id')
+    if not prompt_id:
+        # Handle cases where no prompt_id is provided
+        return "No assignment specified", 400
+
+    # Use the function from database.py to fetch the prompt
+    prompt = get_prompt_by_id(prompt_id)
+    if not prompt:
+        # Handle cases where no prompt is found for the given ID
+        return "Prompt not found", 404
+
+    initial_response = get_gpt_response(prompt.prompt_text)
+    # Render the chat page with the initial prompt data
+    return flask.render_template('assignment-chat.html',  initial_data=initial_response, prompt=prompt.prompt_text, username=username)
 
 #-----------------------------------------------------------------------
+
+@app.route('/process-input', methods=['POST'])
+def process_input():
+    user_input = request.form['userInput']
+    response_text = get_gpt_response(user_input)
+    return jsonify({'gpt_response': response_text})
+
+#-----------------------------------------------------------------------
+
 
 @app.route('/practice-chat')
 def practice_chat():

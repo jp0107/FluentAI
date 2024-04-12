@@ -33,6 +33,16 @@ def get_superadmins() -> List[SuperAdmin]:
         query = session.query(SuperAdmin) # SELECT * FROM SuperAdmin
         return query.all()
 
+# gets admin first name given their netid
+def get_admin_firstname(admin_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = session.query(SuperAdmin.first_name).filter(SuperAdmin.admin_id == admin_id).one_or_none()
+
+        if query is None:
+            return "Default"
+        
+        return query[0]
+
 #-----------------------------------------------------------------------
 
 # creates table storing professor info
@@ -57,7 +67,7 @@ def get_prof_firstname(prof_id):
         if query is None:
             return "Default"
         
-        return query.all()
+        return query[0]
 
 # gets prof info and the courses they teach in alphabetical order by prof first name
 def get_all_profs():
@@ -131,7 +141,7 @@ def get_student_firstname(student_id):
         if query is None:
             return "Default"
         
-        return query.all()
+        return query[0]
 
 #-----------------------------------------------------------------------
 
@@ -349,5 +359,12 @@ def enroll_student_in_course(student_id, course_code):
         session.commit()
 
         return {"status": "success", "message": "Course joined successfully"}
+
+#-----------------------------------------------------------------------
+
+def get_prompt_by_id(prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        prompt = session.query(Prompt).filter(Prompt.prompt_id == prompt_id).first()
+        return prompt
 
 #-----------------------------------------------------------------------

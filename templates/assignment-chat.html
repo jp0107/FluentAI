@@ -72,15 +72,14 @@
     <!-- rather than https://fluentai.onrender.com/fetch-conversation and https://fluentai.onrender.com/process-gpt-request -->
     <div id="welcome-message" style="margin-bottom: 50px;">
       <h5 class="text-center" style="margin-bottom: 20px;">Chat</h5>
+      <textarea id="gptResponse" 
+        class="form-control" 
+        readonly style="width: 100%; height: 10vw; display: flex; background-color: #EAF2FF; margin-bottom: 30px;">
+      </textarea>
       <form action="/process-gpt-request" method="post" class="d-flex">
         <input type="text" name="userInput" class="form-control me-2" placeholder="Type conversation here..." style="flex-grow: 1; background-color: #EAF2FF; margin-bottom: 20px;">
         <button type="submit" class="chat-button" style="margin-bottom: 20px;">Submit</button>
       </form>
-      <textarea id="gptResponse" 
-        class="form-control" 
-        readonly style="width: 100%; height: 10vw; display: flex; background-color: #EAF2FF; margin-bottom: 30px;">
-          {{ data }}
-      </textarea>
 <!-- 
       <h5 class="text-center" style="margin-bottom: 20px;">Conversation History</h5>
       <a href="/fetch-conversation" class="small-button" style="margin-bottom: 20px;">Fetch Conversation History</a>
@@ -90,6 +89,29 @@
           {% endfor %}
       </textarea> -->
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#chatForm').submit(function(event) {
+                event.preventDefault();
+                const userInput = $('input[name="userInput"]').val();
+                
+                $.ajax({
+                    url: '/process-input',
+                    type: 'POST',
+                    data: { userInput: userInput },
+                    success: function(response) {
+                        $('#gptResponse').val(response.gpt_response);
+                        $('input[name="userInput"]').val(''); // Clear the input field after submission
+                    },
+                    error: function() {
+                        alert('Error processing the request');
+                    }
+                });
+            });
+        });
+    </script>
 
   </body>
 </html>
