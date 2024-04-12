@@ -123,8 +123,9 @@
             $(document).ready(function(){
                 // Function to fetch updated course list
                 function fetchCourses() {
+                    var nocache = new Date().getTime();
                     $.ajax({
-                        url: '/get-prof-courses',
+                        url: '/get-prof-courses' + nocache,
                         method: 'GET',
                         cache: false,
                         success: function(response) {

@@ -109,8 +109,9 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 function fetchAllCourses() {
+                    var nocache = new Date().getTime();
                     $.ajax({
-                        url: '/all-courses',
+                        url: '/all-courses' + nocache,
                         method: 'GET',
                         cache: false,
                         success: function(courses) {
