@@ -120,7 +120,7 @@ def delete_course(course_id):
  
         # get entries from Course and CoursesProfs to delete
         # course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).first()
-        course_prof_entries_to_delete = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id)
+        course_prof_entries_to_delete = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).first()
         
         if course_prof_entries_to_delete:
             # session.delete(course_entry_to_delete)
