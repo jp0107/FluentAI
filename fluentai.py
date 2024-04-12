@@ -356,6 +356,7 @@ def assignment_chat():
     username = auth.authenticate()
     # Fetch the prompt_id from query parameters
     prompt_id = flask.request.args.get('prompt_id')
+    print("Received prompt_id:", prompt_id)
     if not prompt_id:
         # Handle cases where no prompt_id is provided
         return "No assignment specified", 400
