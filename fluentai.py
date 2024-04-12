@@ -351,15 +351,9 @@ def conversation_history():
 
 #-----------------------------------------------------------------------
 
-@app.route('/assignment-chat')
-def assignment_chat():
+@app.route('/assignment-chat/<int:prompt_id>')
+def assignment_chat(prompt_id):
     username = auth.authenticate()
-    # Fetch the prompt_id from query parameters
-    prompt_id = flask.request.args.get('prompt_id')
-    print("Received prompt_id:", prompt_id)
-    if not prompt_id:
-        # Handle cases where no prompt_id is provided
-        return "No assignment specified", 400
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
@@ -375,7 +369,7 @@ def assignment_chat():
 
 @app.route('/process-input', methods=['POST'])
 def process_input():
-    user_input = request.form['userInput']
+    user_input = flask.request.form['userInput']
     response_text = get_gpt_response(user_input)
     return jsonify({'gpt_response': response_text})
 
