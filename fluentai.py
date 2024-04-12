@@ -9,6 +9,7 @@ import random
 import string
 from openai import OpenAI
 import flask
+import logging
 import sqlalchemy
 import auth
 from req_lib import ReqLib
@@ -216,8 +217,14 @@ def student_assignments(course_id):
 
     flask.session['course_id'] = course_id
 
-    curr_assignments = get_current_assignments_for_student(username, course_id)
-    past_assignments = get_past_assignments(course_id)
+    try:
+        curr_assignments = get_current_assignments_for_student(username, course_id)
+        past_assignments = get_past_assignments(course_id)
+    except Exception as e:
+        error_message = f"Failed to fetch assignments due to: {e}"
+        flask.flash(error_message, "error")
+        # Handle empty assignments in case of error
+        curr_assignments, past_assignments = [], []
 
     return flask.render_template('student-assignments.html',
                                  username = username,
