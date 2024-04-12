@@ -476,7 +476,7 @@ def join_course():
 #-----------------------------------------------------------------------
 
 @app.route('/edit-course-code', methods=['POST'])
-def edit_course_code():
+def update_course_code():
     course_id = flask.request.form.get('course_id')
     new_code = flask.request.form.get('new_course_code')
 
