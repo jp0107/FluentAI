@@ -251,7 +251,7 @@ def prof_dashboard(course_id):
     flask.session['course_id'] = course_id
 
     # get course code for this course
-    course_code = get_course_code(course_id)
+    course_code = get_course_code(course_id)[0][0]
 
     return flask.render_template('prof-dashboard.html',
                                  username = username,
