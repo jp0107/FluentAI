@@ -76,7 +76,7 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    The course code is: <!-- insert course code from backend-->
+                    The course code is: {{ course_code }} <!-- insert course code from backend-->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -85,6 +85,7 @@
             </div>
         </div>
 
+        <input type="hidden" id="hidden-course-id" value="{{ course_id }}">
         <div class="modal fade" id="editCourseCodeModal" tabindex="-1" role="dialog" aria-labelledby="editCourseCodeModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -96,17 +97,17 @@
                     </div>
                     <div class="modal-body">
                         <form>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Edit Course Code:</label>
-                            <textarea class="form-control" id="edit-course-code" rows="1"  data-max-length="6"
-                            placeholder="Type New Course Code"></textarea>
-                            <small>Characters left: <span id="char-count-edit-course-code">6</span></small>
-                        </div>
+                            <div class="form-group">
+                                <label for="edit-course-code" class="col-form-label">Edit Course Code:</label>
+                                <textarea class="form-control" id="edit-course-code" rows="1" data-max-length="6"
+                                          placeholder="Type New Course Code"></textarea>
+                                <small>Characters left: <span id="char-count-edit-course-code"></span></small>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Edit course code</button>
+                        <button type="button" class="btn btn-primary" id="edit-course-code-button">Edit course code</button>
                     </div>
                 </div>
             </div>
@@ -187,5 +188,69 @@
             </div>
         </div>
       </div>  
+
+      <script type="text/javascript">
+
+        $(document).ready(function() {
+            var $charCount = $('#char-count-edit-course-code');
+            var maxLength = parseInt($('#edit-course-code').attr('data-max-length'), 10);
+
+            // initialize character count
+            function initializeCharCount() {
+                $charCount.text(maxLength);  
+            }
+
+            // update character count
+            function updateCharCount() {
+                var currLength = $('#edit-course-code').val().length;
+                $charCount.text(maxLength - currLength);
+            }
+
+            // clear text area within edit-code modal
+            function clearTextArea() {
+                $("#edit-course-code").val('');
+            }
+
+            // update character count when user types in new code
+            $('#edit-course-code').on('input', updateCharCount);
+
+            // reset text area and character count when edit-code modal is closed
+            $('#editCourseCodeModal').on('hidden.bs.modal', function () {
+                clearTextArea();
+                initializeCharCount();
+            });
+
+            // edit course code click event
+            $("#edit-course-code-button").click(function() {
+                var newCourseCode = $("#edit-course-code").val().trim();
+                var courseId = $("#hidden-course-id").val();
+                
+                if (!newCourseCode) {
+                    alert("Course code cannot be empty");
+                    return;
+                }
+    
+                $.ajax({
+                    url: '/edit-course-code',
+                    type: 'POST',
+                    data: {
+                        course_id: courseId,
+                        new_course_code: newCourseCode
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $('#editCourseCodeModal').modal('hide');
+                        location.reload(); 
+                    },
+                    error: function(xhr) {
+                        alert('Error updating course code: ' + xhr.responseText);
+                    }
+                });
+            });
+    
+        });
+
+      </script>
+
     </body>
 </html>

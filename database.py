@@ -33,6 +33,16 @@ def get_superadmins() -> List[SuperAdmin]:
         query = session.query(SuperAdmin) # SELECT * FROM SuperAdmin
         return query.all()
 
+# gets admin first name given their netid
+def get_admin_firstname(admin_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = session.query(SuperAdmin.first_name).filter(SuperAdmin.admin_id == admin_id).one_or_none()
+
+        if query is None:
+            return "Default"
+        
+        return query[0]
+
 #-----------------------------------------------------------------------
 
 # creates table storing professor info
@@ -57,7 +67,7 @@ def get_prof_firstname(prof_id):
         if query is None:
             return "Default"
         
-        return query.all()
+        return query[0]
 
 # gets prof info and the courses they teach in alphabetical order by prof first name
 def get_all_profs():
@@ -84,6 +94,25 @@ def get_courses() -> List[Course]:
     with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Course) # SELECT * FROM Course
         return query.all()
+
+# get course code given course_id
+def get_course_code(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Course.course_code)
+                .filter(Course.course_id == course_id)) 
+        return query.all()
+
+# edit course code
+def edit_course_code(course_id, new_course_code):
+    with sqlalchemy.orm.Session(engine) as session:
+        course = session.query(Course).filter(Course.course_id == course_id).first()
+
+        if course:
+            course.course_code = new_course_code
+            session.commit()
+            return True
+        else:
+            return False 
 
 #-----------------------------------------------------------------------
 
@@ -112,7 +141,7 @@ def get_student_firstname(student_id):
         if query is None:
             return "Default"
         
-        return query.all()
+        return query[0]
 
 #-----------------------------------------------------------------------
 

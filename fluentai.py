@@ -15,7 +15,7 @@ from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
-                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_prompt_by_id)
+                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code, edit_course_code, get_admin_firstname, get_prompt_by_id)
 
 #-----------------------------------------------------------------------
 
@@ -247,10 +247,14 @@ def prof_dashboard(course_id):
 
     flask.session['course_id'] = course_id
 
+    # get course code for this course
+    course_code = get_course_code(course_id)[0][0]
+
     return flask.render_template('prof-dashboard.html',
                                  username = username,
                                  first_name = first_name,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 course_code = course_code)
 
 #-----------------------------------------------------------------------
 
@@ -301,8 +305,13 @@ def prof_scores(course_id):
 @app.route('/admin-dashboard')
 def admin_dashboard():
     username = auth.authenticate()
+
+    # get user's first name to display on dashboard
+    first_name = get_admin_firstname(username)
+
     return flask.render_template('admin-dashboard.html',
-                                 username = username)
+                                 username = username,
+                                 first_name = first_name)
 
 #-----------------------------------------------------------------------
 
@@ -488,3 +497,22 @@ def join_course():
 
 
 #-----------------------------------------------------------------------
+
+@app.route('/edit-course-code', methods=['POST'])
+def update_course_code():
+    course_id = flask.request.form.get('course_id')
+    new_code = flask.request.form.get('new_course_code')
+
+    if not new_code:
+        return flask.jsonify({'message': 'Invalid course code!'}), 400
+    
+    try:
+        if edit_course_code(course_id, new_code):  
+            return flask.jsonify({'message': 'Course code updated successfully!'})
+        else:
+            return flask.jsonify({'message': 'Update failed!'}), 500
+    except Exception as e:
+        return flask.jsonify({'message': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
