@@ -332,3 +332,10 @@ def enroll_student_in_course(student_id, course_code):
         return {"status": "success", "message": "Course joined successfully"}
 
 #-----------------------------------------------------------------------
+
+def get_prompt_by_id(prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        prompt = session.query(Prompt).filter(Prompt.prompt_id == prompt_id).first()
+        return prompt
+
+#-----------------------------------------------------------------------
