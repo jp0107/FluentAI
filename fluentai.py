@@ -205,6 +205,7 @@ def student_dashboard(course_id):
     return flask.render_template('student-dashboard.html', 
                                  username = username,
                                  first_name = first_name,
+                                 course_id = course_id
                                 )
 
 #-----------------------------------------------------------------------
@@ -228,7 +229,8 @@ def student_practice(course_id):
     flask.session['course_id'] = course_id
 
     return flask.render_template('student-practice.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #-----------------------------------------------------------------------
 
@@ -239,7 +241,8 @@ def student_scores(course_id):
     flask.session['course_id'] = course_id
 
     return flask.render_template('student-scores.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #------------------------  PROFESSOR PAGES   ---------------------------
 #-----------------------------------------------------------------------
