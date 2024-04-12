@@ -84,7 +84,7 @@ font-size: 16px;
 @media (max-width: 768px) {
   .assignments-button {
     padding: 5px 20px; /* Reduce padding */
-    font-size: 16px; /* Reduce font size */
+    font-size: clamp(12px, 3vw, 16px); /* Dynamically adjust font size */
     white-space: normal; /* Allow the text to wrap if needed */
     min-width: 0; /* Override any min-width set */
     width: 100%; /* Allow the width to auto-adjust based on content */
