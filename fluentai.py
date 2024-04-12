@@ -216,8 +216,13 @@ def student_assignments(course_id):
 
     flask.session['course_id'] = course_id
 
-    curr_assignments = get_current_assignments_for_student(username, course_id)
-    past_assignments = get_past_assignments(course_id)
+    try:
+        curr_assignments = get_current_assignments_for_student(username, course_id)
+        past_assignments = get_past_assignments(course_id)
+    except Exception as e:
+        flask.flash("An error occurred while fetching assignments. Please try again later.", "error")
+        # Handle empty assignments in case of error
+        curr_assignments, past_assignments = [], []
 
     return flask.render_template('student-assignments.html',
                                  username = username,
