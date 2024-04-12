@@ -114,6 +114,18 @@ def edit_course_code(course_id, new_course_code):
         else:
             return False 
 
+# delete course
+def delete_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        course_to_delete = session.query(Course).filter(Course.course_id == course_id)
+        
+        if course_to_delete:
+            session.delete(course_to_delete)
+            session.commit()
+            return True
+        else:
+            return False
+
 #-----------------------------------------------------------------------
 
 # creates table storing student info
