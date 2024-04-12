@@ -119,11 +119,11 @@ def delete_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
  
         # get entries from Course and CoursesProfs to delete
-        course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).first()
+        # course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).first()
         course_prof_entries_to_delete = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id)
         
-        if course_entry_to_delete or course_prof_entries_to_delete:
-            session.delete(course_entry_to_delete)
+        if course_prof_entries_to_delete:
+            # session.delete(course_entry_to_delete)
             session.delete(course_prof_entries_to_delete)
             session.commit()
             return True
