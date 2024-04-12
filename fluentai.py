@@ -193,9 +193,11 @@ def student_classes_2():
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-dashboard')
-def student_dashboard():
+@app.route('/student-dashboard/<course_id>')
+def student_dashboard(course_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
     
     # get user's first name to display on dashboard
     first_name = get_student_firstname(username)
@@ -203,31 +205,44 @@ def student_dashboard():
     return flask.render_template('student-dashboard.html', 
                                  username = username,
                                  first_name = first_name,
+                                 course_id = course_id
                                 )
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-assignments')
-def student_assignments():
+@app.route('/student-assignments/<course_id>')
+def student_assignments(course_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
+
     return flask.render_template('student-assignments.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-practice')
-def student_practice():
+@app.route('/student-practice/<course_id>')
+def student_practice(course_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
+
     return flask.render_template('student-practice.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-scores')
-def student_scores():
+@app.route('/student-scores/<course_id>')
+def student_scores(course_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
+
     return flask.render_template('student-scores.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #------------------------  PROFESSOR PAGES   ---------------------------
 #-----------------------------------------------------------------------

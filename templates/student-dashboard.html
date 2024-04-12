@@ -39,7 +39,7 @@
         <div class="container-fluid">
             <div class="row mt-4">
                 <div class="col offset-sm-1">
-                    <h1>SPA101</h1> <!-- eventually replace w classid-->
+                    <h1>{{ course_id }}</h1> 
                 </div>
             </div>
         </div>
@@ -55,17 +55,17 @@
                 <div class="row justify-content-center">
                     <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
                     <div class="col-auto">
-                    <a href="/student-assignments" id="dashboard-btn" class="text-decoration-none">
+                    <a href="/student-assignments/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
                         <div id="dashboard-box">Assignments</div>
                     </a>
                     </div>
                     <div class="col-auto">
-                    <a href="/student-practice" id="dashboard-btn" class="text-decoration-none">
+                    <a href="/student-practice/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
                         <div id="dashboard-box">Practice</div>
                     </a>
                     </div>
                     <div class="col-auto">
-                    <a href="/student-scores" id="dashboard-btn" class="text-decoration-none">
+                    <a href="/student-scores/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
                         <div id="dashboard-box">Scores</div>
                     </a>
                     </div>
