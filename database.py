@@ -117,7 +117,7 @@ def edit_course_code(course_id, new_course_code):
 # delete course
 def delete_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        course_to_delete = session.query(Course).filter(Course.course_id == course_id)
+        course_to_delete = session.query(Course).filter(Course.course_id == course_id).first()
         
         if course_to_delete:
             session.delete(course_to_delete)
