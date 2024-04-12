@@ -91,30 +91,29 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-      $(document).ready(function() {
-          $('#chatForm').submit(function(event) {
-              event.preventDefault();
-              const userInput = $('input[name="userInput"]').val();
-  
-              console.log("Sending user input:", userInput);  // Debugging output
-  
-              $.ajax({
-                  url: '/process-input',
-                  type: 'POST',
-                  data: { userInput: userInput },
-                  success: function(response) {
-                      console.log("Received response:", response);  // Debugging output
-                      $('#gptResponse').val(response.gpt_response);
-                      $('input[name="userInput"]').val('');
-                  },
-                  error: function(xhr, status, error) {
-                      console.error("AJAX error:", status, error);  // More detailed error logging
-                      alert('Error processing the request: ' + error);
-                  }
+          $(document).ready(function() {
+              $('#chatForm').submit(function(event) {
+                  event.preventDefault();
+                  var userInput = $('input[name="userInput"]').val();
+                  var currentContent = $('#gptResponse').val();
+                  currentContent += "\nYou: " + userInput;  // Append user input to the chat
+
+                  $.ajax({
+                      url: '/process-input',
+                      type: 'POST',
+                      data: { userInput: userInput },
+                      success: function(response) {
+                          currentContent += "\nGPT: " + response.gpt_response;  // Append GPT response
+                          $('#gptResponse').val(currentContent);  // Update the textarea
+                          $('input[name="userInput"]').val('');  // Clear input field
+                      },
+                      error: function(xhr, status, error) {
+                          alert('Error processing the request: ' + error);
+                      }
+                  });
               });
           });
-      });
-  </script>
+      </script>
   
 
   </body>
