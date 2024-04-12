@@ -112,6 +112,7 @@
                     $.ajax({
                         url: '/all-courses',
                         method: 'GET',
+                        cache: false,
                         success: function(courses) {
                             var courseListHtml = '';
                             $.each(courses, function(index, course) {
