@@ -14,6 +14,52 @@
   </head>
 
   <body>
+
+    <div class="modal fade" id="addAssignmentModal" tabindex="-1" role="dialog" aria-labelledby="addAssignmentModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="addAssignmentModalLabel">Create a New Assignment</h5>
+                  <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <form>
+                  <div class="form-group">
+                    <label for="message-text" class="col-form-label">Assignment Name:</label>
+                    <textarea class="form-control" id="assignment-name" rows="1"  data-max-length="100"
+                    placeholder="Type assignment name (e.g. Assignment 1: Café Fluent)"></textarea>
+                    <small>Characters left: <span id="char-count-assignment-name">2</span></small>
+                  </div>
+                  <div class="form-group">
+                    <label for="message-text"  class="col-form-label">Assignment Prompt to Chatbot:</label>
+                    <textarea class="form-control" id="assignment-prompt" rows="4" data-max-length="500"
+                    placeholder="Type assignment prompt to ChatGPT"></textarea>
+                    <small>Characters left: <span id="char-count-assignment-prompt">500</span></small>
+                  </div>
+                  <div class="form-group">
+                    <label for="message-text" class="col-form-label">Assignment Description:</label>
+                    <textarea class="form-control" id="assignment-description" rows="4" data-max-length="500"
+                    placeholder="Type assignment description for students"></textarea>
+                    <small>Characters left: <span id="char-count-assignment-description">500</span></small>
+                  </div>
+                  <div class="form-group">
+                      <label for="num-turns-select" class="col-form-label">Number of Turns:</label>
+                      <select class="form-control" id="num-turns-select">
+                          <option selected>Choose number of turns...</option>
+                      </select>
+                  </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary">Create new assignment</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
@@ -28,7 +74,7 @@
               <a class="nav-link" href= "/prof-assignments/{{course_id}}">Assignments</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" >Create New Assignment</a>
+              <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">Create Assignment</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/prof-scores/{{course_id}}" id="underlined">Scores</a>
@@ -69,8 +115,8 @@
 
     <div class="container-fluid">
       <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 offset-sm-1" style="background-color: #EAF2FF;">
-          <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 text-white min-vh-100">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 offset-sm-1" style="background-color: #EAF2FF; color: #1E1E1E;" >
+          <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 min-vh-100">
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                 <li class="nav-item">
                   <a href="#" class="nav-link align-middle px-0" data-assignment="general"> <!-- change to {{smth_ass}}-->
