@@ -53,18 +53,38 @@
       </div>
     </nav>
 
-    <div>
-        <h1>Students in {{ course_id }}</h1>
-        {% if students %}
-        <ul>
-        {% for student in students %}
-            <li>{{ student }}</li>
-        {% endfor %}
-        </ul>
-        {% else %}
-        <p>No students found for this course.</p>
-        {% endif %}
+
+  <div class="container-fluid">
+    <div class="row mt-4">
+        <div class="col offset-sm-1">
+            <h1>Students in {{ course_id }}</h1> 
+        </div>
     </div>
+  </div>
+
+
+  <div class="container-fluid">
+    <table class="col offset-sm-1 table score-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>NetID</th>
+                <th>Courses</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if students %}
+              {% for student in students %}
+                  <tr>{{ student }}</tr>
+              {% endfor %}
+
+              {% else %}
+              <tr>No students found for this course.</tr>
+            {% endif %}
+        </tbody>
+    </table>
+  </div>
 
         
   </body>
