@@ -212,6 +212,10 @@ h2 {
   color: #EAF2FF;
 }
 
+.chat-button:hover img {
+  filter: invert(91%) sepia(93%) saturate(5796%) hue-rotate(179deg) brightness(110%) contrast(104%);
+}
+
 .subcontainer {
   height: 100%;
   flex-direction: column;

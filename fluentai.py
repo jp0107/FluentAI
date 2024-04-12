@@ -37,7 +37,7 @@ def generate_course_code(length=6):
     return ''.join(random.choice(characters) for i in range(length))
 #-----------------------------------------------------------------------
 
-def get_gpt_response(prompt_text):
+def get_gpt_response(prompt_text, user_input=""):
     if not GPT_API_KEY:
         print("GPT API key is missing", file=sys.stderr)
         return "Error: API key is missing."
@@ -50,7 +50,7 @@ def get_gpt_response(prompt_text):
             # response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": prompt_text},
-                {"role": "user", "content": ""}
+                {"role": "user", "content": user_input}
             ]
         )
         return response.choices[0].message.content
@@ -392,7 +392,7 @@ def assignment_chat(prompt_id):
 
 @app.route('/process-input', methods=['POST'])
 def process_input():
-    user_input = flask.request.form.get('userInput')
+    user_input = flask.request.form.get('userInput', '')
     if not user_input:
         print("No user input received")
         return jsonify({'error': 'No input provided'}), 400
@@ -430,23 +430,7 @@ def fetch_conversation():
             conversation_data=conversation_texts)
 
 #-----------------------------------------------------------------------
-@app.route('/process-gpt-request', methods=['POST'])
-def process_gpt_request():
-    username = auth.authenticate()
 
-    user_input = flask.request.form['userInput']
-
-    # Retrieve the GPT response (modify as needed)
-    gpt_response = get_gpt_response(user_input, " ")
-
-    store_conversation(
-        123, 456, 789, "User: " + user_input + "\nAI: " + gpt_response)
-
-    # Render index.html again with the GPT response
-    return flask.render_template(
-        'assignment-chat.html', 
-        username = username,
-        data=gpt_response)
 #-----------------------------------------------------------------------
 
 @app.route('/add-course', methods=['POST'])
