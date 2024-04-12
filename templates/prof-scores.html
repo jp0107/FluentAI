@@ -11,11 +11,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/assignments.css') }}">
   </head>
 
   <body>
-    
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">
@@ -27,16 +25,16 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href= "/prof-assignments/{{ course_id }}" id="underlined">Assignments</a>
+              <a class="nav-link" href= "/prof-assignments/{{course_id}}">Assignments</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" >Create New Assignment</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/prof-scores/{{ course_id }}">Scores</a>
+              <a class="nav-link" href="/prof-scores/{{course_id}}" id="underlined">Scores</a>
             </li>    
             <li class="nav-item">
-                <a class="nav-link" href="/prof-roster/{{ course_id }}">Students</a>
+                <a class="nav-link" href="/prof-roster/{{course_id}}">Students</a>
               </li>   
           </ul>
           <ul class="navbar-nav d-flex flex-row ms-auto">
@@ -53,10 +51,109 @@
       </div>
     </nav>
 
-    <div>
-      {{ course_id }} Scores
+    <div class="container-fluid">
+      <div class="row mt-4">
+          <div class="col offset-sm-1">
+              <h1>{{course_id}}</h1> <!-- replace w classid-->
+          </div>
+      </div>
     </div>
 
-        
+    <div class="container-fluid">
+      <div class="row mt-4">
+          <div class="col offset-sm-1">
+              <h2>Assignment Scores</h2>
+          </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2" style="background-color: #EAF2FF;">
+          <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+              <a href="#" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <span class="fs-5 d-none d-sm-inline">Assignments</span> 
+              </a>
+              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                <li class="nav-item">
+                  <a href="#" class="nav-link align-middle px-0" data-assignment="general"> <!-- change to {{smth_ass}}-->
+                    <span class="ms-1 d-none d-sm-inline">General</span> <!-- change to {{smth_ass}}-->
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link align-middle px-0" data-assignment="assignment1">
+                    <span class="ms-1 d-none d-sm-inline">Assignment 1</span> 
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link align-middle px-0" data-assignment="assignment2">
+                    <span class="ms-1 d-none d-sm-inline">Assignment 2</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link align-middle px-0" data-assignment="assignment3">
+                    <span class="ms-1 d-none d-sm-inline">Assignment 3</span>
+                  </a>
+                </li>
+              </ul>
+          </div>
+        </div>
+        <div class="col py-3">
+          <div class="container-fluid">
+            <table class="col offset-sm-1 table score-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Score</th>
+                  <th>Conversation History</th>
+                </tr>
+              </thead>
+              <tbody id="score-body">
+                <!-- Data rows will go here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const scores = {
+              'assignment1': [
+                  {name: 'Dictator Wang', score: '100/100', link: '/conversation-history'},
+                  {name: 'Servant Peixoto', score: '96/100', link: '/conversation-history'}
+              ],
+              'assignment2': [
+                  {name: 'Servant Mak', score: '25/100', link: '/conversation-history'},
+                  {name: 'Servant Kimbap', score: '-', link: '/conversation-history'}
+              ],
+              'assignment3': [
+                  {name: 'Dictator Wang', score: '50/100', link: '/conversation-history'},
+                  {name: 'Servant Peixoto', score: '75/100', link: '/conversation-history'}
+              ]
+          };
+
+          const menuItems = document.querySelectorAll('#menu a');
+          menuItems.forEach(item => {
+              item.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  const assignment = this.getAttribute('data-assignment');
+                  const data = scores[assignment];
+                  const tbody = document.getElementById('score-body');
+                  tbody.innerHTML = ''; // Clear existing data
+
+                  data.forEach(d => {
+                      const row = `<tr>
+                          <td>${d.name}</td>
+                          <td>${d.score}</td>
+                          <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
+                      </tr>`;
+                      tbody.innerHTML += row;
+                  });
+              });
+          });
+      });
+    </script>
   </body>
 </html>
