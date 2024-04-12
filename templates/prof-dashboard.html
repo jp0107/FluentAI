@@ -97,12 +97,12 @@
                     </div>
                     <div class="modal-body">
                         <form>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Edit Course Code:</label>
-                            <textarea class="form-control" id="edit-course-code" rows="1"  data-max-length="6"
-                            placeholder="Type New Course Code"></textarea>
-                            <small>Characters left: <span id="char-count-edit-course-code">6</span></small>
-                        </div>
+                            <div class="form-group">
+                                <label for="edit-course-code" class="col-form-label">Edit Course Code:</label>
+                                <textarea class="form-control" id="edit-course-code" rows="1" data-max-length="6"
+                                          placeholder="Type New Course Code"></textarea>
+                                <small>Characters left: <span id="char-count-edit-course-code"></span></small>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -192,17 +192,39 @@
       <script type="text/javascript">
 
         $(document).ready(function() {
+            var $charCount = $('#char-count-edit-course-code');
+            var maxLength = parseInt($('#edit-course-code').attr('data-max-length'), 10);
 
-            // clears text area within edit-code modal
+            // initialize character count
+            function initializeCharCount() {
+                $charCount.text(maxLength);  
+            }
+
+            // update character count
+            function updateCharCount() {
+                var currLength = $('#edit-course-code').val().length;
+                $charCount.text(maxLength - currLength);
+            }
+
+            // clear text area within edit-code modal
             function clearTextArea() {
                 $("#edit-course-code").val('');
             }
 
-            // Edit course code click event
+            // update character count when user types in new code
+            $('#edit-course-code').on('input', updateCharCount);
+
+            // reset text area and character count when edit-code modal is closed
+            $('#editCourseCodeModal').on('hidden.bs.modal', function () {
+                clearTextArea();
+                initializeCharCount();
+            });
+
+            // edit course code click event
             $("#edit-course-code-button").click(function() {
                 var newCourseCode = $("#edit-course-code").val().trim();
                 var courseId = $("#hidden-course-id").val();
-    
+                
                 if (!newCourseCode) {
                     alert("Course code cannot be empty");
                     return;
@@ -224,11 +246,6 @@
                         alert('Error updating course code: ' + xhr.responseText);
                     }
                 });
-            });
-
-            // clear the text area when the edit-code modal is closed
-            $('#editCourseCodeModal').on('hidden.bs.modal', function () {
-                clearTextArea();
             });
     
         });
