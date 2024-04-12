@@ -15,7 +15,8 @@ from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
-                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code)
+                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
+                      edit_course_code)
 
 #-----------------------------------------------------------------------
 
@@ -473,3 +474,22 @@ def join_course():
 
 
 #-----------------------------------------------------------------------
+
+@app.route('/edit-course-code', methods=['POST'])
+def edit_course_code():
+    course_id = flask.request.form.get('course_id')
+    new_code = flask.request.form.get('new_course_code')
+
+    if not new_code:
+        return flask.jsonify({'message': 'Invalid course code!'}), 400
+    
+    try:
+        if edit_course_code(course_id, new_code):  
+            return flask.jsonify({'message': 'Course code updated successfully!'})
+        else:
+            return flask.jsonify({'message': 'Update failed!'}), 500
+    except Exception as e:
+        return flask.jsonify({'message': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
