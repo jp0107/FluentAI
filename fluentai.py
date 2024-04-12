@@ -6,7 +6,6 @@
 import os
 import sys
 import random
-import jsonify
 import string
 from openai import OpenAI
 import flask
@@ -388,15 +387,15 @@ def process_input():
     user_input = flask.request.form.get('userInput', '')
     if not user_input:
         print("No user input received")
-        return jsonify({'error': 'No input provided'}), 400
+        return flask.jsonify({'error': 'No input provided'}), 400
 
     try:
         response_text = get_gpt_response(user_input)
     except Exception as e:
         print(f"Error processing GPT request: {str(e)}")
-        return jsonify({'error': 'Failed to process input'}), 500
+        return flask.jsonify({'error': 'Failed to process input'}), 500
 
-    return jsonify({'gpt_response': response_text})
+    return flask.jsonify({'gpt_response': response_text})
 
 #-----------------------------------------------------------------------
 
