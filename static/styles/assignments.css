@@ -64,6 +64,17 @@ color: #EAF2FF !important;
 background-color: #1E1E1E;
 }
 
+.assignments-button img {
+  vertical-align: middle;
+  margin-left: 0em;
+  height: 1em;
+  margin-bottom: 0.2em;
+}
+
+.assignments-button:hover img {
+  filter: invert(86%) sepia(94%) saturate(7362%) hue-rotate(179deg) brightness(107%) contrast(107%);
+}
+
 #deadline-text {
 color: #5E5E5E;
 font-size: 16px;

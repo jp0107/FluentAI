@@ -118,13 +118,13 @@ def edit_course_code(course_id, new_course_code):
 def delete_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
  
-        # get entries from Course and CoursesProfs to delete
+        # get entry from course
         course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).first()
-        course_prof_entries_to_delete = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id)
-        
-        if course_entry_to_delete or course_prof_entries_to_delete:
+
+        if course_entry_to_delete:
             session.delete(course_entry_to_delete)
-            session.delete(course_prof_entries_to_delete)
+            # delete entries from CoursesProfs
+            session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete()
             session.commit()
             return True
         else:
