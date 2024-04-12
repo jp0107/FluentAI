@@ -382,7 +382,8 @@ def assignment_chat(prompt_id):
     if not prompt:
         # Handle cases where no prompt is found for the given ID
         return "Prompt not found", 404
-
+    
+    session['prompt_used'] = False  # Initialize prompt usage state
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('assignment-chat.html',  initial_data=initial_response, prompt=prompt.prompt_text, username=username)
@@ -393,16 +394,16 @@ def assignment_chat(prompt_id):
 def process_input():
     user_input = flask.request.form.get('userInput', '')
     if not user_input:
-        print("No user input received")
-        return flask.jsonify({'error': 'No input provided'}), 400
+        return jsonify({'error': 'No input provided'}), 400
 
-    try:
-        response_text = get_gpt_response(user_input)
-    except Exception as e:
-        print(f"Error processing GPT request: {str(e)}")
-        return flask.jsonify({'error': 'Failed to process input'}), 500
+    if not session.get('prompt_used', False):
+        prompt_text = get_prompt_by_id(some_id).prompt_text  # Fetch the prompt text only the first time
+        session['prompt_used'] = True
+    else:
+        prompt_text = ""
 
-    return flask.jsonify({'gpt_response': response_text})
+    response_text = get_gpt_response(prompt_text, user_input)
+    return jsonify({'gpt_response': response_text})
 
 #-----------------------------------------------------------------------
 
@@ -414,19 +415,19 @@ def practice_chat():
                                  username = username)
 
 #-----------------------------------------------------------------------
-@app.route('/fetch-conversation')
-def fetch_conversation():
-    username = auth.authenticate()
-    hardcoded_student_id = 123  # Hardcoded value
+# @app.route('/fetch-conversation')
+# def fetch_conversation():
+#     username = auth.authenticate()
+#     hardcoded_student_id = 123  # Hardcoded value
 
-    with Session() as session:
-        conversations = session.query(Conversation).filter(
-            Conversation.student_id == hardcoded_student_id).all()
-        conversation_texts = [conv.conv_text for conv in conversations]
-        return flask.render_template(
-            'assignment-chat.html', 
-            username = username,
-            conversation_data=conversation_texts)
+#     with Session() as session:
+#         conversations = session.query(Conversation).filter(
+#             Conversation.student_id == hardcoded_student_id).all()
+#         conversation_texts = [conv.conv_text for conv in conversations]
+#         return flask.render_template(
+#             'assignment-chat.html', 
+#             username = username,
+#             conversation_data=conversation_texts)
 
 #-----------------------------------------------------------------------
 
