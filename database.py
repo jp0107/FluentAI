@@ -95,7 +95,7 @@ def get_course_code(course_id):
 # edit course code
 def edit_course_code(course_id, new_course_code):
     with sqlalchemy.orm.Session(engine) as session:
-        course = session.query(Course).filter(Course.id == course_id).first()
+        course = session.query(Course).filter(Course.course_id == course_id).first()
 
         if course:
             course.course_code = new_course_code
