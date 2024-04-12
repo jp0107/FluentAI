@@ -190,7 +190,14 @@
       </div>  
 
       <script type="text/javascript">
+
         $(document).ready(function() {
+
+            // clears text area within edit-code modal
+            function clearTextArea() {
+                $("#edit-course-code").val('');
+            }
+
             // Edit course code click event
             $("#edit-course-code-button").click(function() {
                 var newCourseCode = $("#edit-course-code").val().trim();
@@ -217,6 +224,11 @@
                         alert('Error updating course code: ' + xhr.responseText);
                     }
                 });
+            });
+
+            // clear the text area when the edit-code modal is closed
+            $('#editCourseCodeModal').on('hidden.bs.modal', function () {
+                clearTextArea();
             });
     
         });
