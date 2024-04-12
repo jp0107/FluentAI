@@ -21,3 +21,14 @@ document.addEventListener('DOMContentLoaded', function () {
         textArea.addEventListener('input', () => updateCharCount(textArea));
     });
 });
+
+// Populates number of turns options automatically
+window.onload = function() {
+    var select = document.getElementById("num-turns-select");
+    for (var i = 1; i <= 20; i++) {
+        var option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        select.appendChild(option);
+    }
+};
