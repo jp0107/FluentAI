@@ -33,6 +33,16 @@ def get_superadmins() -> List[SuperAdmin]:
         query = session.query(SuperAdmin) # SELECT * FROM SuperAdmin
         return query.all()
 
+# gets admin first name given their netid
+def get_admin_firstname(admin_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = session.query(SuperAdmin.first_name).filter(SuperAdmin.admin_id == admin_id).one_or_none()
+
+        if query is None:
+            return "Default"
+        
+        return query.all()
+
 #-----------------------------------------------------------------------
 
 # creates table storing professor info

@@ -16,7 +16,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
-                      edit_course_code)
+                      edit_course_code, get_admin_firstname)
 
 #-----------------------------------------------------------------------
 
@@ -309,8 +309,13 @@ def prof_scores(course_id):
 @app.route('/admin-dashboard')
 def admin_dashboard():
     username = auth.authenticate()
+
+    # get user's first name to display on dashboard
+    first_name = get_admin_firstname(username)
+
     return flask.render_template('admin-dashboard.html',
-                                 username = username)
+                                 username = username,
+                                 first_name = first_name)
 
 #-----------------------------------------------------------------------
 
