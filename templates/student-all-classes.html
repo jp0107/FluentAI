@@ -138,9 +138,9 @@
                             var courseListHtml = '';
                             $.each(courses, function(index, course) {
                                 courseListHtml += '<div class="col d-flex">' +
-                                                '<a href="/student-dashboard"' + encodeURIComponent(course.course_id) + 'class="class-button" role="button">' +
-                                                '<h3>' + course.course_id + '</h3>' + course.course_name +
-                                                '</a>' + '</div>';
+                                                '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
+                                                '<h3>' + course.course_id + '</h3> ' + course.course_name +
+                                                '</a></div>';
                             });
                             $(".row-cols-md-3").html(courseListHtml);
                         },
@@ -149,6 +149,7 @@
                         }
                     });
                 }
+
                 // Initial fetch of all courses when the page loads
                 fetchAllCourses();
             });
