@@ -125,7 +125,7 @@
                 function fetchCourses() {
                     var nocache = new Date().getTime();
                     $.ajax({
-                        url: '/get-prof-courses' + nocache,
+                        url: '/get-prof-courses' + 'nocache=' + nocache,
                         method: 'GET',
                         cache: false,
                         success: function(response) {
