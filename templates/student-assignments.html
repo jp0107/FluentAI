@@ -57,94 +57,63 @@
           </div>
       </div>
     </div>
-
+    
     <div class="container-fluid">
       <div class="row mt-4">
           <div class="col offset-sm-1">
               <h2>Current Assignments</h2>
           </div>
       </div>
-
       <br>
-
       <div class="row">
         <div class="col-lg-10 mx-auto">
-
-              <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                  <div class="job-content">
-                      <h5>Assignment 1: Café Fluent</h5>
-                      <h5 id="deadline-text">Deadline: 05/01/2024 5:00PM EST</h5>
-                      <!-- Insert completion status -->Completed
-                  </div>
-                </div>
-                <div class="job-right my-4 flex-shrink-0 d-flex">
-                  <a href="/assignment-chat/1" class="assignments-button me-2">Start Assignment</a>
-                  <a href="/practice-chat" class="assignments-button">Practice</a>
+          {% for assignment in curr_assignments %}
+            <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+              <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                <div class="job-content">
+                    <h5>{{ assignment.prompt_title }}</h5>
+                    <h5 id="deadline-text">Deadline: {{ assignment.deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
+                    {{ 'Completed' if assignment.completed else 'Not Completed' }}
                 </div>
               </div>
-
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 2: Job Interview</h5>
-                  <h5 id="deadline-text">Deadline: 05/02/2024 5:00PM EST</h5>
-                  <!-- Insert completion status -->Not Completed
+              <div class="job-right my-4 flex-shrink-0 d-flex">
+                <a href="/assignment-chat/{{ assignment.prompt_id }}" class="assignments-button me-2">Start Assignment</a>
+                <a href="/practice-chat" class="assignments-button">Practice</a>
               </div>
             </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/assignment-chat" class="assignments-button">Start Assignment</a>
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-            </div>
-          </div>
-
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 3: Airport Troubles</h5>
-                  <h5 id="deadline-text">Deadline: 05/03/2024 5:00PM EST</h5>
-                  <!-- Insert completion status -->Not Completed
-              </div>
-            </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/assignment-chat" class="assignments-button">Start Assignment</a>
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-            </div>
-          </div>
-
+          {% else %}
+            <div>No current assignments found.</div>
+          {% endfor %}
         </div>
       </div>
-
       <br>
-
       <div class="row mt-4">
         <div class="col offset-sm-1">
-            <h2>Past Assignments</h2> <!-- replace w classid-->
+            <h2>Past Assignments</h2>
         </div>
       </div>
-
       <br>
-
       <div class="row">
         <div class="col-lg-10 mx-auto">
-
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 0: Say Hello</h5>
-                  <h5 id="deadline-text">Deadline: 03/01/2024 5:00PM EST</h5>
+          {% for assignment in past_assignments %}
+            <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+              <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                <div class="job-content">
+                    <h5>{{ assignment.prompt_title }}</h5>
+                    <h5 id="deadline-text">Deadline: {{ assignment.deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
+                    {{ 'Completed' if assignment.completed else 'Not Completed' }}
+                </div>
+              </div>
+              <div class="job-right my-4 flex-shrink-0 d-flex">
+                <a href="/practice-chat" class="assignments-button">Practice</a>
               </div>
             </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-            </div>
-          </div>
-          
+              {% else %}
+            <div>No past assignments found.</div>
+            {% endfor %}
         </div>
       </div>
-
     </div>
-
     <br>
         
   </body>
