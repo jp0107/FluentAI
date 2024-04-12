@@ -218,7 +218,7 @@ def student_assignments(course_id):
     flask.session['course_id'] = course_id
 
     curr_assignments = get_current_assignments_for_student(username, course_id)
-    past_assignments = get_past_assignments(username, course_id)
+    past_assignments = get_past_assignments(course_id)
 
     return flask.render_template('student-assignments.html',
                                  username = username,
