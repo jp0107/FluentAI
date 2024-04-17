@@ -229,6 +229,7 @@ def student_assignments(course_id):
     return flask.render_template('student-assignments.html',
                                  username = username,
                                  course_id = course_id,
+                                 student_id=username,
                                  curr_assignments = curr_assignments,
                                  past_assignments = past_assignments,
                                 get_current_assignments_for_student=get_current_assignments_for_student,
