@@ -19,7 +19,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
                       get_score_for_student, get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
-                      get_current_assignments_for_prof, get_curr_prof_default_assignments)
+                      get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice)
 
 #-----------------------------------------------------------------------
 
@@ -241,9 +241,15 @@ def student_practice(course_id):
 
     flask.session['course_id'] = course_id
 
+    try:
+        practice_assignments = get_practice_prompts(course_id)
+    except:
+        practice_assignments = get_default_practice()
+
     return flask.render_template('student-practice.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 practice_assignments = practice_assignments)
 
 #-----------------------------------------------------------------------
 

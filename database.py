@@ -286,13 +286,26 @@ class PracticePrompt(Base):
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
+# get default practice prompts
+def get_default_practice():
+    now = datetime.now()
+    return [
+        (98762, 'Assignment 0: Say Hello', now),
+        (98765, 'Assignment 1: Café Fluent', now),
+        (87654, 'Assignment 2: Job Interview', now),
+        (76543, 'Assignment 3: Airport Troubles', now)
+    ]
+
 # get all practice prompts for a given course, ordered by most to least recently created
 def get_practice_prompts(course_id) -> List[Prompt]:
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(PracticePrompt.prompt_id, PracticePrompt.prompt_title, PracticePrompt.created_at)
                 .filter(PracticePrompt.course_id == course_id)
                 .order_by(sqlalchemy.desc(PracticePrompt.created_at)))
-        return query.all()
+        
+        results = query.all()
+
+        return results if results else get_default_practice()
 
 #-----------------------------------------------------------------------
 
