@@ -147,7 +147,16 @@ class Student(Base):
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# gets student info and the courses they belong to in alphabetical order by student first name
+# get default prof roster
+def get_default_prof_roster():
+    return [
+        ('ik1234', 'Irene', 'Kim'),
+        ('tm0261', 'Tinney', 'Mak'),
+        ('jp2024', 'Jonathan', 'Peixoto'),
+        ('jw2003', 'Jessie', 'Wang')
+    ]
+
+# get student info and the courses they belong to in alphabetical order by student first name
 def get_all_students():
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Student.student_id, Student.first_name, Student.last_name, CoursesStudents.course_id)
@@ -158,10 +167,12 @@ def get_all_students():
 # get all students in a given course
 def get_students_in_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Student.student_id, Student.first_name, Student.last_name, CoursesStudents.course_id)
+        query = (session.query(Student.student_id, Student.first_name, Student.last_name)
                 .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
+                .filter(CoursesStudents.course_id == course_id)
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
-        return query.all()
+        results = query.all()
+        return results if results else get_default_prof_roster()
 
 # gets student first name based on their netid
 def get_student_firstname(student_id):
@@ -194,14 +205,6 @@ class CoursesStudents(Base):
     __tablename__ = 'coursesstudents'
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
-
-# gets all students in a course given course id
-def get_students_by_course(course_id):
-     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Student.student_id, Student.first_name, Student.last_name)
-                 .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
-                 .filter(CoursesStudents.course_id == course_id))
-        return query.all()
 
 #-----------------------------------------------------------------------
 
