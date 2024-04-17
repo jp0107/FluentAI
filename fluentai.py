@@ -18,7 +18,8 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
-                      get_score_for_student, get_past_assignments, get_curr_default_assignments, get_past_default_assignments)
+                      get_score_for_student, get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
+                      get_current_assignments_for_prof, get_curr_prof_default_assignments)
 
 #-----------------------------------------------------------------------
 
@@ -222,7 +223,7 @@ def student_assignments(course_id):
         past_assignments = get_past_assignments(course_id)
     except Exception as e:
         # Handle empty assignments in case of error
-        curr_assignments = get_curr_default_assignments()
+        curr_assignments = get_curr_student_default_assignments()
         past_assignments = get_past_default_assignments()
 
     return flask.render_template('student-assignments.html',
@@ -296,9 +297,21 @@ def prof_assignments(course_id):
 
     flask.session['course_id'] = course_id
 
+    try:
+        curr_assignments = get_current_assignments_for_prof(course_id)
+        past_assignments = get_past_assignments(course_id)
+    except:
+        # handle empty assignments in case of error
+        curr_assignments = get_curr_prof_default_assignments()
+        past_assignments = get_past_default_assignments()
+
     return flask.render_template('prof-assignments.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 curr_assignments = curr_assignments,
+                                 past_assignments = past_assignments,
+                                 get_current_assignments_for_prof = get_current_assignments_for_prof,
+                                 get_past_assignments = get_past_assignments)
 
 #-----------------------------------------------------------------------
 

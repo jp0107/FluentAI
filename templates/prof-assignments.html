@@ -143,93 +143,51 @@
 
       <br>
 
-      <div class="row">
-        <div class="col-lg-10 mx-auto">
-
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 1: Café Fluent</h5>
-                  <h5 id="deadline-text">Deadline: 05/01/2024 5:00PM EST</h5>
-                  <!-- Insert completion status -->Completed
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+              {% for assignment in curr_assignments %}
+              <div class="job-box d-md-flex align-items-center justify-content-between mb-3">
+                  <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                      <div class="job-content">
+                          <h5>{{ assignment.prompt_title }}</h5>
+                          <h5 id="deadline-text">Deadline: {{ assignment.deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
+                      </div>
+                  </div>
+                  <div class="job-right my-4 flex-shrink-0 d-flex">
+                      <a href="{{ url_for('assignment_chat', prompt_id=assignment.prompt_id) }}" class="btn btn-primary me-2">Start Assignment</a>
+                      <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ assignment.prompt_id }}')">Delete</button>
+                  </div>
               </div>
-            </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/assignment-chat" class="assignments-button">Start Assignment</a>
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-              <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">
-                Delete <img src="/static/img/delete.svg">
-              </a>
-            </div>
+              {% else %}
+              <p>No current assignments available.</p>
+              {% endfor %}
           </div>
-
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 2: Job Interview</h5>
-                  <h5 id="deadline-text">Deadline: 05/02/2024 5:00PM EST</h5>
-                  <!-- Insert completion status -->Not Completed
-              </div>
-            </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/assignment-chat" class="assignments-button">Start Assignment</a>
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-              <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">
-                Delete <img src="/static/img/delete.svg">
-              </a>
-            </div>
-          </div>
-
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 3: Airport Troubles</h5>
-                  <h5 id="deadline-text">Deadline: 05/03/2024 5:00PM EST</h5>
-                  <!-- Insert completion status -->Not Completed
-              </div>
-            </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/assignment-chat" class="assignments-button">Start Assignment</a>
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-              <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">
-                Delete <img src="/static/img/delete.svg">
-              </a>
-            </div>
-          </div>
-
-        </div>
       </div>
 
-      <br>
+        <br>
 
-      <div class="row mt-4">
-        <div class="col offset-sm-1">
-            <h2>Past Assignments</h2> <!-- replace w classid-->
-        </div>
-      </div>
-
-      <br>
-
-      <div class="row">
-        <div class="col-lg-10 mx-auto">
-
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 0: Say Hello</h5>
-                  <h5 id="deadline-text">Deadline: 03/01/2024 5:00PM EST</h5>
-              </div>
-            </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-              <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">
-                Delete <img src="/static/img/delete.svg">
-              </a>
-            </div>
+        <div class="row mt-4">
+          <div class="col offset-sm-1">
+              <h2>Past Assignments</h2>
           </div>
-          
         </div>
-      </div>
+      
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+              {% for assignment in past_assignments %}
+              <div class="job-box d-md-flex align-items-center justify-content-between mb-3">
+                  <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                      <div class="job-content">
+                          <h5>{{ assignment.prompt_title }}</h5>
+                          <h5 id="deadline-text">Deadline: {{ assignment.deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
+                      </div>
+                  </div>
+              </div>
+              {% else %}
+              <p>No past assignments completed yet.</p>
+              {% endfor %}
+          </div>
+        </div>
 
     </div>
 

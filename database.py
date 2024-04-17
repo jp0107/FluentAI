@@ -210,13 +210,22 @@ class Prompt(Base):
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# get default current assignments
-def get_curr_default_assignments():
+# get default current assignments for student
+def get_curr_student_default_assignments():
     now = datetime.now()
     return [
         (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10), False, now, True),
         (22222, 'Assignment 2: Job Interview', now + timedelta(days=20), False, now, False),
         (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now, False)
+    ]
+
+# get default current assignments for prof
+def get_curr_prof_default_assignments():
+    now = datetime.now()
+    return [
+        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10), False, now),
+        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20), False, now),
+        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now)
     ]
 
 # get default past assignments
@@ -231,7 +240,7 @@ def get_current_assignments_for_student(student_id, course_id):
         # Check if the student exists in the database
         student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
         if not student_exists:
-            return get_curr_default_assignments()
+            return get_curr_student_default_assignments()
         
         subquery = (session.query(Conversation.prompt_id)
                     .filter(Conversation.student_id == student_id, Conversation.prompt_id == Prompt.prompt_id)
@@ -242,7 +251,7 @@ def get_current_assignments_for_student(student_id, course_id):
                  .order_by(sqlalchemy.asc(Prompt.deadline)))
 
         results = query.all()
-        return results if results else get_curr_default_assignments()
+        return results if results else get_curr_student_default_assignments()
 
 # get all current assignments for a given course, with the earliest deadline first (FOR PROFESSOR ASSIGNMENTS PAGE)
 def get_current_assignments_for_prof(course_id):
@@ -250,7 +259,10 @@ def get_current_assignments_for_prof(course_id):
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
                 .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
                 .order_by(sqlalchemy.asc(Prompt.deadline)))
-        return query.all()
+
+        results = query.all()
+
+        return results if results else get_curr_prof_default_assignments()
 
 # get all past assignments for a given course, with the most recent assignment first
 def get_past_assignments(course_id):
