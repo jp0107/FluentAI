@@ -210,12 +210,23 @@ class Prompt(Base):
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
-# mark whether assignment has been completed or not
-def get_current_assignments_for_student(student_id, course_id):
+# get default current assignments
+def get_curr_default_assignments():
+    now = datetime.now()
+    return [
+        ('Assignment 1: Introduction', now + timedelta(days=10), False, now, False),
+        ('Assignment 2: Basics', now + timedelta(days=20), False, now, False),
+    ]
+
+def get_current_assignments_for_student(student_id, course_id, engine):
     with sqlalchemy.orm.Session(engine) as session:
+        # Check if the student exists in the database
+        student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
+        if not student_exists:
+            return get_curr_default_assignments()
+        
         subquery = (session.query(Conversation.prompt_id)
-                    .filter(Conversation.prompt_id == Prompt.course_id, Conversation.student_id == student_id)
+                    .filter(Conversation.student_id == student_id, Conversation.prompt_id == Prompt.prompt_id)
                     .exists()).label("completed")
 
         query = (session.query(Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at, subquery)
@@ -223,16 +234,7 @@ def get_current_assignments_for_student(student_id, course_id):
                  .order_by(sqlalchemy.asc(Prompt.deadline)))
 
         results = query.all()
-
-        if not results:
-            now = datetime.now() 
-            defaults = [
-                ('Assignment 1: Default', now + timedelta(days=10), False, now, False),
-                ('Assignment 2: Default', now + timedelta(days=5), False, now, True),
-            ]
-            return defaults
-
-        return results
+        return results if results else get_curr_default_assignments()
 
 # get all current assignments for a given course, with the earliest deadline first (FOR PROFESSOR ASSIGNMENTS PAGE)
 def get_current_assignments_for_prof(course_id):
