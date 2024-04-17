@@ -326,13 +326,30 @@ def get_conversations() -> List[Conversation]:
         query = session.query(Conversation) # SELECT * FROM Conversation
         return query.all()
 
-# gets the score given a student net id and the assignment id
-def get_score_for_student(student_id, prompt_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Conversation.score)
-                .filter(Conversation.student_id == student_id, Conversation.prompt_id == prompt_id)) 
+# get default student scores for a course
+def get_default_student_scores():
+    return [
+        (98762, 'Assignment 0: Say Hello', 1, 100),
+        (98765, 'Assignment 1: Café Fluent', 2, 96),
+        (87654, 'Assignment 2: Job Interview', 3, 25),
+        (76543, 'Assignment 3: Airport Troubles', 4, None)
+    ]
 
-        return query.all()
+# gets the course assignments and their scores for each given a student id
+def get_assignments_and_scores_for_student(course_id, student_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # check if the student exists in the database
+        student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
+        if not student_exists:
+            return get_default_student_scores()
+
+        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
+                 .outerjoin(Conversation, sqlalchemy.and_(Conversation.prompt_id == Prompt.prompt_id, Conversation.student_id == student_id))
+                 .filter(Prompt.course_id == course_id)
+                 .order_by(sqlalchemy.asc(Prompt.created_at)))
+
+        results = query.all()
+        return results if results else get_default_student_scores()
 
 # gets all student scores in alphabetical order for an assignment given the assignment id
 def get_all_scores(prompt_id):
