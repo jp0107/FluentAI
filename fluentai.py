@@ -432,7 +432,7 @@ def process_input():
 #-----------------------------------------------------------------------
 
 
-@app.route('/practice-chat')
+@app.route('/practice-chat/<course_id>')
 def practice_chat(course_id):
     username = auth.authenticate()
     flask.session['course_id'] = course_id

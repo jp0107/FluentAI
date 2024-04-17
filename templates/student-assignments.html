@@ -76,7 +76,7 @@
                         </div>
                         <div class="job-right my-4 flex-shrink-0 d-flex">
                             <a href="{{ url_for('assignment_chat', course_id=course_id, prompt_id=prompt_id) }}" class="assignments-button me-2">Start Assignment</a>
-                            <a href="/practice-chat" class="assignments-button">Practice</a>
+                            <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
                         </div>
                     </div>
                 {% else %}
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <div class="job-right my-4 flex-shrink-0 d-flex">
-                            <a href="/practice-chat" class="assignments-button">Practice</a>
+                            <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
                         </div>
                     </div>
                 {% else %}
