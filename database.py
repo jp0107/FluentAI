@@ -155,6 +155,14 @@ def get_all_students():
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
         return query.all()
 
+# get all students in a given course
+def get_students_in_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Student.student_id, Student.first_name, Student.last_name, CoursesStudents.course_id)
+                .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
+                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
+        return query.all()
+
 # gets student first name based on their netid
 def get_student_firstname(student_id):
     with sqlalchemy.orm.Session(engine) as session:
@@ -321,11 +329,6 @@ class Conversation(Base):
     score = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-def get_conversations() -> List[Conversation]:
-    with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(Conversation) # SELECT * FROM Conversation
-        return query.all()
-
 # get default student scores for a course
 def get_default_student_scores():
     return [
@@ -334,6 +337,10 @@ def get_default_student_scores():
         (87654, 'Assignment 2: Job Interview', 3, 25),
         (76543, 'Assignment 3: Airport Troubles', 4, None)
     ]
+
+# get default conversation
+def get_default_conversation():
+    return [('Assignment 0: Default', 'Mi nueva casa está en una calle ancha que tiene muchos árboles. El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña terraza con piscina donde puedo tomar el sol en verano.')]
 
 # gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
@@ -360,6 +367,24 @@ def get_all_scores(prompt_id):
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
 
         return query.all()
+
+# get conversation history given a conv_id
+def get_conversation(course_id, student_id, conv_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # check if the student exists in the database
+        student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
+        if not student_exists:
+            return get_default_conversation()
+
+        query = (session.query(Prompt.prompt_title, Conversation.conv_text)
+                 .outerjoin(Conversation, sqlalchemy.and_(
+                     Conversation.prompt_id == Prompt.prompt_id, 
+                     Conversation.conv_id == conv_id 
+                 ))
+                 .filter(Prompt.course_id == course_id))
+
+        results = query.one_or_none()
+        return results if results else get_default_conversation()
 
 #-----------------------------------------------------------------------
 

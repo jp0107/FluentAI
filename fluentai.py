@@ -20,7 +20,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
                       get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
-                      get_assignments_and_scores_for_student, get_default_student_scores)
+                      get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation)
 
 #-----------------------------------------------------------------------
 
@@ -401,10 +401,15 @@ def conversation_history(course_id, conv_id):
 
     flask.session['course_id'] = course_id
 
+    try:
+        conversation = get_conversation(course_id, username, conv_id)
+    except:
+        conversation = get_default_conversation()
+
     return flask.render_template('conversation-history.html',
                                  username = username,
                                  course_id = course_id,
-                                 conv_id = conv_id)
+                                 conversation = conversation)
 
 #-----------------------------------------------------------------------
 

@@ -28,13 +28,13 @@
           <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="/student-assignments">Assignments</a>
+                <a class="nav-link" href="/student-assignments/{{ course_id }}">Assignments</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/student-practice">Practice</a>
+                <a class="nav-link" href="/student-practice/{{ course_id }}">Practice</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/student-scores">Scores</a>
+                <a class="nav-link" href="/student-scores/{{ course_id }}">Scores</a>
               </li>    
             </ul>
             <ul class="navbar-nav d-flex flex-row ms-auto">
@@ -54,7 +54,7 @@
       <div class="container-fluid">
         <div class="row mt-4">
             <div class="col offset-sm-1">
-                <h1>SPA101</h1> <!-- replace w classid-->
+                <h1>{{ course_id}}</h1> 
             </div>
         </div>
       </div>
@@ -62,20 +62,14 @@
       <div class="container-fluid">
         <div class="row mt-4">
             <div class="col offset-sm-1">
-                <h2>Conversation History for Assignment</h2> <!-- insert assignment-->
+                <h2>Conversation History for {{ conversation[0] }}</h2>
             </div>
             <br>
             <div class="subcontainer">
                 <p>
-                    Mi nueva casa está en una calle ancha que tiene muchos árboles.
-                    El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. 
-                    El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, 
-                    un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña 
-                    terraza con piscina donde puedo tomar el sol en verano.
+                   {{ (conversation[1] if conversation[1] else 'No conversation history found. Please complete assignment first.') }}
                 </p> 
-                <!-- insert conversation history-->
             </div>
-            
         </div>
       </div>
         
