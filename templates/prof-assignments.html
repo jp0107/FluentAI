@@ -155,6 +155,7 @@
                   </div>
                   <div class="job-right my-4 flex-shrink-0 d-flex">
                       <a href="{{ url_for('assignment_chat', prompt_id=prompt_id) }}" class="assignments-button">Start Assignment</a>
+                      <a href="/practice-chat" class="assignments-button">Practice</a>
                       <button class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ prompt_id }}')">Delete</button>
                   </div>
               </div>
@@ -182,6 +183,12 @@
                           <h5>{{ title }}</h5>
                           <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
                       </div>
+                  </div>
+                  <div class="job-right my-4 flex-shrink-0 d-flex">
+                    <a href="/practice-chat" class="assignments-button">Practice</a>
+                    <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ prompt_id }}')">
+                      Delete <img src="/static/img/delete.svg">
+                    </a>
                   </div>
               </div>
               {% else %}
