@@ -221,7 +221,7 @@ def get_curr_default_assignments():
 # get default past assignments
 def get_past_default_assignments():
     now = datetime.now()
-    return [(12345, 'Assignment 0: Default', now - timedelta(days=3), True, now - timedelta(days=5), True)]
+    return [(12345, 'Assignment 0: Default', now - timedelta(days=3), True, now - timedelta(days=5))]
 
 # get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
 # mark whether assignment has been completed or not
