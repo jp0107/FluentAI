@@ -60,7 +60,7 @@
         </div>
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                {% for prompt_id, title, deadline, past_deadline, created_at, completed in get_current_assignments_for_student(student_id, course_id) %}
+                {% for prompt_id, title, deadline, past_deadline, created_at, completed in curr_assignments %}
                     <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                         <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
                             <div class="job-content">
@@ -96,7 +96,7 @@
         </div>
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                {% for prompt_id, title, deadline, past_deadline, created_at in get_past_assignments(course_id) %}
+                {% for prompt_id, title, deadline, past_deadline, created_at in past_assignments %}
                     <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                         <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
                             <div class="job-content">

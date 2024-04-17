@@ -154,8 +154,8 @@
                       </div>
                   </div>
                   <div class="job-right my-4 flex-shrink-0 d-flex">
-                      <a href="{{ url_for('assignment_chat', prompt_id=prompt_id) }}" class="btn btn-primary me-2">Start Assignment</a>
-                      <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ prompt_id }}')">Delete</button>
+                      <a href="{{ url_for('assignment_chat', prompt_id=prompt_id) }}" class="assignments-button">Start Assignment</a>
+                      <button class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ prompt_id }}')">Delete</button>
                   </div>
               </div>
               {% else %}
@@ -169,6 +169,7 @@
         <div class="row mt-4">
           <div class="col offset-sm-1">
               <h2>Past Assignments</h2>
+              <br>
           </div>
         </div>
       
@@ -186,6 +187,7 @@
               {% else %}
               <p>No past assignments completed yet.</p>
               {% endfor %}
+              <br>
           </div>
         </div>
 
