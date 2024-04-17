@@ -390,9 +390,11 @@ def conversation_history():
 
 #-----------------------------------------------------------------------
 
-@app.route('/assignment-chat/<int:prompt_id>')
-def assignment_chat(prompt_id):
+@app.route('/assignment-chat/<course_id>/<int:prompt_id>')
+def assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
@@ -404,7 +406,11 @@ def assignment_chat(prompt_id):
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
-    return flask.render_template('assignment-chat.html',  initial_data=initial_response, prompt=prompt.prompt_text, username=username)
+    return flask.render_template('assignment-chat.html',  
+                                course_id = course_id,
+                                initial_data=initial_response, 
+                                prompt=prompt.prompt_text, 
+                                username=username)
 
 #-----------------------------------------------------------------------
 
@@ -427,10 +433,13 @@ def process_input():
 
 
 @app.route('/practice-chat')
-def practice_chat():
+def practice_chat(course_id):
     username = auth.authenticate()
+    flask.session['course_id'] = course_id
+
     return flask.render_template('practice-chat.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #-----------------------------------------------------------------------
 # @app.route('/fetch-conversation')
