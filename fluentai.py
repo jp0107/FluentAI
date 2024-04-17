@@ -18,7 +18,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
-                      get_score_for_student, get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
+                      get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores)
 
