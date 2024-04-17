@@ -62,12 +62,12 @@
       <div class="container-fluid">
         <div class="row mt-4">
             <div class="col offset-sm-1">
-                <h2>Conversation History for {{ conversation[0] }}</h2>
+                <h2>Conversation History for {{ conversation[0][0] }}</h2>
             </div>
             <br>
             <div class="subcontainer">
                 <p>
-                   {{ (conversation[1] if conversation[1] else 'No conversation history found. Please complete assignment first.') }}
+                   {{ (conversation[1] if conversation[0][1] else 'No conversation history found. Please complete assignment first.') }}
                 </p> 
             </div>
         </div>
