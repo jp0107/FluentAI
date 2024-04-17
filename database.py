@@ -218,7 +218,9 @@ def get_curr_default_assignments():
         ('Assignment 2: Basics', now + timedelta(days=20), False, now, False),
     ]
 
-def get_current_assignments_for_student(student_id, course_id, engine):
+# get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
+# mark whether assignment has been completed or not
+def get_current_assignments_for_student(student_id, course_id):
     with sqlalchemy.orm.Session(engine) as session:
         # Check if the student exists in the database
         student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
