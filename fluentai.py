@@ -221,8 +221,6 @@ def student_assignments(course_id):
         curr_assignments = get_current_assignments_for_student(username, course_id)
         past_assignments = get_past_assignments(course_id)
     except Exception as e:
-        error_message = f"Failed to fetch assignments due to: {e}"
-        flask.flash(error_message, "error")
         # Handle empty assignments in case of error
         curr_assignments = get_curr_default_assignments()
         past_assignments = get_past_default_assignments()

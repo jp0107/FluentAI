@@ -214,14 +214,15 @@ class Prompt(Base):
 def get_curr_default_assignments():
     now = datetime.now()
     return [
-        (11111, 'Assignment 1: Introduction', now + timedelta(days=10), False, now, False),
-        (22222, 'Assignment 2: Basics', now + timedelta(days=20), False, now, False),
+        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10), False, now, True),
+        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20), False, now, False),
+        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now, False)
     ]
 
 # get default past assignments
 def get_past_default_assignments():
     now = datetime.now()
-    return [(12345, 'Assignment 0: Default', now - timedelta(days=3), True, now - timedelta(days=5))]
+    return [(12345, 'Assignment 0: Say Hello', now - timedelta(days=3), True, now - timedelta(days=5))]
 
 # get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
 # mark whether assignment has been completed or not
