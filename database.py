@@ -183,6 +183,27 @@ def get_student_firstname(student_id):
         
         return query[0]
 
+# delete student
+def delete_student(student_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        try:
+            # delete associated entries from CoursesProfs first
+            session.query(CoursesStudents).filter(CoursesStudents.student_id == student_id).delete(synchronize_session='fetch')
+
+            # delete the course entry
+            student_to_delete = session.query(Student).filter(Student.student_id == student_id).one_or_none()
+            if student_to_delete:
+                session.delete(student_to_delete)
+                session.commit()
+                return True
+            else:
+                session.commit()  
+                return False
+        except Exception as e:
+            session.rollback()  
+            print(f"An error occurred: {e}")
+            return False
+
 #-----------------------------------------------------------------------
 
 # creates table mapping courses to professors

@@ -21,7 +21,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
-                      get_students_in_course, get_default_prof_roster)
+                      get_students_in_course, get_default_prof_roster, delete_student)
 
 #-----------------------------------------------------------------------
 
@@ -591,3 +591,17 @@ def delete_course_click():
             return flask.jsonify({'message': 'Error deleting course'}), 200
     except Exception as e:
         return flask.jsonify({'message': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
+@app.route('/delete-student/<student_id>', methods=['POST'])
+def delete_student_click():
+    student_id = flask.request.form.get('student_id')
+    return flask.jsonify({'message': 'Student deleted successfully'}), 200
+    # try:
+    #     if delete_student(student_id):
+    #         return flask.jsonify({'message': 'Student deleted successfully'}), 200
+    #     else:
+    #         return flask.jsonify({'message': 'Error deleting student'}), 200
+    # except Exception as e:
+    #     return flask.jsonify({'message': str(e)}), 500
