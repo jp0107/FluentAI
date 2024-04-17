@@ -214,9 +214,14 @@ class Prompt(Base):
 def get_curr_default_assignments():
     now = datetime.now()
     return [
-        ('Assignment 1: Introduction', now + timedelta(days=10), False, now, False),
-        ('Assignment 2: Basics', now + timedelta(days=20), False, now, False),
+        (11111, 'Assignment 1: Introduction', now + timedelta(days=10), False, now, False),
+        (22222, 'Assignment 2: Basics', now + timedelta(days=20), False, now, False),
     ]
+
+# get default past assignments
+def get_past_default_assignments():
+    now = datetime.now()
+    return [(12345, 'Assignment 0: Default', now - timedelta(days=3), True, now - timedelta(days=5), True)]
 
 # get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
 # mark whether assignment has been completed or not
@@ -231,7 +236,7 @@ def get_current_assignments_for_student(student_id, course_id):
                     .filter(Conversation.student_id == student_id, Conversation.prompt_id == Prompt.prompt_id)
                     .exists()).label("completed")
 
-        query = (session.query(Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at, subquery)
+        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at, subquery)
                  .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
                  .order_by(sqlalchemy.asc(Prompt.deadline)))
 
@@ -241,7 +246,7 @@ def get_current_assignments_for_student(student_id, course_id):
 # get all current assignments for a given course, with the earliest deadline first (FOR PROFESSOR ASSIGNMENTS PAGE)
 def get_current_assignments_for_prof(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
+        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
                 .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
                 .order_by(sqlalchemy.asc(Prompt.deadline)))
         return query.all()
@@ -255,13 +260,7 @@ def get_past_assignments(course_id):
 
         results = query.all()
 
-        if not results:
-            now = datetime.now()
-            default = [('Assignment 0: Default', now - timedelta(days=3), True, now - timedelta(days=5), True)]
-            return default
-
-        return results
-
+        return results if results else get_past_default_assignments()
 
 #-----------------------------------------------------------------------
 

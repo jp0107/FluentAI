@@ -18,7 +18,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
-                      get_score_for_student, get_past_assignments)
+                      get_score_for_student, get_past_assignments, get_curr_default_assignments, get_past_default_assignments)
 
 #-----------------------------------------------------------------------
 
@@ -224,7 +224,8 @@ def student_assignments(course_id):
         error_message = f"Failed to fetch assignments due to: {e}"
         flask.flash(error_message, "error")
         # Handle empty assignments in case of error
-        curr_assignments, past_assignments = [], []
+        curr_assignments = get_curr_default_assignments()
+        past_assignments = get_past_default_assignments()
 
     return flask.render_template('student-assignments.html',
                                  username = username,
