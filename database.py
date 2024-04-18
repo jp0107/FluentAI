@@ -224,9 +224,9 @@ def get_default_courses_and_profs():
 # get courses and professors for each one (FOR ADMIN COURSES PAGE)
 def get_courses_and_profs():
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Course.course_id, Professor.first_name, Professor.last_name)
+        query = (session.query(CoursesProfs.course_id, Professor.first_name, Professor.last_name)
                 .join(Professor, CoursesProfs.prof_id == Professor.prof_id)
-                .order_by(Course.course_id))
+                .order_by(CoursesProfs.course_id))
         
         results = query.all()
         
