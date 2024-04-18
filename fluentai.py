@@ -13,12 +13,15 @@ import logging
 import sqlalchemy
 import auth
 from req_lib import ReqLib
-from database import (Student, Professor, SuperAdmin, Course, Conversation,
-                      CoursesStudents, CoursesProfs, engine, Base, Prompt, get_profs, get_all_profs,
-                      get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
+from database import (Student, Professor, SuperAdmin, Course, Conversation, CoursesProfs, engine, Base, get_profs, get_all_profs,
+                      get_superadmins, check_user_type, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
-                      get_score_for_student, get_past_assignments, get_assignments_for_course)
+                      get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
+                      get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
+                      get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
+                      get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
+                      get_profs_in_course, get_default_student_roster)
 
 #-----------------------------------------------------------------------
 
@@ -221,10 +224,9 @@ def student_assignments(course_id):
         curr_assignments = get_current_assignments_for_student(username, course_id)
         past_assignments = get_past_assignments(course_id)
     except Exception as e:
-        error_message = f"Failed to fetch assignments due to: {e}"
-        flask.flash(error_message, "error")
         # Handle empty assignments in case of error
-        curr_assignments, past_assignments = [], []
+        curr_assignments = get_curr_student_default_assignments()
+        past_assignments = get_past_default_assignments()
 
     return flask.render_template('student-assignments.html',
                                  username = username,
@@ -241,9 +243,15 @@ def student_practice(course_id):
 
     flask.session['course_id'] = course_id
 
+    try:
+        practice_assignments = get_practice_prompts(course_id)
+    except:
+        practice_assignments = get_default_practice()
+
     return flask.render_template('student-practice.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 practice_assignments = practice_assignments)
 
 #-----------------------------------------------------------------------
 
@@ -253,9 +261,15 @@ def student_scores(course_id):
 
     flask.session['course_id'] = course_id
 
+    try:
+        scores = get_assignments_and_scores_for_student(course_id, username)
+    except:
+        scores = get_default_student_scores()
+
     return flask.render_template('student-scores.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 scores = scores)
 
 #------------------------  PROFESSOR PAGES   ---------------------------
 #-----------------------------------------------------------------------
@@ -294,9 +308,19 @@ def prof_assignments(course_id):
 
     flask.session['course_id'] = course_id
 
+    try:
+        curr_assignments = get_current_assignments_for_prof(course_id)
+        past_assignments = get_past_assignments(course_id)
+    except:
+        # handle empty assignments in case of error
+        curr_assignments = get_curr_prof_default_assignments()
+        past_assignments = get_past_default_assignments()
+
     return flask.render_template('prof-assignments.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 curr_assignments = curr_assignments,
+                                 past_assignments = past_assignments)
 
 #-----------------------------------------------------------------------
 
@@ -306,15 +330,19 @@ def prof_roster(course_id):
 
     flask.session['course_id'] = course_id
 
-    roster = get_students_by_course(course_id)
-
-    full_names = [f"{first} {last}" for student_id, first, last in roster]
+    try:
+        student_roster = get_students_in_course(course_id)
+        prof_roster = get_profs_in_course(course_id)
+    except:
+        student_roster = get_default_student_roster()
+        prof_roster = get_default_prof_roster()
 
     return flask.render_template('prof-roster.html',
                                  username = username,
                                  course_id = course_id,
-                                 students = full_names
-                                 )
+                                 student_roster = student_roster,
+                                 prof_roster = prof_roster
+                                )
 
 #-----------------------------------------------------------------------
 
@@ -348,41 +376,63 @@ def admin_dashboard():
 @app.route('/admin-courses')
 def admin_courses():
     username = auth.authenticate()
+
+    courses_profs = get_courses_and_profs()
+
     return flask.render_template('admin-courses.html',
-                                 username = username)
+                                 username = username,
+                                 courses_profs = courses_profs)
 
 #-----------------------------------------------------------------------
 
 @app.route('/admin-prof-roster')
 def admin_prof_roster():
     username = auth.authenticate()
-    prof_list = get_all_profs()
+
+    prof_list = get_prof_info()
+
     return flask.render_template('admin-prof-roster.html',
-                                 prof_list = prof_list,
-                                 username = username)
+                                 username = username,
+                                 prof_list = prof_list)
 
 #-----------------------------------------------------------------------
 
 @app.route('/admin-student-roster')
 def admin_student_roster():
     username = auth.authenticate()
+
+    student_list = get_student_info()
+
     return flask.render_template('admin-student-roster.html',
-                                 username = username)
+                                 username = username,
+                                 student_list = student_list)
 
 #------------------------   OTHER PAGES   ------------------------------
 #-----------------------------------------------------------------------
 
-@app.route('/conversation-history')
-def conversation_history():
+@app.route('/conversation-history/<course_id>/<int:conv_id>')
+def conversation_history(course_id, conv_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
+
+    try:
+        conversation = get_conversation(course_id, username, conv_id)
+    except:
+        conversation = get_default_conversation()
+
     return flask.render_template('conversation-history.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id,
+                                 conversation = conversation)
 
 #-----------------------------------------------------------------------
 
-@app.route('/assignment-chat/<int:prompt_id>')
-def assignment_chat(prompt_id):
+@app.route('/assignment-chat/<course_id>/<int:prompt_id>')
+def assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
@@ -394,7 +444,11 @@ def assignment_chat(prompt_id):
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
-    return flask.render_template('assignment-chat.html',  initial_data=initial_response, prompt=prompt.prompt_text, username=username)
+    return flask.render_template('assignment-chat.html',  
+                                course_id = course_id,
+                                initial_data=initial_response, 
+                                prompt=prompt.prompt_text, 
+                                username=username)
 
 #-----------------------------------------------------------------------
 
@@ -416,11 +470,14 @@ def process_input():
 #-----------------------------------------------------------------------
 
 
-@app.route('/practice-chat')
-def practice_chat():
+@app.route('/practice-chat/<course_id>')
+def practice_chat(course_id):
     username = auth.authenticate()
+    flask.session['course_id'] = course_id
+
     return flask.render_template('practice-chat.html',
-                                 username = username)
+                                 username = username,
+                                 course_id = course_id)
 
 #-----------------------------------------------------------------------
 # @app.route('/fetch-conversation')
@@ -536,8 +593,8 @@ def update_course_code_click():
 
 #-----------------------------------------------------------------------
 
-@app.route('/delete-course', methods=['POST'])
-def delete_course_click():
+@app.route('/delete-course/<course_id>', methods=['POST'])
+def delete_course_click(course_id):
     course_id = flask.request.form.get('course_id')
 
     try:
@@ -547,6 +604,29 @@ def delete_course_click():
             return flask.jsonify({'message': 'Error deleting course'}), 200
     except Exception as e:
         return flask.jsonify({'message': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
+# FIX LATER
+@app.route('/delete-student/<student_id>', methods=['POST'])
+def delete_student_click(student_id):
+    student_id = flask.request.form.get('student_id')
+    return flask.jsonify({'message': 'Student deleted successfully'}), 200
+    # try:
+    #     if delete_student(student_id):
+    #         return flask.jsonify({'message': 'Student deleted successfully'}), 200
+    #     else:
+    #         return flask.jsonify({'message': 'Error deleting student'}), 200
+    # except Exception as e:
+    #     return flask.jsonify({'message': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
+# FIX LATER
+@app.route('/delete-prof/<prof_id>', methods=['POST'])
+def delete_prof_click(prof_id):
+    prof_id = flask.request.form.get('prof_id')
+    return flask.jsonify({'message': 'Professor deleted successfully'}), 200
     
 
 #-----------------------------------------------------------------------

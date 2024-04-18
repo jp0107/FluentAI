@@ -16,7 +16,7 @@
   <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/admin-dashboard">
           <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -127,16 +127,19 @@
               </tr>
           </thead>
           <tbody>
-              <!-- hard coded example-->
+              {% for course_info in courses_profs.values() %}
               <tr>
-                <td>SPA101</td>
-                <td>Dictator Wang</td>
+                <td>{{ course_info.course_id }}</td>
+                <td>{{ ", ".join(course_info.professors) }}</td>
                 <td>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal" data-courseid="{{ course_info.course_id }}" onclick="prepareDeleteCourseModal(this);">
                     <img src="/static/img/delete.svg">
                   </a>
                 </td>
               </tr>
+              {% else %}
+              <tr><td colspan="3">No courses found.</td></tr>
+              {% endfor %}
           </tbody>
       </table>
     </div>
@@ -152,9 +155,8 @@
               </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this course?
-                <!-- Need to replace this course with actual course name -->
-                <p>Warning: By deleting this course, you will not be able to access nor recover any data for this course upon deletion.</p>
+                <p></p>
+                <p>Warning: By deleting this course, you will not be able to access nor recover any data for it upon deletion.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -166,5 +168,35 @@
     <!-- End Modals -->
 
   </div>
+
+  <script type="text/javascript">
+    function prepareDeleteCourseModal(element) {
+      const courseId = element.getAttribute('data-courseid');
+      const modalBody = document.querySelector('#deleteCourseModal .modal-body p:first-child');
+      const deleteButton = document.getElementById('delete-btn');
+
+      modalBody.textContent = `Are you sure you want to delete ${courseId}?`;
+      
+      // Attach the course id to the delete button in the modal for later use in deletion
+      deleteButton.setAttribute('data-courseid', courseId);
+      deleteButton.onclick = function() { deleteCourse(this.getAttribute('data-courseid')); };
+    }
+
+    function deleteCourse(course_id) {
+      fetch(`/delete-course/${course_id}`, { method: 'POST' })
+      .then(response => {
+          if (response.ok) {
+              alert('Course deleted successfully.');
+              window.location.reload(); 
+          } else {
+              alert('Error deleting course.');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to delete course.');
+      });
+    }
+  </script>
   </body>
 </html>

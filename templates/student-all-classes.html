@@ -43,7 +43,7 @@
 
         <nav class="navbar navbar-expand-sm bg-dark navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand" href="/student-classes">
                 <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -108,47 +108,48 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
-                function fetchAllCourses() {
-                    var nocache = new Date().getTime(); 
-                    $.ajax({
-                        url: '/all-courses?' + 'nocache=' + nocache,  
-                        method: 'GET',
-                        cache: false,
-                        success: function(courses) {
-                            var courseListHtml = '';
-                            $.each(courses, function(index, course) {
-                                courseListHtml += '<div class="col d-flex">' +
-                                                '<a href="/student-dashboard/' + course.course_id + '" class="class-button" role="button">' + 
-                                                '<h3>' + course.course_id + '</h3> ' + course.course_name +
-                                                '</a></div>';
-                            });
-                            $(".row-cols-md-3").html(courseListHtml);
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error fetching courses: ' + xhr.statusText + ' Status: ' + status + ' Error: ' + error);
-                        }
-                });
-        }
                 // function fetchAllCourses() {
+                //     var nocache = new Date().getTime(); 
                 //     $.ajax({
-                //         url: '/all-courses',
+                //         url: '/all-courses?' + 'nocache=' + nocache,  
                 //         method: 'GET',
                 //         cache: false,
                 //         success: function(courses) {
                 //             var courseListHtml = '';
                 //             $.each(courses, function(index, course) {
                 //                 courseListHtml += '<div class="col d-flex">' +
-                //                                 '<a href="/student-dashboard" class="class-button" role="button">' +
-                //                                 '<h3>' + course.course_id + '</h3>' + course.course_name +
-                //                                 '</a>' + '</div>';
+                //                                 '<a href="/student-dashboard/' + course.course_id + '" class="class-button" role="button">' + 
+                //                                 '<h3>' + course.course_id + '</h3> ' + course.course_name +
+                //                                 '</a></div>';
                 //             });
                 //             $(".row-cols-md-3").html(courseListHtml);
                 //         },
-                //         error: function(xhr) {
-                //             alert('Error fetching courses: ' + xhr.statusText);
+                //         error: function(xhr, status, error) {
+                //             alert('Error fetching courses: ' + xhr.statusText + ' Status: ' + status + ' Error: ' + error);
                 //         }
-                //     });
-                // }
+                // });
+                //  }
+                function fetchAllCourses() {
+                    $.ajax({
+                        url: '/all-courses',
+                        method: 'GET',
+                        cache: false,
+                        success: function(courses) {
+                            var courseListHtml = '';
+                            $.each(courses, function(index, course) {
+                                courseListHtml += '<div class="col d-flex">' +
+                                                '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
+                                                '<h3>' + course.course_id + '</h3> ' + course.course_name +
+                                                '</a></div>';
+                            });
+                            $(".row-cols-md-3").html(courseListHtml);
+                        },
+                        error: function(xhr) {
+                            alert('Error fetching courses: ' + xhr.statusText);
+                        }
+                    });
+                }
+
                 // Initial fetch of all courses when the page loads
                 fetchAllCourses();
             });

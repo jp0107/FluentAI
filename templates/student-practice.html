@@ -18,7 +18,7 @@
     
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/student-classes">
           <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -73,51 +73,21 @@
         <div class="col-lg-10 mx-auto">
           <div class="career-search mb-60">
             <div class="filter-result">
-
+              {% for prompt_id, title, created_at in practice_assignments %}
               <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                 <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
                   <div class="job-content">
-                      <h5>Assignment 0: Say Hello</h5>
+                      <h5>{{ title }}</h5>
                   </div>
                 </div>
                 <div class="job-right my-4 flex-shrink-0 d-flex">
-                  <a href="/practice-chat" class="assignments-button">Practice</a>
+                  <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
                 </div>
               </div>
-
-              <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                  <div class="job-content">
-                      <h5>Assignment 1: Café Fluent</h5>
-                  </div>
-                </div>
-                <div class="job-right my-4 flex-shrink-0 d-flex">
-                  <a href="/practice-chat" class="assignments-button">Practice</a>
-                </div>
-              </div>
-
-              <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                  <div class="job-content">
-                      <h5>Assignment 2: Interview with Jonathan</h5>
-                  </div>
-                </div>
-                <div class="job-right my-4 flex-shrink-0 d-flex">
-                  <a href="/practice-chat" class="assignments-button">Practice</a>
-                </div>
-              </div>
-
-              <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                  <div class="job-content">
-                      <h5>Assignment 3: Airport Troubles</h5>
-                  </div>
-                </div>
-                <div class="job-right my-4 flex-shrink-0 d-flex">
-                  <a href="/practice-chat" class="assignments-button">Practice</a>
-                </div>
-              </div>
-
+              {% else %}
+                <p>No current practice assignments available.</p>
+              {% endfor %}
+              <br>
             </div>
           </div>
         </div>

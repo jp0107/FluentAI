@@ -19,7 +19,7 @@
 
       <nav class="navbar navbar-expand-sm bg-dark navbar-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">
+          <a class="navbar-brand" href="/student-classes">
             <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -78,29 +78,18 @@
                   </tr>
               </thead>
               <tbody>
+                {% for prompt_id, title, conv_id, score in scores %}
                   <tr>
-                    <td>Assignment 0:  Say Hello</td>
-                    <td>100/100</td>
-                    <td><a href="/conversation-history" class="small-button">See Conversation History</a></td>
+                    <td>{{ title }}</td>
+                    <td>{{ (score if score else '-') }}/100</td>
+                    <td><a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a></td>
                   </tr>
-                  <tr>
-                      <td>Assignment 1: Café Fluent</td>
-                      <td>96/100</td>
-                      <td><a href="/conversation-history" class="small-button">See Conversation History</a></td>
-                  </tr>
-                  <tr>
-                      <td>Assignment 2: Job Interview</td>
-                      <td>25/100</td>
-                      <td><a href="/conversation-history" class="small-button">See Conversation History</a></td>
-                  </tr>
-                  <tr>
-                      <td>Assignment 3: Airport Troubles</td>
-                      <td>-/100</td>
-                      <td><a href="/conversation-history" class="small-button">See Conversation History</a></td>
-                  </tr>
+                  {% else %}
+                    <p>No scores available.</p>
+                  {% endfor %}
               </tbody>
           </table>
       </div>
-        
+      <br>  
     </body>
 </html>
