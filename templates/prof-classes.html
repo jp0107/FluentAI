@@ -103,14 +103,12 @@
                     <h1>My Courses</h1>
             </div>
             <br>
-            <div id="courses-container" class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
+            <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
             </div>
         </div>
 
         <script type="text/javascript">
             $(document).ready(function(){
-                // Initial fetch of courses when the page loads
-                fetchCourses();
                 // Function to fetch updated course list
                 function fetchCourses() {
                     var nocache = new Date().getTime();
@@ -141,7 +139,7 @@
                                             '<a data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">' +
                                             '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Create New Course' +
                                             '</a></div>';
-                    $("#couses-container").html(courseListHtml);
+                    $(".row-cols-md-3").html(courseListHtml);
                 }
 
                 // Add course button click event
@@ -177,6 +175,8 @@
                     });
                 });
 
+                // Initial fetch of courses when the page loads
+                fetchCourses();
             });
         </script>
         
