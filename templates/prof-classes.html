@@ -109,20 +109,6 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
-                // function fetchCourses() {
-                //     var nocache = new Date().getTime();
-                //     $.ajax({
-                //         url: '/get-prof-courses?' + 'nocache=' + nocache,  // Correctly formatted URL with cache-buster
-                //         method: 'GET',
-                //         cache: false,
-                //         success: function(response) {
-                //             displayCourses(response); // Update the course list on the page
-                //         },
-                //         error: function(xhr, status, error) {
-                //             alert('Error fetching courses: ' + xhr.statusText + ' Status: ' + status + ' Error: ' + error);
-                //     }
-                // });
-                // }
                 // Function to fetch updated course list
                 function fetchCourses() {
                     var nocache = new Date().getTime();
@@ -180,8 +166,8 @@
                         success: function(response) {
                             alert(response.message);
                             $('#addCourseModal').modal('hide');
-                            $('#add-course-form')[0].reset();
-                            location.reload();
+                            $('#addCourseModal').find('form').trigger('reset');
+                            fetchCourses();
                         },
                         error: function(xhr, status, error) {
                             alert('Error adding course: ' + xhr.statusText);
