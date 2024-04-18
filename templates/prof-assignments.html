@@ -144,7 +144,7 @@
       <br>
       <div class="container-fluid">
         <div id="assignments-container" class="row mt-4">
-          <div class="col-lg-10 mx-auto">
+          <!-- <div class="col-lg-10 mx-auto">
               {% for prompt_id, title, deadline, past_deadline, created_at in curr_assignments %}
               <div class="job-box d-md-flex align-items-center justify-content-between mb-3">
                   <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
@@ -164,7 +164,7 @@
               {% else %}
               <p>No current assignments available.</p>
               {% endfor %}
-          </div>
+          </div> -->
       </div>
 
         <br>
@@ -181,7 +181,6 @@
 
       <div class="row">
         <div class="col-lg-10 mx-auto">
-
           <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
             <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
               <div class="job-content">
@@ -244,7 +243,7 @@
                   url: '/get-assignments',
                   data: {'course_id': '{{ course_id }}'},
                   success: function(assignments) {
-                      var assignmentsHtml = '<div class = "row mt-4">' + '<div class="col offset-sm-1">';
+                      var assignmentsHtml = '<div class="col-lg-10 mx-auto">';
                       assignments.forEach(function(assignment) {
                           assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
                               '<div class="job-left my-4 d-md-flex align-items-center flex-wrap">' +
