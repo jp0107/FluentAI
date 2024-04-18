@@ -420,6 +420,11 @@ def get_past_assignments(course_id):
 # get all asssignments for a course (FOR PROF SCORES PAGE)
 def get_all_assignments_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
+        # check if course exists in the database
+        course_exists = session.query(sqlalchemy.exists().where(Course.course_id == course_id)).scalar()
+        if not course_exists:
+            return get_default_assignments()
+
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline)
                 .filter(Prompt.course_id == course_id)
                 .order_by(sqlalchemy.asc(Prompt.deadline)))
@@ -514,6 +519,11 @@ def get_assignments_and_scores_for_student(course_id, student_id):
 # gets all student scores in alphabetical order for an assignment given the assignment id (FOR PROF SCORES PAGE)
 def get_all_scores(prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
+
+        # check if the prompt exists in the database
+        prompt_exists = session.query(sqlalchemy.exists().where(Prompt.prompt_id == prompt_id)).scalar()
+        if not prompt_exists:
+            return get_default_scores_for_assignment()
 
         query = (session.query(Student.first_name, Student.last_name, Conversation.id, Conversation.score)
                 .outerjoin(Conversation, sqlalchemy.and_(Conversation.student_id == Student.student_id, Conversation.prompt_id == prompt_id))
