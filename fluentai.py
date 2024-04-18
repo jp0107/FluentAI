@@ -22,7 +22,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_in_course, get_default_student_roster, get_past_assignments, get_assignments_for_course)
+                      get_profs_in_course, get_default_student_roster, get_past_assignments, get_assignments_for_course, get_past_assignments_for_course)
 
 #-----------------------------------------------------------------------
 
@@ -670,7 +670,7 @@ def get_assignments():
 @app.route('/get-past-assignments', methods=['GET'])
 def get_past_assignments():
     course_id = flask.request.args.get('course_id')
-    assignments = get_past_assignments(course_id)
+    assignments = get_past_assignments_for_course(course_id)
     return flask.jsonify(assignments)
 
 #-----------------------------------------------------------------------

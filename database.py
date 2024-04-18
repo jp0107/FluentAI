@@ -659,5 +659,48 @@ def get_assignments_for_course(course_id):
             }
             course_assignments.append(assignment_data)
         return course_assignments
+
+def get_past_assignments_for_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        assignments = (session.query(Prompt)
+                    .filter(Prompt.course_id == course_id, Prompt.past_deadline == True)
+                    .order_by(sqlalchemy.desc(Prompt.deadline))).all()
+
+        past_assignments = []
+
+        # default case
+        if not assignments:
+            assignments = get_full_past_default_assignments()
+            assignment_data = {
+                'prompt_id': assignments[0][0],
+                'prompt_title': assignments[0][1],
+                'prompt_text': assignments[0][2],
+                'deadline': assignments[0][3].isoformat(),
+                'num_turns': assignments[0][4],
+                'created_at': assignments[0][5].isoformat(),
+                'past_deadline': assignments[0][6]
+            }
+            past_assignments.append(assignment_data)
+            return past_assignments
+
+        # normal case
+        for assignment in assignments:
+            assignment_data = {
+            'prompt_id': assignment.prompt_id,
+            'prompt_title': assignment.prompt_title,
+            'prompt_text': assignment.prompt_text,
+            'deadline': assignment.deadline.isoformat() if assignment.deadline else None,
+            'num_turns': assignment.num_turns,
+            'created_at': assignment.created_at.isoformat(),
+            'past_deadline': assignment.past_deadline
+            }
+            past_assignments.append(assignment_data)
+        return past_assignments
+
+# get default past assignments with full info (FOR PROF ASSIGNMENTS PAGE)
+def get_full_past_default_assignments():
+    now = datetime.now()
+    return [(12345, 'Assignment 0: Say Hello', "Say hello to the student", now - timedelta(days=3), 5, now - timedelta(days=10), True)]
+
 #-----------------------------------------------------------------------
 
