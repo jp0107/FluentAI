@@ -123,7 +123,7 @@
                     <span class="ms-1 d-none d-sm-inline">General</span> <!-- change to {{smth_assignment}}-->
                   </a>
                 </li>
-                {% for title in scores %}
+                {% for prompt_id, title, conv_id, score in scores %}
                   <li class="nav-item">
                     <a href="#" class="nav-link align-middle px-0" data-assignment="assignment1">
                       <span class="ms-1 d-none d-sm-inline">{{ title }}</span> 
