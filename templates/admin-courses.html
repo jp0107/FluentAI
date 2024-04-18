@@ -130,7 +130,7 @@
               {% for course_id, professors in courses_profs.items() %}
               <tr>
                 <td>{{ course_id }}</td>
-                <td>{{ ", ".join(professor_names) }}</td>
+                <td>{{ ", ".join(professors) }}</td>
                 <td>
                   <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal" data-courseid="{{ course_id }}" onclick="prepareDeleteCourseModal(this);">
                     <img src="/static/img/delete.svg">
