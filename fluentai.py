@@ -15,15 +15,14 @@ import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, Prompt, get_profs, get_all_profs,
-                      get_superadmins, check_user_type, get_students_by_course, get_student_firstname, get_professor_courses,
+                      get_superadmins, check_user_type, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
                       get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_in_course, get_default_student_roster,
-                      get_score_for_student, get_past_assignments, get_assignments_for_course)
+                      get_profs_in_course, get_default_student_roster, get_past_assignments, get_assignments_for_course)
 
 #-----------------------------------------------------------------------
 

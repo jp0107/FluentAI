@@ -149,7 +149,8 @@
     </table>
   </div>
 
-
+  <br>
+  
   <div class="container-fluid">
     <div class="row mt-4">
         <div class="col offset-sm-1">
@@ -168,7 +169,7 @@
             </tr>
         </thead>
         <tbody>
-              {% for student_id, first_name, last_name in student_roster%}
+              {% for student_id, first_name, last_name in student_roster %}
               <tr>
                 <td>{{ first_name}} {{ last_name }}</td>
                 <td>{{ student_id }}</td>
