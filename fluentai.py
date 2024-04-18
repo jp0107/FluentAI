@@ -331,17 +331,18 @@ def prof_roster(course_id):
     flask.session['course_id'] = course_id
 
     try:
-        roster = get_students_in_course(course_id)
+        student_roster = get_students_in_course(course_id)
         prof_roster = get_profs_in_course(course_id)
     except:
-        roster = get_default_student_roster()
+        student_roster = get_default_student_roster()
         prof_roster = get_default_prof_roster()
 
     return flask.render_template('prof-roster.html',
                                  username = username,
                                  course_id = course_id,
-                                 roster = roster
-                                 )
+                                 student_roster = student_roster,
+                                 prof_roster = prof_roster
+                                )
 
 #-----------------------------------------------------------------------
 
