@@ -297,7 +297,7 @@ def prof_dashboard(course_id):
 
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('student-dashboard.html'))  # Redirecting to the home page or a suitable route
+        return flask.redirect(flask.url_for('index'))  # Redirecting to the home page or a suitable route
     if(user_type == "Professor"):
         first_name = get_prof_firstname(username)
     elif(user_type == "SuperAdmin"):
@@ -390,10 +390,10 @@ def admin_dashboard():
 
     if (user_type == "Student"):
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('student-dashboard.html'))  # Redirecting to the home page or a suitable route
+        return flask.redirect(flask.url_for('index'))  # Redirecting to the home page or a suitable route
     if(user_type == "Professor"):
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('prof-dashboard.html'))  # Redirecting to the home page or a suitable route
+        return flask.redirect(flask.url_for('index'))  # Redirecting to the home page or a suitable route
     if(user_type == "SuperAdmin"):
         first_name = get_admin_firstname(username)
 
