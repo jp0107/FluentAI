@@ -56,7 +56,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary">Create new assignment</button>
+                  <button type="button" class="btn btn-primary" onclick="createNewAssignment()">Create new assignment</button>
               </div>
           </div>
       </div>
@@ -129,7 +129,7 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row mt-4">
+      <div id="assignments-container" class="row mt-4">
         <div class="col-lg-10 mx-auto">
           <div class="d-flex justify-content-between align-items-center mb-3">
               <h2>Current Assignments</h2>
@@ -175,35 +175,102 @@
               <br>
           </div>
         </div>
-      
-        <div class="row">
-          <div class="col-lg-10 mx-auto">
-              {% for prompt_id, title, deadline, past_deadline, created_at in past_assignments %}
-              <div class="job-box d-md-flex align-items-center justify-content-between mb-3">
-                  <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                      <div class="job-content">
-                          <h5>{{ title }}</h5>
-                          <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
-                      </div>
-                  </div>
-                  <div class="job-right my-4 flex-shrink-0 d-flex">
-                    <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
-                    <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ prompt_id }}')">
-                      Delete <img src="/static/img/delete.svg">
-                    </a>
-                  </div>
-              </div>
-              {% else %}
-              <p>No past assignments completed yet.</p>
-              {% endfor %}
-              <br>
-          </div>
-        </div>
+      </div>
 
-    </div>
+      <br>
+
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+
+          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+              <div class="job-content">
+                  <h5>Assignment 0: Say Hello</h5>
+                  <h5 id="deadline-text">Deadline: 03/01/2024 5:00PM EST</h5>
+              </div>
+            </div>
+            <div class="job-right my-4 flex-shrink-0 d-flex">
+              <a href="/practice-chat" class="assignments-button">Practice</a>
+              <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">
+                Delete <img src="/static/img/delete.svg">
+              </a>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+    </div> -->
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+          // Load assignments when the page loads
+          fetchAssignments();
+      
+          // Function to create a new assignment
+          $('#addAssignmentModal .btn-primary').click(function() {
+              var formData = {
+                  'assignment_name': $('#assignment-name').val(),
+                  'assignment_description': $('#assignment-description').val(),
+                  'assignment_prompt': $('#assignment-prompt').val(),
+                  'num_turns': $('#num-turns-select').val(),
+                  'course_id': '{{ course_id }}' 
+              };
+      
+              $.ajax({
+                  type: 'POST',
+                  url: '/add-assignment',
+                  data: formData,
+                  success: function(response) {
+                      alert(response.message);  // Display a success message
+                      $('#addAssignmentModal').modal('hide');  // Hide the modal
+                      fetchAssignments();  // Refresh the assignments list
+                  },
+                  error: function(xhr) {
+                      console.error("Error adding assignment: ", xhr.responseText);
+                      alert('Failed to create assignment: ' + xhr.responseText);
+                  }
+              });
+          });
+
+          $('#addAssignmentModal').on('hidden.bs.modal', function () {
+              $(this).find('form').trigger('reset');  // Reset all form fields
+          });
+      
+          // Function to fetch and display assignments
+          function fetchAssignments() {
+              $.ajax({
+                  type: 'GET',
+                  url: '/get-assignments',
+                  data: {'course_id': '{{ course_id }}'},
+                  success: function(assignments) {
+                      var assignmentsHtml = '';
+                      assignments.forEach(function(assignment) {
+                          assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
+                              '<div class="job-left my-4 d-md-flex align-items-center flex-wrap">' +
+                              '<div class="job-content">' +
+                              '<h5>' + assignment.prompt_title + '</h5>' +
+                              '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
+                              '</div></div>' +
+                              '<div class="job-right my-4 flex-shrink-0 d-flex">' +
+                              '<a href="/assignment-chat" class="assignments-button">Start Assignment</a>' +
+                              '<a href="/practice-chat" class="assignments-button">Practice</a>' +
+                              '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
+                              'Delete <img src="/static/img/delete.svg"></a>' +
+                              '</div></div>';
+                      });
+                      $('#assignments-container').html(assignmentsHtml);  // Update the assignments container
+                  },
+                  error: function(xhr) {
+                      console.error("Error fetching assignments: ", xhr.responseText);
+                  }
+              });
+          }
+      });
+      </script>
+      
 
     <br>
         
   </body>
 </html>
-

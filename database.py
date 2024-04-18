@@ -69,7 +69,7 @@ def get_default_prof_roster():
 # get all professors for a given course (FOR PROF ROSTER PAGE)
 def get_profs_in_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Professor.student_id, Professor.first_name, Professor.last_name)
+        query = (session.query(Professor.prof_id, Professor.first_name, Professor.last_name)
                 .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
                 .filter(CoursesProfs.course_id == course_id)
                 .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name))) 
@@ -602,3 +602,22 @@ def get_prompt_by_id(prompt_id):
         return prompt
 
 #-----------------------------------------------------------------------
+def get_assignments_for_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # Query to get all prompts for a given course ID
+        assignments = session.query(Prompt).filter(Prompt.course_id == course_id).all()
+        course_assignments = []
+        for assignment in assignments:
+            assignment_data = {
+            'prompt_id': assignment.prompt_id,
+            'prompt_title': assignment.prompt_title,
+            'prompt_text': assignment.prompt_text,
+            'deadline': assignment.deadline.isoformat() if assignment.deadline else None,
+            'num_turns': assignment.num_turns,
+            'created_at': assignment.created_at.isoformat(),
+            'past_deadline': assignment.past_deadline
+            }
+            course_assignments.append(assignment_data)
+        return course_assignments
+#-----------------------------------------------------------------------
+
