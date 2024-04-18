@@ -140,27 +140,6 @@
       </div>
       
       <div id="assignments-container" class="row">
-        <!-- <div class="col-lg-10 mx-auto">
-            {% for prompt_id, title, deadline, past_deadline, created_at in curr_assignments %}
-            <div class="job-box d-md-flex align-items-center justify-content-between mb-3">
-                <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                    <div class="job-content">
-                        <h5>{{ title }}</h5>
-                        <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
-                    </div>
-                </div>
-                <div class="job-right my-4 flex-shrink-0 d-flex">
-                    <a href="{{ url_for ('assignment_chat', course_id=course_id, prompt_id=prompt_id) }}" class="assignments-button me-2">Start Assignment</a>                      
-                    <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
-                    <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ prompt_id }}')">
-                      Delete <img src="/static/img/delete.svg">
-                    </a>
-                </div>
-            </div>
-            {% else %}
-            <p>No current assignments available.</p>
-            {% endfor %}
-        </div> -->
       </div>
 
         <br>
@@ -172,6 +151,7 @@
           </div>
         </div>
       </div>
+    </div>
 
       <br>
 
