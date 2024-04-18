@@ -175,30 +175,30 @@
               <br>
           </div>
         </div>
-      
-        <div class="row">
-          <div class="col-lg-10 mx-auto">
-              {% for prompt_id, title, deadline, past_deadline, created_at in past_assignments %}
-              <div class="job-box d-md-flex align-items-center justify-content-between mb-3">
-                  <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                      <div class="job-content">
-                          <h5>{{ title }}</h5>
-                          <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
-                      </div>
-                  </div>
-                  <div class="job-right my-4 flex-shrink-0 d-flex">
-                    <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
-                    <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" onclick="setDeleteTarget('{{ prompt_id }}')">
-                      Delete <img src="/static/img/delete.svg">
-                    </a>
-                  </div>
+      </div>
+
+      <br>
+
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+
+          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+              <div class="job-content">
+                  <h5>Assignment 0: Say Hello</h5>
+                  <h5 id="deadline-text">Deadline: 03/01/2024 5:00PM EST</h5>
               </div>
-              {% else %}
-              <p>No past assignments completed yet.</p>
-              {% endfor %}
-              <br>
+            </div>
+            <div class="job-right my-4 flex-shrink-0 d-flex">
+              <a href="/practice-chat" class="assignments-button">Practice</a>
+              <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">
+                Delete <img src="/static/img/delete.svg">
+              </a>
+            </div>
           </div>
+          
         </div>
+      </div>
 
     </div> -->
 
@@ -274,4 +274,3 @@
         
   </body>
 </html>
-
