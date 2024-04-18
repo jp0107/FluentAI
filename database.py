@@ -69,7 +69,7 @@ def get_default_prof_roster():
 # get all professors for a given course (FOR PROF ROSTER PAGE)
 def get_profs_in_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Professor.student_id, Professor.first_name, Professor.last_name)
+        query = (session.query(Professor.prof_id, Professor.first_name, Professor.last_name)
                 .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
                 .filter(CoursesProfs.course_id == course_id)
                 .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name))) 
