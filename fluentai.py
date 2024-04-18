@@ -13,15 +13,14 @@ import logging
 import sqlalchemy
 import auth
 from req_lib import ReqLib
-from database import (Student, Professor, SuperAdmin, Course, Conversation,
-                      CoursesStudents, CoursesProfs, engine, Base, get_profs, get_all_profs,
+from database import (Student, Professor, SuperAdmin, Course, Conversation, CoursesProfs, engine, Base, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, delete_course, get_prompt_by_id, get_current_assignments_for_student,
                       get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
-                      get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_default_courses_and_profs)
+                      get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info)
 
 #-----------------------------------------------------------------------
 
@@ -375,7 +374,6 @@ def admin_courses():
     username = auth.authenticate()
 
     courses_profs = get_courses_and_profs()
-    print(courses_profs)  # Debug: Output the structure of courses_profs
 
     return flask.render_template('admin-courses.html',
                                  username = username,
@@ -386,10 +384,12 @@ def admin_courses():
 @app.route('/admin-prof-roster')
 def admin_prof_roster():
     username = auth.authenticate()
-    prof_list = get_all_profs()
+
+    prof_list = get_prof_info()
+
     return flask.render_template('admin-prof-roster.html',
-                                 prof_list = prof_list,
-                                 username = username)
+                                 username = username,
+                                 prof_list = prof_list)
 
 #-----------------------------------------------------------------------
 
@@ -599,6 +599,7 @@ def delete_course_click(course_id):
 
 #-----------------------------------------------------------------------
 
+# FIX LATER
 @app.route('/delete-student/<student_id>', methods=['POST'])
 def delete_student_click(student_id):
     student_id = flask.request.form.get('student_id')
@@ -610,3 +611,11 @@ def delete_student_click(student_id):
     #         return flask.jsonify({'message': 'Error deleting student'}), 200
     # except Exception as e:
     #     return flask.jsonify({'message': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
+# FIX LATER
+@app.route('/delete-prof/<prof_id>', methods=['POST'])
+def delete_prof_click(prof_id):
+    prof_id = flask.request.form.get('prof_id')
+    return flask.jsonify({'message': 'Professor deleted successfully'}), 200
