@@ -81,7 +81,7 @@
               <a class="nav-link" href="/prof-scores/{{ course_id }}">Scores</a>
             </li>    
             <li class="nav-item">
-                <a class="nav-link" href="/prof-roster/{{ course_id }}" id="underlined">Students</a>
+                <a class="nav-link" href="/prof-roster/{{ course_id }}" id="underlined">Roster</a>
               </li>   
           </ul>
           <ul class="navbar-nav d-flex flex-row ms-auto">
@@ -110,8 +110,12 @@
 
   <div class="container-fluid">
     <div class="row mt-4">
-        <div class="col offset-sm-1">
+        <div class="col-lg-10 mx-auto">
             <h2>Professors</h2> 
+            <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addProfModal">
+              <img src="/static/img/add.svg" width="20" style="margin-right: 7px;"/>
+              Add Professor
+            </button>
         </div>
     </div>
   </div>
@@ -150,11 +154,15 @@
   </div>
 
   <br>
-  
+
   <div class="container-fluid">
     <div class="row mt-4">
-        <div class="col offset-sm-1">
-            <h2>Students</h2> 
+        <div class="col-lg-10 mx-auto">
+            <h2>Students</h2>
+            <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+              <img src="/static/img/add.svg" width="20" style="margin-right: 7px;"/>
+              Add Student
+            </button>
         </div>
     </div>
   </div>
@@ -192,6 +200,73 @@
   </div>
 
   <!-- Modals -->
+
+  <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStudentModalLabel">Add a New Student</h5>
+                <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">Student Name:</label>
+                  <textarea class="form-control" id="student-name" rows="1" data-max-length="20" 
+                  placeholder="Type full name of student"></textarea>
+                  <small>Characters left: <span id="char-count-student-name">20</span></small>
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">Student NetID:</label>
+                  <textarea class="form-control" id="student-netid" rows="1" data-max-length="10" 
+                  placeholder="Type netID of student"></textarea>
+                  <small>Characters left: <span id="char-count-student-netid">10</span></small>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="add-course-button">Add student</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addProfModal" tabindex="-1" role="dialog" aria-labelledby="addProfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProfModalLabel">Add a New Professor</h5>
+                <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">Professor Name:</label>
+                  <textarea class="form-control" id="prof-name" rows="1" data-max-length="20" 
+                  placeholder="Type full name of professor"></textarea>
+                  <small>Characters left: <span id="char-count-prof-name">20</span></small>
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">Professor NetID:</label>
+                  <textarea class="form-control" id="prof-netid" rows="1" data-max-length="10" 
+                  placeholder="Type netID of professor"></textarea>
+                  <small>Characters left: <span id="char-count-prof-netid">10</span></small>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="add-course-button">Add professor</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
   <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
