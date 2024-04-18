@@ -374,10 +374,7 @@ def admin_dashboard():
 def admin_courses():
     username = auth.authenticate()
 
-    try:
-        courses_profs = get_courses_and_profs()
-    except:
-        courses_profs = get_default_courses_and_profs()
+    courses_profs = get_courses_and_profs()
 
     return flask.render_template('admin-courses.html',
                                  username = username,
