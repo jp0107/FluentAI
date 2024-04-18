@@ -119,32 +119,17 @@
           <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 min-vh-100">
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                 <li class="nav-item">
-                  <a href="#" class="nav-link align-middle px-0" data-assignment="general"> <!-- change to {{smth_assignment}}-->
-                    <span class="ms-1 d-none d-sm-inline">General</span> <!-- change to {{smth_assignment}}-->
+                  <a href="#" class="nav-link align-middle px-0" data-assignment="general"> 
+                    <span class="ms-1 d-none d-sm-inline">General</span> 
                   </a>
                 </li>
-                {% for prompt_id, title, conv_id, score in scores %}
+                {% for prompt_id, title, deadline in assignments %}
                   <li class="nav-item">
-                    <a href="#" class="nav-link align-middle px-0" data-assignment="assignment1">
+                    <a href="#" class="nav-link align-middle px-0" data-assignment="{{ prompt_id }}">
                       <span class="ms-1 d-none d-sm-inline">{{ title }}</span> 
                     </a>
                   </li>
                 {% endfor %}
-                <li class="nav-item">
-                  <a href="#" class="nav-link align-middle px-0" data-assignment="assignment1">
-                    <span class="ms-1 d-none d-sm-inline">Assignment 1</span> 
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link align-middle px-0" data-assignment="assignment2">
-                    <span class="ms-1 d-none d-sm-inline">Assignment 2</span>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link align-middle px-0" data-assignment="assignment3">
-                    <span class="ms-1 d-none d-sm-inline">Assignment 3</span>
-                  </a>
-                </li>
               </ul>
           </div>
         </div>
@@ -169,41 +154,31 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-          const scores = {
-              'assignment1': [
-                  {name: 'Dictator Wang', score: '100/100', link: '/conversation-history'},
-                  {name: 'Servant Peixoto', score: '96/100', link: '/conversation-history'}
-              ],
-              'assignment2': [
-                  {name: 'Servant Mak', score: '25/100', link: '/conversation-history'},
-                  {name: 'Servant Kimbap', score: '-', link: '/conversation-history'}
-              ],
-              'assignment3': [
-                  {name: 'Dictator Wang', score: '50/100', link: '/conversation-history'},
-                  {name: 'Servant Peixoto', score: '75/100', link: '/conversation-history'}
-              ]
-          };
-
-          const menuItems = document.querySelectorAll('#menu a');
-          menuItems.forEach(item => {
-              item.addEventListener('click', function(e) {
-                  e.preventDefault();
-                  const assignment = this.getAttribute('data-assignment');
-                  const data = scores[assignment];
-                  const tbody = document.getElementById('score-body');
-                  tbody.innerHTML = ''; // Clear existing data
-
-                  data.forEach(d => {
-                      const row = `<tr>
-                          <td>${d.name}</td>
-                          <td>${d.score}</td>
-                          <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
-                      </tr>`;
-                      tbody.innerHTML += row;
-                  });
-              });
-          });
+      const menuItems = document.querySelectorAll('#menu a');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const promptId = this.getAttribute('data-assignment');
+                fetch(`/get-scores/${promptId}`) 
+                    .then(response => response.json())
+                    .then(data => updateTable(data))
+                    .catch(error => console.error('Error fetching data:', error));
+            });
       });
+
+      function updateTable(data) {
+          const tbody = document.getElementById('score-body');
+          tbody.innerHTML = ''; // Clear existing data
+          data.forEach(d => {
+              const row = `<tr>
+                  <td>${d.name}</td>
+                  <td>${d.score}</td>
+                  <td><a href="${d.link}${d.conv_id}" class="small-button">See Conversation History</a></td>
+              </tr>`;
+              tbody.innerHTML += row;
+          });
+      }
+    });
     </script>
   </body>
 </html>

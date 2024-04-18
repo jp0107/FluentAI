@@ -361,6 +361,15 @@ def get_curr_prof_default_assignments():
         (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now)
     ]
 
+# get default assignments for a course
+def get_default_assignments():
+    now = datetime.now()
+    return [
+        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10)),
+        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20)),
+        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30))
+    ]
+
 # get default past assignments
 def get_past_default_assignments():
     now = datetime.now()
@@ -407,6 +416,17 @@ def get_past_assignments(course_id):
         results = query.all()
 
         return results if results else get_past_default_assignments()
+
+# get all asssignments for a course (FOR PROF SCORES PAGE)
+def get_all_assignments_for_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline)
+                .filter(Prompt.course_id == course_id)
+                .order_by(sqlalchemy.asc(Prompt.deadline)))
+
+        results = query.all()
+
+        return results if results else get_default_assignments()
 
 #-----------------------------------------------------------------------
 
@@ -463,6 +483,14 @@ def get_default_student_scores():
         (76543, 'Assignment 3: Airport Troubles', 4, None)
     ]
 
+# get default scores for an assignment for each student in a course
+def get_default_scores_for_assignment():
+    return [
+        ('Irene', 'Kim', 1, 100),
+        ('Jonathan', 'Peixoto', 2, 25),
+        ('Jessie', 'Wang', 3, None)
+    ]
+
 # get default conversation
 def get_default_conversation():
     return [('Assignment 0: Default', 'Mi nueva casa está en una calle ancha que tiene muchos árboles. El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña terraza con piscina donde puedo tomar el sol en verano.')]
@@ -483,15 +511,17 @@ def get_assignments_and_scores_for_student(course_id, student_id):
         results = query.all()
         return results if results else get_default_student_scores()
 
-# gets all student scores in alphabetical order for an assignment given the assignment id
+# gets all student scores in alphabetical order for an assignment given the assignment id (FOR PROF SCORES PAGE)
 def get_all_scores(prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Student.first_name, Student.last_name, Conversation.score)
-                .join(Conversation, Conversation.student_id == Student.student_id)
-                .filter(Conversation.prompt_id == prompt_id)
+
+        query = (session.query(Student.first_name, Student.last_name, Conversation.id, Conversation.score)
+                .outerjoin(Conversation, sqlalchemy.and_(Conversation.student_id == Student.student_id, Conversation.prompt_id == prompt_id))
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
 
-        return query.all()
+        results = query.all()
+
+        return results if results else get_default_scores_for_assignment()
 
 # get conversation history given a conv_id
 def get_conversation(course_id, student_id, conv_id):
