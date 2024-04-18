@@ -143,7 +143,7 @@
 
       <br>
       <div class="container-fluid">
-        <div id="assignments-container" class="row">
+        <div id="assignments-container" class="row mt-4">
           <div class="col-lg-10 mx-auto">
               {% for prompt_id, title, deadline, past_deadline, created_at in curr_assignments %}
               <div class="job-box d-md-flex align-items-center justify-content-between mb-3">
@@ -246,7 +246,8 @@
                   success: function(assignments) {
                       var assignmentsHtml = '';
                       assignments.forEach(function(assignment) {
-                          assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
+                          assignmentsHtml += '<div class = "row mt-4">' + '<div class="col offset-sm-1">' +
+                          '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
                               '<div class="job-left my-4 d-md-flex align-items-center flex-wrap">' +
                               '<div class="job-content">' +
                               '<h5>' + assignment.prompt_title + '</h5>' +
