@@ -170,12 +170,9 @@
       const firstName = anchorElement.getAttribute('data-firstname');
       const lastName = anchorElement.getAttribute('data-lastname');
 
-      // Update modal's content
-      const modalTitle = document.getElementById('deleteStudentModalLabel');
       const modalBody = document.querySelector('#deleteStudentModal .modal-body p:first-child');
       const deleteButton = document.getElementById('delete-btn');
 
-      modalTitle.textContent = 'Delete Student';  // Set the modal's title
       modalBody.textContent = `Are you sure you want to delete ${firstName} ${lastName}?`;
 
       // Attach the student ID to the delete button in the modal for later use in deletion

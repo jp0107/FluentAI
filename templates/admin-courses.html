@@ -127,16 +127,19 @@
               </tr>
           </thead>
           <tbody>
-              <!-- hard coded example-->
+              {% for course_id, professors in courses.items() %}
               <tr>
-                <td>SPA101</td>
-                <td>Dictator Wang</td>
+                <td>{{ course_id }}</td>
+                <td>{{ ", ".join(professor_names) }}</td>
                 <td>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal" data-courseid="{{ course_id }}" onclick="prepareDeleteCourseModal(this);">
                     <img src="/static/img/delete.svg">
                   </a>
                 </td>
               </tr>
+              {% else %}
+              <tr><td colspan="3">No current courses.</td></tr>
+              {% endfor %}
           </tbody>
       </table>
     </div>
@@ -166,5 +169,35 @@
     <!-- End Modals -->
 
   </div>
+
+  <script type="text/javascript">
+    function prepareDeleteModal(element) {
+      const courseId = element.getAttribute('data-courseid');
+      const modalBody = document.querySelector('#deleteStudentModal .modal-body p:first-child');
+      const deleteButton = document.getElementById('delete-btn');
+      
+      modalBody.textContent = `Are you sure you want to delete ${courseId}?`;
+      
+      // Attach the course id to the delete button in the modal for later use in deletion
+      deleteButton.setAttribute('data-courseid', courseId);
+      deleteButton.onclick = function() { deleteCourse(this.getAttribute('data-courseid')); };
+    }
+
+    function deleteCourse(course_id) {
+      fetch(`/delete-course/${course_id}`, { method: 'POST' })
+      .then(response => {
+          if (response.ok) {
+              alert('Course deleted successfully.');
+              window.location.reload(); 
+          } else {
+              alert('Error deleting course.');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to delete course.');
+      });
+    }
+  </script>
   </body>
 </html>

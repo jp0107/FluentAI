@@ -120,7 +120,7 @@ def delete_course(course_id):
         try:
             # delete associated entries from CoursesProfs first
             session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='fetch')
-
+            # ***** ALSO NEED TO DELETE FROM COURSESSTUDENTS *****
             # delete the course entry
             course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
             if course_entry_to_delete:
@@ -187,7 +187,7 @@ def get_student_firstname(student_id):
 def delete_student(student_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            # delete associated entries from CoursesProfs first
+            # delete associated entries from CoursesStudents first
             session.query(CoursesStudents).filter(CoursesStudents.student_id == student_id).delete(synchronize_session='fetch')
 
             # delete the course entry
@@ -212,11 +212,36 @@ class CoursesProfs(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
-# get all courses and the professors that teach them
-def get_coursesprofs():
+# get default courses and profs
+def get_default_courses_and_profs():
+    return [
+        ('SPA100', 'Irene', 'Kim'),
+        ('SPA100', 'Tinney', 'Mak'),
+        ('SPA200', 'Jonathan', 'Peixoto'),
+        ('SPA300', 'Jessie', 'Wang')
+    ]
+
+# get courses and professors for each one (FOR ADMIN COURSES PAGE)
+def get_courses_and_profs():
     with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(CoursesProfs.course_id, CoursesProfs.prof_id)
-        return query.all()
+        query = (session.query(Course.course_id, Professor.first_name, Professor.last_name)
+                .join(Professor, CoursesProfs.prof_id == Professor.prof_id)
+                .order_by(Course.course_id))
+        
+        results = query.all()
+        
+        if not results:
+            results = get_default_courses_and_profs()
+
+        # format query results
+        courses = {}
+
+        for course_id, first_name, last_name in results:
+            if course_id not in courses:
+                courses[course_id] = {'course_id': course_id, 'professors': []}
+            courses[course_id]['professors'].append(f"{first_name} {last_name}")
+
+        return courses
 
 #-----------------------------------------------------------------------
 

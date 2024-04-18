@@ -21,7 +21,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
-                      get_students_in_course, get_default_prof_roster, delete_student)
+                      get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_default_courses_and_profs)
 
 #-----------------------------------------------------------------------
 
@@ -373,8 +373,15 @@ def admin_dashboard():
 @app.route('/admin-courses')
 def admin_courses():
     username = auth.authenticate()
+
+    try:
+        courses_profs = get_courses_and_profs()
+    except:
+        courses_profs = get_default_courses_and_profs()
+
     return flask.render_template('admin-courses.html',
-                                 username = username)
+                                 username = username,
+                                 courses_profs = courses_profs)
 
 #-----------------------------------------------------------------------
 
@@ -580,8 +587,8 @@ def update_course_code_click():
 
 #-----------------------------------------------------------------------
 
-@app.route('/delete-course', methods=['POST'])
-def delete_course_click():
+@app.route('/delete-course/<course_id>', methods=['POST'])
+def delete_course_click(course_id):
     course_id = flask.request.form.get('course_id')
 
     try:
@@ -595,7 +602,7 @@ def delete_course_click():
 #-----------------------------------------------------------------------
 
 @app.route('/delete-student/<student_id>', methods=['POST'])
-def delete_student_click():
+def delete_student_click(student_id):
     student_id = flask.request.form.get('student_id')
     return flask.jsonify({'message': 'Student deleted successfully'}), 200
     # try:
