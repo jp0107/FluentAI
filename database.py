@@ -221,6 +221,15 @@ def get_default_courses_and_profs():
         ('SPA300', 'Jessie', 'Wang')
     ]
 
+# get default profs
+def get_default_profs():
+    return [
+        ('SPA100', 'ik1234', 'Irene', 'Kim'),
+        ('SPA200', 'ik1234', 'Irene', 'Kim'),
+        ('SPA200', 'jp2024', 'Jonathan', 'Peixoto'),
+        ('SPA300', 'jw2003', 'Jessie', 'Wang')
+    ]
+
 # get courses and professors for each one (FOR ADMIN COURSES PAGE)
 def get_courses_and_profs():
     with sqlalchemy.orm.Session(engine) as session:
@@ -242,6 +251,28 @@ def get_courses_and_profs():
             courses[course_id]['professors'].append(f"{first_name} {last_name}")
 
         return courses
+
+# get prof info (FOR ADMIN PROFESSORS PAGE)
+def get_prof_info():
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(CoursesProfs.course_id, CoursesProfs.prof_id, Professor.first_name, Professor.last_name)
+                .join(Professor, CoursesProfs.prof_id == Professor.prof_id)
+                .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name)))
+        
+        results = query.all()
+        
+        if not results:
+            results = get_default_profs()
+
+        # format query results
+        profs = {}
+
+        for course_id, prof_id, first_name, last_name in results:
+            if prof_id not in profs:
+                profs[prof_id] = {'prof_id': prof_id, 'prof_name': f"{first_name} {last_name}", 'courses': []}
+            profs[prof_id]['courses'].append(course_id)
+
+        return profs
 
 #-----------------------------------------------------------------------
 

@@ -172,7 +172,7 @@
   <script type="text/javascript">
     function prepareDeleteCourseModal(element) {
       const courseId = element.getAttribute('data-courseid');
-      const modalBody = document.querySelector('#deleteStudentModal .modal-body p:first-child');
+      const modalBody = document.querySelector('#deleteCourseModal .modal-body p:first-child');
       const deleteButton = document.getElementById('delete-btn');
 
       modalBody.textContent = `Are you sure you want to delete ${courseId}?`;
