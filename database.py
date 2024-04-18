@@ -602,3 +602,22 @@ def get_prompt_by_id(prompt_id):
         return prompt
 
 #-----------------------------------------------------------------------
+def get_assignments_for_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # Query to get all prompts for a given course ID
+        assignments = session.query(Prompt).filter(Prompt.course_id == course_id).all()
+        course_assignments = []
+        for assignment in assignments:
+            assignment_data = {
+            'prompt_id': assignment.prompt_id,
+            'prompt_title': assignment.prompt_title,
+            'prompt_text': assignment.prompt_text,
+            'deadline': assignment.deadline.isoformat() if assignment.deadline else None,
+            'num_turns': assignment.num_turns,
+            'created_at': assignment.created_at.isoformat(),
+            'past_deadline': assignment.past_deadline
+            }
+            course_assignments.append(assignment_data)
+        return course_assignments
+#-----------------------------------------------------------------------
+

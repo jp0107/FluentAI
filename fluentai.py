@@ -530,7 +530,7 @@ def add_course():
 
 @app.route('/get-prof-courses')
 def get_prof_courses():
-    id = flask.session.get('username') 
+    id = flask.session.get('username')
     course_data = get_professor_courses(id)
     return flask.jsonify(course_data)
 
@@ -627,3 +627,40 @@ def delete_student_click(student_id):
 def delete_prof_click(prof_id):
     prof_id = flask.request.form.get('prof_id')
     return flask.jsonify({'message': 'Professor deleted successfully'}), 200
+    
+
+#-----------------------------------------------------------------------
+@app.route('/get-assignments', methods=['GET'])
+def get_assignments():
+    course_id = flask.request.args.get('course_id')
+    assignments = get_assignments_for_course(course_id)
+    return flask.jsonify(assignments)
+
+#-----------------------------------------------------------------------
+@app.route('/add-assignment', methods=['POST'])
+def add_assignment():
+    assignment_name = flask.request.form.get('assignment_name')
+    assignment_description = flask.request.form.get('assignment_description')
+    assignment_prompt = flask.request.form.get('assignment_prompt')
+    num_turns = flask.request.form.get('num_turns')
+    course_id = flask.request.form.get('course_id')
+
+    if not all([assignment_name, assignment_description, assignment_prompt, num_turns]):
+        return flask.jsonify({"message": "All fields are required."}), 400
+
+    prof_id = flask.session.get('username')
+    new_assignment = Prompt(
+        prompt_title=assignment_name,
+        course_id=course_id,
+        prof_id=prof_id,
+        prompt_text=assignment_prompt,
+        num_turns=int(num_turns),
+        deadline=flask.request.form.get('deadline')  # Assuming deadline is passed as form data
+    )
+
+    with sqlalchemy.orm.Session(engine) as session:
+        session.add(new_assignment)
+        session.commit()
+
+    return flask.jsonify({"message": "Assignment added successfully"})
+#-----------------------------------------------------------------------
