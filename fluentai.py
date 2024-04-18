@@ -673,6 +673,8 @@ def get_scores(prompt_id):
     scores = get_all_scores(prompt_id) 
     results = []
     for first_name, last_name, conv_id, score in scores:
+        if score is None:
+            score = "-"
         results.append({
             'name': f"{first_name} {last_name}",
             'score': f"{score}/100",
