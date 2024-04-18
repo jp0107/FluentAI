@@ -127,7 +127,7 @@
               </tr>
           </thead>
           <tbody>
-              {% for course_id, professors in courses.items() %}
+              {% for course_id, professors in courses_profs.items() %}
               <tr>
                 <td>{{ course_id }}</td>
                 <td>{{ ", ".join(professor_names) }}</td>
@@ -155,8 +155,7 @@
               </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this course?
-                <!-- Need to replace this course with actual course name -->
+                <p></p>
                 <p>Warning: By deleting this course, you will not be able to access nor recover any data for this course upon deletion.</p>
             </div>
             <div class="modal-footer">
@@ -175,7 +174,7 @@
       const courseId = element.getAttribute('data-courseid');
       const modalBody = document.querySelector('#deleteStudentModal .modal-body p:first-child');
       const deleteButton = document.getElementById('delete-btn');
-      
+
       modalBody.textContent = `Are you sure you want to delete ${courseId}?`;
       
       // Attach the course id to the delete button in the modal for later use in deletion
