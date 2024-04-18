@@ -119,7 +119,7 @@
                 <td>{{ prof_info.prof_id }}</td>
                 <td>{{ ", ".join(prof_info.courses) }}</td>
                 <td>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteProfModal" data-profid="{{ prof_info.prof_id }}" onclick="prepareDeleteProfModal(this);">
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteProfModal" data-profname="{{ prof_info.prof_name }}" data-profid="{{ prof_info.prof_id }}" onclick="prepareDeleteProfModal(this);">
                     <img src="/static/img/delete.svg">
                   </a>
                 </td>
@@ -157,11 +157,11 @@
 
   <script type="text/javascript">
     function prepareDeleteProfModal(element) {
-      const profId = element.getAttribute('data-profid');
+      const profName = element.getAttribute('data-profname');
       const modalBody = document.querySelector('#deleteProfModal .modal-body p:first-child');
       const deleteButton = document.getElementById('delete-btn');
 
-      modalBody.textContent = `Are you sure you want to delete ${profId}?`;
+      modalBody.textContent = `Are you sure you want to delete ${profName}?`;
       
       // Attach the course id to the delete button in the modal for later use in deletion
       deleteButton.setAttribute('data-profid', profId);
