@@ -60,6 +60,22 @@ def get_profs():
         query = session.query(Professor) # SELECT * FROM Professor
         return query.all()
 
+# get default professor roster
+def get_default_prof_roster():
+    return [
+        ('bd0101', 'Bob', 'Dondero')
+    ]
+
+# get all professors for a given course (FOR PROF ROSTER PAGE)
+def get_profs_in_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Professor.student_id, Professor.first_name, Professor.last_name)
+                .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
+                .filter(CoursesProfs.course_id == course_id)
+                .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name))) 
+        results = query.all()
+        return results if results else get_default_prof_roster()
+
 # gets prof first name given their netid
 def get_prof_firstname(prof_id):
     with sqlalchemy.orm.Session(engine) as session:
@@ -146,8 +162,8 @@ class Student(Base):
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# get default prof roster
-def get_default_prof_roster():
+# get default student roster
+def get_default_student_roster():
     return [
         ('ik1234', 'Irene', 'Kim'),
         ('tm0261', 'Tinney', 'Mak'),
@@ -163,7 +179,7 @@ def get_all_students():
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
         return query.all()
 
-# get all students in a given course
+# get all students in a given course (FOR PROF ROSTER PAGE)
 def get_students_in_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Student.student_id, Student.first_name, Student.last_name)
@@ -171,7 +187,7 @@ def get_students_in_course(course_id):
                 .filter(CoursesStudents.course_id == course_id)
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
         results = query.all()
-        return results if results else get_default_prof_roster()
+        return results if results else get_default_student_roster()
 
 # gets student first name based on their netid
 def get_student_firstname(student_id):
@@ -520,7 +536,7 @@ def check_user_type(user_id: str):
         return "Professor"
     if in_superadmins(user_id):
         return "SuperAdmin"
-    return None
+    return None 
 
 #-----------------------------------------------------------------------
 
