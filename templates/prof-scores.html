@@ -100,7 +100,7 @@
     <div class="container-fluid">
       <div class="row mt-4">
           <div class="col offset-sm-1">
-              <h1>{{course_id}}</h1> <!-- replace w classid-->
+              <h1>{{course_id}}</h1>
           </div>
       </div>
     </div>
@@ -119,10 +119,17 @@
           <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 min-vh-100">
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                 <li class="nav-item">
-                  <a href="#" class="nav-link align-middle px-0" data-assignment="general"> <!-- change to {{smth_ass}}-->
-                    <span class="ms-1 d-none d-sm-inline">General</span> <!-- change to {{smth_ass}}-->
+                  <a href="#" class="nav-link align-middle px-0" data-assignment="general"> <!-- change to {{smth_assignment}}-->
+                    <span class="ms-1 d-none d-sm-inline">General</span> <!-- change to {{smth_assignment}}-->
                   </a>
                 </li>
+                {% for title in scores %}
+                  <li class="nav-item">
+                    <a href="#" class="nav-link align-middle px-0" data-assignment="assignment1">
+                      <span class="ms-1 d-none d-sm-inline">{{ title }}</span> 
+                    </a>
+                  </li>
+                {% endfor %}
                 <li class="nav-item">
                   <a href="#" class="nav-link align-middle px-0" data-assignment="assignment1">
                     <span class="ms-1 d-none d-sm-inline">Assignment 1</span> 
