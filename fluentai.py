@@ -640,6 +640,13 @@ def get_assignments():
     return flask.jsonify(assignments)
 
 #-----------------------------------------------------------------------
+@app.route('/get-past-assignments', methods=['GET'])
+def get_past_assignments():
+    course_id = flask.request.args.get('course_id')
+    assignments = get_past_assignments(course_id)
+    return flask.jsonify(assignments)
+
+#-----------------------------------------------------------------------
 @app.route('/add-assignment', methods=['POST'])
 def add_assignment():
     assignment_name = flask.request.form.get('assignment_name')

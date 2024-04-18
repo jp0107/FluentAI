@@ -155,31 +155,14 @@
 
       <br>
 
-      <div class="row">
-        <div class="col-lg-10 mx-auto">
-          <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-              <div class="job-content">
-                  <h5>Assignment 0: Say Hello</h5>
-                  <h5 id="deadline-text">Deadline: 03/01/2024 5:00PM EST</h5>
-              </div>
-            </div>
-            <div class="job-right my-4 flex-shrink-0 d-flex">
-              <a href="/practice-chat" class="assignments-button">Practice</a>
-              <a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">
-                Delete <img src="/static/img/delete.svg">
-              </a>
-            </div>
-          </div>
-          
-        </div>
+      <div id="past-assignments-container" class="row">
       </div>
-    </div>
 
     <script type="text/javascript">
       $(document).ready(function() {
           // Load assignments when the page loads
           fetchAssignments();
+          fetchPastAssignments();
       
           // Function to create a new assignment
           $('#addAssignmentModal .btn-primary').click(function() {
@@ -240,7 +223,37 @@
                   }
               });
           }
+
+            // Function to fetch and display past assignments
+            function fetchPastAssignments() {
+              $.ajax({
+                  type: 'GET',
+                  url: '/get-past-assignments',
+                  data: {'course_id': '{{ course_id }}'},
+                  success: function(assignments) {
+                      var assignmentsHtml = '<div class="col-lg-10 mx-auto">';
+                      assignments.forEach(function(assignment) {
+                          assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
+                              '<div class="job-left my-4 d-md-flex align-items-center flex-wrap">' +
+                              '<div class="job-content">' +
+                              '<h5>' + assignment.prompt_title + '</h5>' +
+                              '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
+                              '</div></div>' +
+                              '<div class="job-right my-4 flex-shrink-0 d-flex">' +
+                              '<a href="/practice-chat" class="assignments-button">Practice</a>' +
+                              '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
+                              'Delete <img src="/static/img/delete.svg"></a>' +
+                              '</div></div>';
+                      });
+                      $('#past-assignments-container').html(assignmentsHtml);  // Update the past assignments container
+                  },
+                  error: function(xhr) {
+                      console.error("Error fetching past assignments: ", xhr.responseText);
+                  }
+              });
+          }
       });
+
       </script>
       
 
