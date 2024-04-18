@@ -210,7 +210,7 @@
                               '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
                               '</div></div>' +
                               '<div class="job-right my-4 flex-shrink-0 d-flex">' +
-                              '<a href="/assignment-chat/{{ course_id }}/"' + assignment.prompt_id + ' class="assignments-button">Start Assignment</a>' +
+                              '<a href="/assignment-chat/{{ course_id }}/' + assignment.prompt_id + '" class="assignments-button">Start Assignment</a>' +
                               '<a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>' +
                               '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
                               'Delete <img src="/static/img/delete.svg"></a>' +
