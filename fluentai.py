@@ -375,6 +375,7 @@ def admin_courses():
     username = auth.authenticate()
 
     courses_profs = get_courses_and_profs()
+    print(courses_profs)  # Debug: Output the structure of courses_profs
 
     return flask.render_template('admin-courses.html',
                                  username = username,
