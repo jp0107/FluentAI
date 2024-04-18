@@ -108,27 +108,6 @@
 
         <script type="text/javascript">
             $(document).ready(function(){
-                // function fetchAllCourses() {
-                //     var nocache = new Date().getTime(); 
-                //     $.ajax({
-                //         url: '/all-courses?' + 'nocache=' + nocache,  
-                //         method: 'GET',
-                //         cache: false,
-                //         success: function(courses) {
-                //             var courseListHtml = '';
-                //             $.each(courses, function(index, course) {
-                //                 courseListHtml += '<div class="col d-flex">' +
-                //                                 '<a href="/student-dashboard/' + course.course_id + '" class="class-button" role="button">' + 
-                //                                 '<h3>' + course.course_id + '</h3> ' + course.course_name +
-                //                                 '</a></div>';
-                //             });
-                //             $(".row-cols-md-3").html(courseListHtml);
-                //         },
-                //         error: function(xhr, status, error) {
-                //             alert('Error fetching courses: ' + xhr.statusText + ' Status: ' + status + ' Error: ' + error);
-                //         }
-                // });
-                //  }
                 function fetchAllCourses() {
                     $.ajax({
                         url: '/all-courses',
