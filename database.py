@@ -282,6 +282,36 @@ class CoursesStudents(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
+# get default students
+def get_default_students():
+    return [
+        ('SPA200', 'jp2024', 'Jonathan', 'Peixoto'),
+        ('SPA300', 'jw2003', 'Jessie', 'Wang'),
+        ('SPA500', 'jp2024', 'Jonathan', 'Peixoto')
+    ]
+
+# get student info (FOR ADMIN STUDENTS PAGE)
+def get_student_info():
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(CoursesStudents.course_id, CoursesStudents.student_id, Student.first_name, Student.last_name)
+                .join(Student, CoursesStudents.student_id == Student.student_id)
+                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name)))
+        
+        results = query.all()
+        
+        if not results:
+            results = get_default_students()
+
+        # format query results
+        students = {}
+
+        for course_id, student_id, first_name, last_name in results:
+            if student_id not in students:
+                students[student_id] = {'student_id': student_id, 'student_name': f"{first_name} {last_name}", 'courses': []}
+            students[student_id]['courses'].append(course_id)
+
+        return students
+
 #-----------------------------------------------------------------------
 
 # creates table storing assignment prompts

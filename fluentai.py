@@ -20,7 +20,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation, Cour
                       get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
-                      get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info)
+                      get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info)
 
 #-----------------------------------------------------------------------
 
@@ -396,8 +396,12 @@ def admin_prof_roster():
 @app.route('/admin-student-roster')
 def admin_student_roster():
     username = auth.authenticate()
+
+    student_list = get_student_info()
+
     return flask.render_template('admin-student-roster.html',
-                                 username = username)
+                                 username = username,
+                                 student_list = student_list)
 
 #------------------------   OTHER PAGES   ------------------------------
 #-----------------------------------------------------------------------

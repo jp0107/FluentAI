@@ -143,7 +143,7 @@
             </div>
             <div class="modal-body">
                 <p></p>
-                <p>Warning: By deleting this professor, you will not be able to access nor recover any data for this professor upon deletion.</p>
+                <p>Warning: By deleting this professor, you will not be able to access nor recover any data for them upon deletion.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -158,6 +158,7 @@
   <script type="text/javascript">
     function prepareDeleteProfModal(element) {
       const profName = element.getAttribute('data-profname');
+      const profId = element.getAttribute('data-profid');
       const modalBody = document.querySelector('#deleteProfModal .modal-body p:first-child');
       const deleteButton = document.getElementById('delete-btn');
 
