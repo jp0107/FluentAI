@@ -333,7 +333,7 @@ def get_student_info():
 # creates table storing assignment prompts
 class Prompt(Base):
     __tablename__ = 'prompts'
-    prompt_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    prompt_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     prompt_title = sqlalchemy.Column(sqlalchemy.VARCHAR)
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
