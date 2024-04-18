@@ -22,7 +22,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_in_course, get_default_student_roster, get_past_assignments, get_assignments_for_course, get_all_scores, get_all_assignments_for_course)
+                      get_profs_in_course, get_default_student_roster, get_past_assignments, get_assignments_for_course)
 
 #-----------------------------------------------------------------------
 
@@ -150,7 +150,7 @@ def student_classes():
         )
 
         # get user first/last name, email, and pustatus from netid
-        user_info = req[0]  
+        user_info = req[0]
 
         full_name = user_info.get("displayname")
         temp = full_name.split()
@@ -203,9 +203,15 @@ def student_dashboard(course_id):
     username = auth.authenticate()
 
     flask.session['course_id'] = course_id
-    
+
     # get user's first name to display on dashboard
-    first_name = get_student_firstname(username)
+    user_type = check_user_type(username)
+    if(user_type == "Student"):
+        first_name = get_student_firstname(username)
+    elif(user_type == "Professor"):
+        first_name = get_prof_firstname(username)
+    elif(user_type == "SuperAdmin"):
+        first_name = get_admin_firstname(username)
 
     return flask.render_template('student-dashboard.html', 
                                  username = username,
@@ -286,9 +292,17 @@ def prof_classes():
 @app.route('/prof-dashboard/<course_id>')
 def prof_dashboard(course_id):
     username = auth.authenticate()
+    # get user's type to make sure they can access page and display name if correct
+    user_type = check_user_type(username)
 
-    # get user's first name to display on dashboard
-    first_name = get_prof_firstname(username)
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student-dashboard.html'))  # Redirecting to the home page or a suitable route
+    if(user_type == "Professor"):
+        first_name = get_prof_firstname(username)
+    elif(user_type == "SuperAdmin"):
+        first_name = get_admin_firstname(username)
+
 
     flask.session['course_id'] = course_id
 
@@ -353,12 +367,16 @@ def prof_scores(course_id):
 
     flask.session['course_id'] = course_id
 
-    assignments = get_all_assignments_for_course(course_id)
+    try:
+        scores = get_assignments_and_scores_for_student(course_id, username)
+    except:
+        scores = get_default_student_scores()
 
     return flask.render_template('prof-scores.html',
                                  username = username,
                                  course_id = course_id,
-                                 assignments = assignments)
+                                 scores = scores
+                                 )
                                 
 #----------------------      ADMIN PAGES    ----------------------------
 #-----------------------------------------------------------------------
@@ -367,8 +385,17 @@ def prof_scores(course_id):
 def admin_dashboard():
     username = auth.authenticate()
 
-    # get user's first name to display on dashboard
-    first_name = get_admin_firstname(username)
+    # get user's type to make sure they can access page and display name if correct
+    user_type = check_user_type(username)
+
+    if (user_type == "Student"):
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student-dashboard.html'))  # Redirecting to the home page or a suitable route
+    if(user_type == "Professor"):
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('prof-dashboard.html'))  # Redirecting to the home page or a suitable route
+    if(user_type == "SuperAdmin"):
+        first_name = get_admin_firstname(username)
 
     return flask.render_template('admin-dashboard.html',
                                  username = username,
@@ -674,18 +701,3 @@ def add_assignment():
 
     return flask.jsonify({"message": "Assignment added successfully"})
 #-----------------------------------------------------------------------
-
-@app.route('/get-scores/<int:prompt_id>')
-def get_scores(prompt_id):
-    scores = get_all_scores(prompt_id) 
-    results = []
-    for first_name, last_name, conv_id, score in scores:
-        if score is None:
-            score = "-"
-        results.append({
-            'name': f"{first_name} {last_name}",
-            'score': f"{score}/100",
-            'conv_id': conv_id,
-            'link': flask.url_for('conversation_history', course_id=flask.session.get('course_id'), conv_id=conv_id)
-        })
-    return flask.jsonify(results)
