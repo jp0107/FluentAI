@@ -652,9 +652,9 @@ def get_assignments_for_course(course_id):
             'prompt_id': assignment.prompt_id,
             'prompt_title': assignment.prompt_title,
             'prompt_text': assignment.prompt_text,
-            'deadline': assignment.deadline.isoformat() if assignment.deadline else None,
+            'deadline': assignment.deadline if assignment.deadline else None,
             'num_turns': assignment.num_turns,
-            'created_at': assignment.created_at.isoformat(),
+            'created_at': assignment.created_at,
             'past_deadline': assignment.past_deadline
             }
             course_assignments.append(assignment_data)
@@ -675,9 +675,9 @@ def get_past_assignments_for_course(course_id):
                 'prompt_id': assignments[0][0],
                 'prompt_title': assignments[0][1],
                 'prompt_text': assignments[0][2],
-                'deadline': assignments[0][3].isoformat(),
+                'deadline': assignments[0][3],
                 'num_turns': assignments[0][4],
-                'created_at': assignments[0][5].isoformat(),
+                'created_at': assignments[0][5],
                 'past_deadline': assignments[0][6]
             }
             past_assignments.append(assignment_data)
@@ -689,9 +689,9 @@ def get_past_assignments_for_course(course_id):
             'prompt_id': assignment.prompt_id,
             'prompt_title': assignment.prompt_title,
             'prompt_text': assignment.prompt_text,
-            'deadline': assignment.deadline.isoformat() if assignment.deadline else None,
+            'deadline': assignment.deadline if assignment.deadline else None,
             'num_turns': assignment.num_turns,
-            'created_at': assignment.created_at.isoformat(),
+            'created_at': assignment.created_at,
             'past_deadline': assignment.past_deadline
             }
             past_assignments.append(assignment_data)
