@@ -131,11 +131,9 @@ def logoutcas():
 def home():
     return flask.render_template('index.html')
 
-#----------------------   STUDENT PAGES   ------------------------------
 #-----------------------------------------------------------------------
-
-@app.route('/student-classes')
-def student_classes():
+@app.route('/login')
+def login():
     username = auth.authenticate()
 
     # if new user, store user info in database
@@ -162,6 +160,48 @@ def student_classes():
 
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus, email)
+
+    if user_type == "Student":
+        return flask.redirect(flask.url_for('student_classes'))
+    if user_type == "Professor":
+        return flask.redirect(flask.url_for('prof_classes'))
+    if user_type == "SuperAdmin":
+        return flask.redirect(flask.url_for('admin_dashboard'))
+
+    return "Login Required", 401
+    
+
+#----------------------   STUDENT PAGES   ------------------------------
+#-----------------------------------------------------------------------
+
+@app.route('/student-classes')
+def student_classes():
+    username = auth.authenticate()
+
+    # # if new user, store user info in database
+    # user_type = check_user_type(username)
+
+    # if user_type is None:
+    #     req_lib = ReqLib()
+
+    #     req = req_lib.getJSON(
+    #         req_lib.configs.USERS,
+    #         uid=username
+    #     )
+
+    #     # get user first/last name, email, and pustatus from netid
+    #     user_info = req[0]
+
+    #     full_name = user_info.get("displayname")
+    #     temp = full_name.split()
+    #     first_name = temp[0]
+    #     last_name = temp[-1]
+
+    #     pustatus = user_info.get("pustatus")
+    #     email = user_info.get("mail")
+
+    #     # store user info in corresponding table
+    #     store_userinfo(username, first_name, last_name, pustatus, email)
     
     # direct user to the correct page based on user type
     # if user_type == "Student":
