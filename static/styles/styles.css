@@ -251,6 +251,12 @@ h2 {
   color: #b3b3b3; /* Light grey color; adjust as needed */
 }
 
+.delete-icon:hover,
+.delete-icon:active,
+.delete-icon:focus {
+  fill: #1E1E1E;
+}
+
 /* Responsive styling*/
 @media (max-width: 768px) {
   .small-screen-layout {
