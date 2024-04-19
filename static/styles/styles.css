@@ -224,10 +224,6 @@ h2 {
   color: #EAF2FF;
 }
 
-.chat-button:hover img {
-  filter: invert(91%) sepia(93%) saturate(5796%) hue-rotate(179deg) brightness(110%) contrast(104%);
-}
-
 .subcontainer {
   height: 100%;
   flex-direction: column;
@@ -253,6 +249,16 @@ h2 {
 
 #message-text::placeholder {
   color: #b3b3b3; /* Light grey color; adjust as needed */
+}
+
+.delete-icon:hover,
+.delete-icon:active,
+.delete-icon:focus {
+  fill: #1E1E1E;
+}
+
+.tooltip .tooltip-inner {
+  color: #EAF2FF;
 }
 
 /* Responsive styling*/
@@ -284,5 +290,10 @@ h2 {
     font-size: 16px;
     align-items: center;
     padding: 3vw 3vw; /* Add 20px padding to the left and right */
+  }
+
+  .class-button {
+    border: 2px solid #1E1E1E;
+    font-size: 15px;
   }
 }
