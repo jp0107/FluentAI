@@ -222,7 +222,7 @@
                               '<h5>' + assignment.prompt_title + '</h5>' +
                               '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
                               '</div></div>' +
-                              '<div class="large-screen-layout">'
+                              '<div class="large-screen-layout">' +
                               '<div class="job-right my-4 flex-shrink-0 d-flex">' +
                               '<a href="/assignment-chat/{{ course_id }}/' + assignment.prompt_id + '" class="assignments-button">Start Assignment</a>' +
                               '<a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>' +
@@ -263,11 +263,20 @@
                               '<h5>' + assignment.prompt_title + '</h5>' +
                               '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
                               '</div></div>' +
+                              '<div class="large-screen-layout">' +
                               '<div class="job-right my-4 flex-shrink-0 d-flex">' +
                               '<a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>' +
                               '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
                               'Delete <img src="/static/img/delete.svg"></a>' +
-                              '</div></div>';
+                              '</div></div></div>' +
+                              '<div class="small-screen-layout">' +
+                              '<div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">' +
+                              '<div class="col d-flex">' +
+                              '<a href="/practice-chat/{{ course_id }}" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">Practice</a></div>' +
+                              '<div class="col d-flex">' +
+                              '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
+                              'Delete <img src="/static/img/delete.svg"></a></div>' +
+                              '</div></div>';;
                       });
                       $('#past-assignments-container').html(assignmentsHtml);  // Update the past assignments container
                   },
