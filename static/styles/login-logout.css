@@ -31,7 +31,7 @@ body, html {
 }
 
 h1 {
-  font-size: 12vw;
+  font-size: 175px;
   margin-top: 180px;
   margin-bottom: 80px;
   position: relative; /* Add this to establish a positioning context */
