@@ -80,7 +80,7 @@ def store_conversation(student_id, course_id, prompt_id, conv_text):
 # function for storing student and prof info in the database
 def store_userinfo(user_id, first_name, last_name, pustatus, email):
     with Session() as session:
-        if pustatus == "undergraduate":
+        if (pustatus in ("undergraduate", "graduate")):
             new_student = Student(
                 student_id=user_id,
                 first_name=first_name,
@@ -161,11 +161,7 @@ def login():
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus, email)
 
-        if pustatus == "student":
-            return flask.redirect(flask.url_for('student_classes'))
-        if pustatus == "faculty":
-            return flask.redirect(flask.url_for('prof_classes'))
-    
+    user_type = check_user_type(username)
 
     if user_type == "Student":
         return flask.redirect(flask.url_for('student_classes'))
@@ -175,7 +171,6 @@ def login():
         return flask.redirect(flask.url_for('admin_dashboard'))
 
     return "Login Required", 401
-    
 
 #----------------------   STUDENT PAGES   ------------------------------
 #-----------------------------------------------------------------------
