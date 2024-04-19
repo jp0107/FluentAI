@@ -161,6 +161,12 @@ def login():
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus, email)
 
+        if pustatus == "student":
+            return flask.redirect(flask.url_for('student_classes'))
+        if pustatus == "faculty":
+            return flask.redirect(flask.url_for('prof_classes'))
+    
+
     if user_type == "Student":
         return flask.redirect(flask.url_for('student_classes'))
     if user_type == "Professor":
