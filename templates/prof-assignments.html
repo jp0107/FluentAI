@@ -228,7 +228,7 @@
                               '<a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>' +
                               '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
                               'Delete <img src="/static/img/delete.svg"></a>' +
-                              '</div></div></div>' +
+                              '</div></div>' +
                               '<div class="small-screen-layout">' +
                               '<div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">' +
                               '<div class="col d-flex">' +
@@ -236,9 +236,9 @@
                               '<div class="col d-flex">' +
                               '<a href="/practice-chat/{{ course_id }}" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">Practice</a></div>' +
                               '<div class="col d-flex">' +
-                              '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
+                              '<a class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
                               'Delete <img src="/static/img/delete.svg"></a></div>' +
-                              '</div></div>';
+                              '</div></div></div>';
                       });
                       $('#assignments-container').html(assignmentsHtml);  // Update the assignments container
                   },
@@ -268,15 +268,15 @@
                               '<a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>' +
                               '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
                               'Delete <img src="/static/img/delete.svg"></a>' +
-                              '</div></div></div>' +
+                              '</div></div>' +
                               '<div class="small-screen-layout">' +
                               '<div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">' +
                               '<div class="col d-flex">' +
                               '<a href="/practice-chat/{{ course_id }}" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">Practice</a></div>' +
                               '<div class="col d-flex">' +
-                              '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
+                              '<a class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
                               'Delete <img src="/static/img/delete.svg"></a></div>' +
-                              '</div></div>';;
+                              '</div></div></div>';
                       });
                       $('#past-assignments-container').html(assignmentsHtml);  // Update the past assignments container
                   },
