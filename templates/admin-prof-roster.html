@@ -52,14 +52,27 @@
       <div class="row mt-4">
         <div class="col-lg-10 mx-auto">
           <div class="d-flex justify-content-between align-items-center mb-3">
-              <h1>Professors</h1>
-              <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addProfessorModal">
-                <img src="/static/img/add.svg" width="20" style="margin-right: 7px;"/>
+            <h1>Professors</h1>
+            
+            <div class="large-screen-layout">
+              <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16" style="padding-right: 5px;">
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
                 Add Professor
               </button>
+            </div>
+  
+            <div class="small-screen-layout">
+              <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addAssignmentModal"
+              style="padding: 8px 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
     </div>
 
     <div class="modal fade" id="addProfessorModal" tabindex="-1" role="dialog" aria-labelledby="addProfessorModalLabel" aria-hidden="true">
