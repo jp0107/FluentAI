@@ -257,6 +257,10 @@ h2 {
   fill: #1E1E1E;
 }
 
+.tooltip .tooltip-inner {
+  color: #EAF2FF;
+}
+
 /* Responsive styling*/
 @media (max-width: 768px) {
   .small-screen-layout {

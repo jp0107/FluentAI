@@ -32,3 +32,19 @@ window.onload = function() {
         select.appendChild(option);
     }
 };
+
+// Allows tooltip functionality
+document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+      
+      // Show the tooltip
+      tooltip.show();
+  
+      // Set a timeout to hide the tooltip after 5 seconds
+      setTimeout(function () {
+        tooltip.hide();
+      }, 3000); // Adjust time as needed
+    });
+});
