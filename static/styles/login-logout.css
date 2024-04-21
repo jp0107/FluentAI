@@ -134,6 +134,7 @@ h2 {
   }
 
   p {
+    margin-top: -20vw;
     font-size: 3vw;
   }
 
@@ -157,5 +158,12 @@ h2 {
     font-size: 11px;
     justify-content: center;
     text-align: justify;
+  }
+}
+
+/* Styles for ipad / tablet screens */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation : portrait) {
+  h1 {
+    margin-top: 300px;
   }
 }
