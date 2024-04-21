@@ -48,16 +48,18 @@
         </div>
     </nav>
 
-    <!-- Current Assignments -->
     <div class="container-fluid">
         <div class="row mt-4">
             <div class="col offset-sm-1">
-                <h1>{{ course_id }}</h1> 
-                <br>
                 <h2>Current Assignments</h2>
-                <br>
             </div>
         </div>
+    </div>
+
+    <br>
+
+    <!-- Current Assignments -->
+    <div class="container">
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 {% for prompt_id, title, deadline, past_deadline, created_at, completed in curr_assignments %}
@@ -104,14 +106,19 @@
         </div>
     </div>
 
-    <!-- Past Assignments -->
+
     <div class="container-fluid">
         <div class="row mt-4">
             <div class="col offset-sm-1">
                 <h2>Past Assignments</h2>
-                <br>
             </div>
         </div>
+    </div>
+
+    <br>
+
+    <!-- Past Assignments -->
+    <div class="container">
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 {% for prompt_id, title, deadline, past_deadline, created_at in past_assignments %}
