@@ -666,8 +666,6 @@ def update_course_code_click():
 
 @app.route('/delete-course/<course_id>', methods=['POST'])
 def delete_course_click(course_id):
-    course_id = flask.request.form.get('course_id')
-
     try:
         if delete_course(course_id):
             return flask.jsonify({'message': 'Course deleted successfully'}), 200

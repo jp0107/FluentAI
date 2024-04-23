@@ -134,20 +134,21 @@ def edit_course_code(course_id, new_course_code):
 def delete_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            # delete associated entries from CoursesProfs first
+            # Delete associated entries from CoursesProfs
             session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='fetch')
-            # ***** ALSO NEED TO DELETE FROM COURSESSTUDENTS *****
-            # delete the course entry
+            # Delete associated entries from CoursesStudents
+            session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='fetch')
+            # Delete the course entry
             course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
             if course_entry_to_delete:
                 session.delete(course_entry_to_delete)
                 session.commit()
                 return True
-            else:
-                session.commit()  
-                return False
+           
+            session.commit()
+            return False
         except Exception as e:
-            session.rollback()  
+            session.rollback()
             print(f"An error occurred: {e}")
             return False
 
