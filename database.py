@@ -343,6 +343,7 @@ class Prompt(Base):
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
+    assignment_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
 # get default current assignments for student
 def get_curr_student_default_assignments():
