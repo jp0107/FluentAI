@@ -138,8 +138,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="delete-btn" data-bs-dismiss="modal"
-                        id="confirmDelete"> Yes, delete course</button>
+                    <button type="button" class="btn btn-primary" id="confirmDelete" data-bs-dismiss="modal"> Yes,
+                        delete course</button>
                 </div>
             </div>
         </div>
@@ -262,6 +262,12 @@
                         alert('Error updating course code: ' + xhr.responseText);
                     }
                 });
+            });
+
+            $('#deleteCourseModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);  // Button that triggered the modal
+                var courseId = button.data('course-id');  
+                $(this).find('#confirmDelete').data('course-id', courseId);  
             });
 
             // Handle the confirmation button click
