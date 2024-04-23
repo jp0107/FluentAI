@@ -117,21 +117,30 @@ def store_admininfo(user_id, first_name, last_name, email):
 def delete_course(course_id):
     with Session() as session:
         try:
-            session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='fetch')
-            session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='fetch')
+            # Delete associated professor entries, if any
+            profs_deleted = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='fetch')
+            print(f"Deleted {profs_deleted} professor associations for course ID {course_id}")
+
+            # Delete associated student entries, if any
+            students_deleted = session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='fetch')
+            print(f"Deleted {students_deleted} student associations for course ID {course_id}")
+
+            # Try to find and delete the course itself
             course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
             if course_entry_to_delete:
                 session.delete(course_entry_to_delete)
                 session.commit()
+                print("Course deleted successfully.")
                 return True
             else:
+                # No course found to delete; not necessarily an error, but nothing was done
+                print("No course found to delete.")
                 session.commit()
                 return False
         except Exception as e:
             session.rollback()
-            print(f"An error occurred: {e}")  # Ensure this prints or logs the actual exception message
+            print(f"An error occurred: {e}")  # Log the actual exception
             return False
-
 #-----------------------------------------------------------------------
 # Routes for authentication.
 
@@ -688,8 +697,8 @@ def delete_course_click(course_id):
     try:
         if delete_course(course_id):
             return flask.jsonify({'message': 'Course deleted successfully'}), 200
-        else:
-            return flask.jsonify({'message': 'Error deleting course'}), 200
+        
+        return flask.jsonify({'message': 'Error Deleting course'}), 200
     except Exception as e:
         return flask.jsonify({'message': str(e)}), 500
 
