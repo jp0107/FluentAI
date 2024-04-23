@@ -118,11 +118,11 @@ def delete_course(course_id):
     with Session() as session:
         try:
             # Delete associated professor entries, if any
-            profs_deleted = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='False')
+            profs_deleted = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='FALSE')
             print(f"Deleted {profs_deleted} professor associations for course ID {course_id}")
 
             # Delete associated student entries, if any
-            students_deleted = session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='False')
+            students_deleted = session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='FALSE')
             print(f"Deleted {students_deleted} student associations for course ID {course_id}")
 
             # Try to find and delete the course itself
@@ -744,11 +744,12 @@ def get_past_assignments():
 @app.route('/add-assignment', methods=['POST'])
 def add_assignment():
     assignment_name = flask.request.form.get('assignment_name')
+    assignment_description = flask.request.form.get('assignment_description')
     assignment_prompt = flask.request.form.get('assignment_prompt')
     num_turns = flask.request.form.get('num_turns')
     course_id = flask.request.form.get('course_id')
 
-    if not all([assignment_name, assignment_prompt, num_turns]):
+    if not all([assignment_name, assignment_description, assignment_prompt, num_turns]):
         return flask.jsonify({"message": "All fields are required."}), 400
 
     prof_id = flask.session.get('username')
@@ -758,7 +759,8 @@ def add_assignment():
         prof_id=prof_id,
         prompt_text=assignment_prompt,
         num_turns=int(num_turns),
-        deadline=flask.request.form.get('deadline')  # Assuming deadline is passed as form data
+        deadline=flask.request.form.get('deadline'),  # Assuming deadline is passed as form data
+        assignment_description = assignment_description
     )
 
     with sqlalchemy.orm.Session(engine) as session:
