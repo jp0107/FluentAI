@@ -42,6 +42,19 @@
             </div>
         </div>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+            var addCourseModal = document.getElementById('joinCourseModal');
+
+            // Listen for the 'hidden.bs.modal' event which is fired when the modal has finished being hidden from the user
+            addCourseModal.addEventListener('hidden.bs.modal', function () {
+                var textarea = document.getElementById('course-code');
+                textarea.value = '';  // Clear the textarea
+                document.getElementById('char-count-course-code').innerText = '6';  // Reset the character count
+            });
+            });
+        </script>
+
         <nav class="navbar navbar-expand-sm bg-dark navbar-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/student-classes">
