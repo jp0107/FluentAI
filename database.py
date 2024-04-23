@@ -130,27 +130,27 @@ def edit_course_code(course_id, new_course_code):
         else:
             return False 
 
-# delete course
-def delete_course(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        try:
-            # Delete associated entries from CoursesProfs
-            session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='fetch')
-            # Delete associated entries from CoursesStudents
-            session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='fetch')
-            # Delete the course entry
-            course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
-            if course_entry_to_delete:
-                session.delete(course_entry_to_delete)
-                session.commit()
-                return True
+# # delete course
+# def delete_course(course_id):
+#     with Session() as session:
+#         try:
+#             # Delete associated entries from CoursesProfs
+#             session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='fetch')
+#             # Delete associated entries from CoursesStudents
+#             session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='fetch')
+#             # Delete the course entry
+#             course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
+#             if course_entry_to_delete:
+#                 session.delete(course_entry_to_delete)
+#                 session.commit()
+#                 return True
            
-            session.commit()
-            return False
-        except Exception as e:
-            session.rollback()
-            print(f"An error occurred: {e}")
-            return False
+#                 session.commit()
+#                 return False
+#         except Exception as e:
+#             session.rollback()
+#             print(f"An error occurred: {e}")
+#             return False
 
 #-----------------------------------------------------------------------
 
