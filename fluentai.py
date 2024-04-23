@@ -744,12 +744,11 @@ def get_past_assignments():
 @app.route('/add-assignment', methods=['POST'])
 def add_assignment():
     assignment_name = flask.request.form.get('assignment_name')
-    assignment_description = flask.request.form.get('assignment_description')
     assignment_prompt = flask.request.form.get('assignment_prompt')
     num_turns = flask.request.form.get('num_turns')
     course_id = flask.request.form.get('course_id')
 
-    if not all([assignment_name, assignment_description, assignment_prompt, num_turns]):
+    if not all([assignment_name, assignment_prompt, num_turns]):
         return flask.jsonify({"message": "All fields are required."}), 400
 
     prof_id = flask.session.get('username')
