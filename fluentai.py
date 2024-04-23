@@ -115,18 +115,18 @@ def store_admininfo(user_id, first_name, last_name, email):
         
 #-----------------------------------------------------------------------
 def delete_course(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
+    with Session() as session:
         try:
-            # Delete associated professor entries, if any
-            profs_deleted = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session=False)
-            print(f"Deleted {profs_deleted} professor associations for course ID {course_id}")
+            # # Delete associated professor entries, if any
+            # profs_deleted = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session=False)
+            # print(f"Deleted {profs_deleted} professor associations for course ID {course_id}")
 
-            # Delete associated student entries, if any
-            students_deleted = session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session=False)
-            print(f"Deleted {students_deleted} student associations for course ID {course_id}")
+            # # Delete associated student entries, if any
+            # students_deleted = session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session=False)
+            # print(f"Deleted {students_deleted} student associations for course ID {course_id}")
 
             # Try to find and delete the course itself
-            course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
+            course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one()
             if course_entry_to_delete:
                 session.delete(course_entry_to_delete)
                 session.commit()
