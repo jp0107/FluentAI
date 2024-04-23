@@ -1,193 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
-    <title>FluentAI</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
+  <title>FluentAI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
 
-    <div class="modal fade" id="addAssignmentModal" tabindex="-1" role="dialog" aria-labelledby="addAssignmentModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="addAssignmentModalLabel">Create a New Assignment</h5>
-                  <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                  <form>
-                  <div class="form-group">
-                    <label for="message-text" class="col-form-label">Assignment Name:</label>
-                    <textarea class="form-control" id="assignment-name" rows="1"  data-max-length="100"
-                    placeholder="Type assignment name (e.g. Assignment 1: Café Fluent)"></textarea>
-                    <small>Characters left: <span id="char-count-assignment-name">2</span></small>
-                  </div>
-                  <div class="form-group">
-                    <label for="message-text"  class="col-form-label">Assignment Prompt to Chatbot:</label>
-                    <textarea class="form-control" id="assignment-prompt" rows="4" data-max-length="500"
-                    placeholder="Type assignment prompt to ChatGPT"></textarea>
-                    <small>Characters left: <span id="char-count-assignment-prompt">500</span></small>
-                  </div>
-                  <div class="form-group">
-                    <label for="message-text" class="col-form-label">Assignment Description:</label>
-                    <textarea class="form-control" id="assignment-description" rows="4" data-max-length="500"
-                    placeholder="Type assignment description for students"></textarea>
-                    <small>Characters left: <span id="char-count-assignment-description">500</span></small>
-                  </div>
-                  <div class="form-group">
-                      <label for="num-turns-select" class="col-form-label">Number of Turns:</label>
-                      <select class="form-control" id="num-turns-select">
-                          <option selected>Choose number of turns...</option>
-                      </select>
-                  </div>
-                  </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary">Create new assignment</button>
-              </div>
-          </div>
+<body>
+
+  <div class="modal fade" id="addAssignmentModal" tabindex="-1" role="dialog" aria-labelledby="addAssignmentModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAssignmentModalLabel">Create a New Assignment</h5>
+          <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Assignment Name:</label>
+              <textarea class="form-control" id="assignment-name" rows="1" data-max-length="100"
+                placeholder="Type assignment name (e.g. Assignment 1: Café Fluent)"></textarea>
+              <small>Characters left: <span id="char-count-assignment-name">2</span></small>
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Assignment Prompt to Chatbot:</label>
+              <textarea class="form-control" id="assignment-prompt" rows="4" data-max-length="500"
+                placeholder="Type assignment prompt to ChatGPT"></textarea>
+              <small>Characters left: <span id="char-count-assignment-prompt">500</span></small>
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Assignment Description:</label>
+              <textarea class="form-control" id="assignment-description" rows="4" data-max-length="500"
+                placeholder="Type assignment description for students"></textarea>
+              <small>Characters left: <span id="char-count-assignment-description">500</span></small>
+            </div>
+            <div class="form-group">
+              <label for="num-turns-select" class="col-form-label">Number of Turns:</label>
+              <select class="form-control" id="num-turns-select">
+                <option selected>Choose number of turns...</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary">Create new assignment</button>
+        </div>
       </div>
     </div>
+  </div>
 
-    <nav class="navbar navbar-expand-sm bg-dark navbar-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/prof-classes">
-          <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-          <ul class="navbar-nav">
+  <nav class="navbar navbar-expand-sm bg-dark navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/prof-classes">
+        <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/prof-assignments/{{course_id}}">Assignments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">Create
+              Assignment</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/prof-scores/{{course_id}}" id="underlined">Scores</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/prof-roster/{{course_id}}">Roster</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav d-flex flex-row ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              {{username}}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col offset-sm-1">
+        <h1>{{course_id}}</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col offset-sm-1">
+        <h2>Assignment Scores</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row flex-nowrap">
+      <div class="col-auto col-md-3 col-xl-2 px-sm-2 offset-sm-1" style="background-color: #EAF2FF; color: #1E1E1E;">
+        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 min-vh-100">
+          <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
             <li class="nav-item">
-              <a class="nav-link" href= "/prof-assignments/{{course_id}}">Assignments</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addAssignmentModal">Create Assignment</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/prof-scores/{{course_id}}" id="underlined">Scores</a>
-            </li>    
-            <li class="nav-item">
-                <a class="nav-link" href="/prof-roster/{{course_id}}">Roster</a>
-              </li>   
-          </ul>
-          <ul class="navbar-nav d-flex flex-row ms-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{username}}
+              <a href="#" class="nav-link align-middle px-0" data-assignment="general">
+                <span class="ms-1 d-none d-sm-inline">Scores Overview</span>
+                <span class="ms-1 d-inline d-sm-none">Overview</span>
               </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
-              </ul>
             </li>
+            {% for prompt_id, title, deadline in assignments %}
+            <li class="nav-item">
+              <a href="#" class="nav-link align-middle px-0" data-assignment="{{ prompt_id }}">
+                <span class="ms-1 d-none d-sm-inline">{{ title }}</span>
+                <span class="ms-1 d-inline d-sm-none">A{{ loop.index }}</span>
+              </a>
+            </li>
+            {% endfor %}
           </ul>
         </div>
       </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row mt-4">
-          <div class="col offset-sm-1">
-              <h1>{{course_id}}</h1>
-          </div>
-      </div>
-    </div>
-
-    <div class="container-fluid">
-      <div class="row mt-4">
-          <div class="col offset-sm-1">
-              <h2>Assignment Scores</h2>
-          </div>
-      </div>
-    </div>
-
-    <div class="container-fluid">
-      <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 offset-sm-1" style="background-color: #EAF2FF; color: #1E1E1E;" >
-          <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 min-vh-100">
-              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                <li class="nav-item">
-                  <a href="#" class="nav-link align-middle px-0" data-assignment="general"> 
-                    <span class="ms-1 d-none d-sm-inline">Scores Overview</span> 
-                    <span class="ms-1 d-inline d-sm-none">Overview</span>
-                  </a>
-                </li>
-                {% for prompt_id, title, deadline in assignments %}
-                  <li class="nav-item">
-                    <a href="#" class="nav-link align-middle px-0" data-assignment="{{ prompt_id }}">
-                      <span class="ms-1 d-none d-sm-inline">{{ title }}</span>
-                      <span class="ms-1 d-inline d-sm-none">A{{ loop.index }}</span>
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-          </div>
-        </div>
-        <div class="col py-3">
-          <div class="container-fluid">
-            <table class="col offset-sm-1 table score-table">
-              <thead>
-                <tr>
-                  <th>Student</th>
-                  <th>
-                    AI Score 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative; left: 2px;"
-                    data-bs-toggle="tooltip" data-bs-placement="top" title="Disclaimer: Please be aware that the scores provided for the student answers have been graded by ChatGPT, an artificial intelligence language model. While ChatGPT is designed to assess answers based on language usage and correctness, it does not replicate the comprehensive understanding or judgment of a human instructor. The scores should be considered as indicative and used in conjunction with teacher assessments to ensure accuracy and fairness in grading.">
-                      <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                    </svg>
-                  </th>
-                  <th>Conversation History</th>
-                </tr>
-              </thead>
-              <tbody id="score-body">
-                <!-- Data rows will go here -->
-              </tbody>
-            </table>
-          </div>
+      <div class="col py-3">
+        <div class="container-fluid">
+          <table class="col offset-sm-1 table score-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>
+                  AI Score
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                    class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative; left: 2px;"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Disclaimer: Please be aware that the scores provided for the student answers have been graded by ChatGPT, an artificial intelligence language model. While ChatGPT is designed to assess answers based on language usage and correctness, it does not replicate the comprehensive understanding or judgment of a human instructor. The scores should be considered as indicative and used in conjunction with teacher assessments to ensure accuracy and fairness in grading.">
+                    <path
+                      d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                  </svg>
+                </th>
+                <th>Conversation History</th>
+              </tr>
+            </thead>
+            <tbody id="score-body">
+              <!-- Data rows will go here -->
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
       const menuItems = document.querySelectorAll('#menu a');
-        menuItems.forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const promptId = this.getAttribute('data-assignment');
-                fetch(`/get-scores/${promptId}`) 
-                    .then(response => response.json())
-                    .then(data => updateTable(data))
-                    .catch(error => console.error('Error fetching data:', error));
-            });
+      menuItems.forEach(item => {
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          const promptId = this.getAttribute('data-assignment');
+          fetch(`/get-scores/${promptId}`)
+            .then(response => response.json())
+            .then(data => updateTable(data))
+            .catch(error => console.error('Error fetching data:', error));
+        });
       });
 
       function updateTable(data) {
-          const tbody = document.getElementById('score-body');
-          tbody.innerHTML = ''; // Clear existing data
-          data.forEach(d => {
-              const row = `<tr>
+        const tbody = document.getElementById('score-body');
+        tbody.innerHTML = ''; // Clear existing data
+        data.forEach(d => {
+          const row = `<tr>
                   <td>${d.name}</td>
                   <td>${d.score}</td>
                   <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
               </tr>`;
-              tbody.innerHTML += row;
-          });
+          tbody.innerHTML += row;
+        });
       }
     });
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>

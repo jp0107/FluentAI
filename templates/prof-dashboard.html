@@ -266,8 +266,8 @@
 
             $('#deleteCourseModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);  // Button that triggered the modal
-                var courseId = button.data('course-id');  
-                $(this).find('#confirmDelete').data('course-id', courseId);  
+                var courseId = button.data('course-id');
+                $(this).find('#confirmDelete').data('course-id', courseId);
             });
 
             // Handle the confirmation button click

@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
-      <title>FluentAI</title>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-      <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-      <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
-      <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-    </head>
 
-    <body>
-        <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog" aria-labelledby="joinCourseModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
+    <title>FluentAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+
+<body>
+    <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog" aria-labelledby="joinCourseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="joinCourseModalLabel">Join a Course</h5>
                     <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form>
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Course Code:</label>
-                        <textarea class="form-control" id="course-code" rows="1"  data-max-length="6"
-                        placeholder="Type course code"></textarea>
-                        <small>Characters left: <span id="char-count-course-code">6</span></small>
-                    </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Course Code:</label>
+                            <textarea class="form-control" id="course-code" rows="1" data-max-length="6"
+                                placeholder="Type course code"></textarea>
+                            <small>Characters left: <span id="char-count-course-code">6</span></small>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id = "join-course-button">Join course</button>
-                </div>
+                    <button type="button" class="btn btn-primary" id="join-course-button">Join course</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
             var addCourseModal = document.getElementById('joinCourseModal');
 
             // Listen for the 'hidden.bs.modal' event which is fired when the modal has finished being hidden from the user
@@ -52,54 +55,56 @@
                 textarea.value = '';  // Clear the textarea
                 document.getElementById('char-count-course-code').innerText = '6';  // Reset the character count
             });
-            });
-        </script>
+        });
+    </script>
 
-        <nav class="navbar navbar-expand-sm bg-dark navbar-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/student-classes">
-                <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/student-classes" id="underlined">My Courses</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="/student-all-classes">All Courses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal">Join Course</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav d-flex flex-row ms-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{username}}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/student-classes">
+                <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/student-classes" id="underlined">My Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/student-all-classes">All Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal">Join
+                            Course</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav d-flex flex-row ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{username}}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <br>
+    <br>
 
-        <div class="container">
-            <div class="row mt-4">
-                <div class="row mt-4 align-items-center">
-                    <h1>My Courses</h1>
-                </div>
+    <div class="container">
+        <div class="row mt-4">
+            <div class="row mt-4 align-items-center">
+                <h1>My Courses</h1>
+            </div>
             <br>
             <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
-              <!-- Each .col div acts as a container for a button, ensuring equal height -->
-              <!-- <div class="col d-flex">
+                <!-- Each .col div acts as a container for a button, ensuring equal height -->
+                <!-- <div class="col d-flex">
                 <a href="/student-dashboard" class="class-button" role="button">
                     <h3>SPA 101</h3>Beginner's Spanish I
                 </a>
@@ -109,73 +114,74 @@
                     <h3><img src="static/img/add_course_light.png" width="35"/></h3> Join Course
                 </a>
               </div> -->
-              <!-- Add more .col divs with class-button for each additional course -->
+                <!-- Add more .col divs with class-button for each additional course -->
             </div>
         </div>
 
-        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
         </script>
         </script>
         <script type="text/javascript">
-            $(document).ready(function(){
+            $(document).ready(function () {
                 // Function to fetch updated student course list
                 function fetchStudentCourses() {
                     $.ajax({
                         url: '/get-stu-courses',  // Endpoint for fetching student courses
                         method: 'GET',
                         cache: false,
-                        success: function(response) {
+                        success: function (response) {
                             displayStudentCourses(response); // Update the course list on the page
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             alert('Error fetching courses: ' + xhr.statusText);
                         }
                     });
                 }
-        
+
                 // Function to display student courses
                 function displayStudentCourses(courses) {
                     var courseListHtml = ''
-                    $.each(courses, function(index, course) {
+                    $.each(courses, function (index, course) {
                         courseListHtml += '<div class="col d-flex">' +
-                                          '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
-                                          '<h3>' + course.course_id + '</h3>' + course.course_name +
-                                          '</a></div>';
+                            '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
+                            '<h3>' + course.course_id + '</h3>' + course.course_name +
+                            '</a></div>';
                     });
                     courseListHtml += '<div class="col d-flex">' +
-                                            '<a data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">' +
-                                            '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Join Course' +
-                                            '</a></div>';
+                        '<a data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">' +
+                        '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Join Course' +
+                        '</a></div>';
                     $(".row-cols-md-3").html(courseListHtml);
                 }
-        
+
                 // Join course button click event from the modal
-                $("#join-course-button").click(function(){
+                $("#join-course-button").click(function () {
                     var courseCode = $("#course-code").val();  // Assumes input for course code is available
-        
-                    if(!courseCode) {
+
+                    if (!courseCode) {
                         alert("Course code is required.");
                         return;
                     }
-            
+
                     $.ajax({
                         url: '/join-course',
                         method: 'POST',
                         data: { course_code: courseCode },
-                        success: function(response) {
+                        success: function (response) {
                             alert(response.message);
                             $('#joinCourseModal').modal('hide'); // Hide the modal
                             fetchStudentCourses(); // Re-fetch courses to update the list
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             alert('Error joining course: ' + xhr.statusText);
                         }
                     });
                 });
-        
+
                 // Initial fetch of student courses when the page loads
                 fetchStudentCourses();
             });
         </script>
-    </body>
+</body>
+
 </html>

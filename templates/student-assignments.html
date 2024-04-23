@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,17 +8,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
     <title>FluentAI</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/assignments.css') }}">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="/student-classes">
-                <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
+                <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -32,11 +35,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/student-scores/{{ course_id }}">Scores</a>
-                    </li>    
+                    </li>
                 </ul>
                 <ul class="navbar-nav d-flex flex-row ms-auto">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{username}}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
@@ -52,7 +56,7 @@
     <div class="container-fluid">
         <div class="row mt-4">
             <div class="col offset-lg-1">
-                <h1>{{ course_id }}</h1> 
+                <h1>{{ course_id }}</h1>
                 <br>
                 <h2>Current Assignments</h2>
                 <br>
@@ -61,44 +65,49 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 {% for prompt_id, title, deadline, past_deadline, created_at, completed in curr_assignments %}
-                    <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                        <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                            <div class="job-content">
-                                <h5>{{ title }}</h5>
-                                <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
-                                <!-- Insert completion status -->
-                                {% if completed %}
-                                    Completed
-                                {% else %}
-                                    Not Completed
-                                {% endif %}
-                            </div>
+                <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+                    <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                        <div class="job-content">
+                            <h5>{{ title }}</h5>
+                            <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
+                            <!-- Insert completion status -->
+                            {% if completed %}
+                            Completed
+                            {% else %}
+                            Not Completed
+                            {% endif %}
                         </div>
+                    </div>
 
-                        <div class="large-screen-layout">
-                            <div class="job-right my-4 flex-shrink-0 d-flex">
-                                <a href="{{ url_for('assignment_chat', course_id=course_id, prompt_id=prompt_id) }}" class="assignments-button me-2">Start Assignment</a>
-                                <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
-                            </div>
+                    <div class="large-screen-layout">
+                        <div class="job-right my-4 flex-shrink-0 d-flex">
+                            <a href="{{ url_for('assignment_chat', course_id=course_id, prompt_id=prompt_id) }}"
+                                class="assignments-button me-2">Start Assignment</a>
+                            <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
                         </div>
+                    </div>
 
-                        <div class="small-screen-layout">
-                            <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
-                                <div class="col d-flex">
-                                <a href="{{ url_for('assignment_chat', course_id=course_id, prompt_id=prompt_id) }}" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                    <div class="small-screen-layout">
+                        <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
+                            <div class="col d-flex">
+                                <a href="{{ url_for('assignment_chat', course_id=course_id, prompt_id=prompt_id) }}"
+                                    class="class-button w-100 d-flex align-items-center justify-content-center"
+                                    role="button" id="class-button">
                                     Start Assignment
                                 </a>
-                                </div>
-                                <div class="col d-flex">
-                                <a href="/practice-chat/{{ course_id }}" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                            </div>
+                            <div class="col d-flex">
+                                <a href="/practice-chat/{{ course_id }}"
+                                    class="class-button w-100 d-flex align-items-center justify-content-center"
+                                    role="button" id="class-button">
                                     Practice
                                 </a>
-                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
                 {% else %}
-                    <p>No current assignments available.</p>
+                <p>No current assignments available.</p>
                 {% endfor %}
             </div>
         </div>
@@ -115,23 +124,24 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 {% for prompt_id, title, deadline, past_deadline, created_at in past_assignments %}
-                    <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                        <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                            <div class="job-content">
-                                <h5>{{ title }}</h5>
-                                <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
-                            </div>
-                        </div>
-                        <div class="job-right my-4 flex-shrink-0 d-flex">
-                            <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
+                <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+                    <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                        <div class="job-content">
+                            <h5>{{ title }}</h5>
+                            <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
                         </div>
                     </div>
+                    <div class="job-right my-4 flex-shrink-0 d-flex">
+                        <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
+                    </div>
+                </div>
                 {% else %}
-                    <p>No past assignments completed yet.</p>
+                <p>No past assignments completed yet.</p>
                 {% endfor %}
                 <br>
             </div>
         </div>
     </div>
 </body>
+
 </html>

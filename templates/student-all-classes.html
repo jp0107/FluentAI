@@ -1,90 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
-      <title>FluentAI</title>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-      <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-      <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
-    </head>
 
-    <body>
-        <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog" aria-labelledby="joinCourseModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
+    <title>FluentAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+</head>
+
+<body>
+    <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog" aria-labelledby="joinCourseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="joinCourseModalLabel">Join a Course</h5>
                     <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form>
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Course Code:</label>
-                        <textarea class="form-control" id="course-code" rows="1"  data-max-length="6"
-                        placeholder="Type Course Code"></textarea>
-                        <small>Characters left: <span id="char-count-course-code">6</span></small>
-                    </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Course Code:</label>
+                            <textarea class="form-control" id="course-code" rows="1" data-max-length="6"
+                                placeholder="Type Course Code"></textarea>
+                            <small>Characters left: <span id="char-count-course-code">6</span></small>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary">Join course</button>
                 </div>
-                </div>
             </div>
         </div>
+    </div>
 
-        <nav class="navbar navbar-expand-sm bg-dark navbar-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/student-classes">
-                <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/student-classes">My Courses</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="/student-all-classes" id="underlined">All Courses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal">Join a Course</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav d-flex flex-row ms-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{username}}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/student-classes">
+                <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/student-classes">My Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/student-all-classes" id="underlined">All Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal">Join a
+                            Course</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav d-flex flex-row ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{username}}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
+    <br>
+
+    <div class="container">
+        <div class="row mt-4">
+            <h1>All Courses</h1>
+        </div>
         <br>
-
-        <div class="container">
-            <div class="row mt-4">
-                <h1>All Courses</h1>
-            </div>
-            <br>
-            <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
-              <!-- Each .col div acts as a container for a button, ensuring equal height -->
-              <!-- <div class="col d-flex">
+        <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
+            <!-- Each .col div acts as a container for a button, ensuring equal height -->
+            <!-- <div class="col d-flex">
                 <a href="/student-dashboard" class="class-button" role="button">
                     <h3>SPA 101</h3>Beginner's Spanish I
                 </a>
@@ -99,39 +104,40 @@
                     <h3>SPA 107</h3>Intermediate/Advanced Spanish
                 </a>
               </div> -->
-              <!-- Add more .col divs with class-button for each additional course -->
-            </div>
+            <!-- Add more .col divs with class-button for each additional course -->
         </div>
+    </div>
 
-        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
-        </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
+    </script>
 
-        <script type="text/javascript">
-            $(document).ready(function(){
-                function fetchAllCourses() {
-                    $.ajax({
-                        url: '/all-courses',
-                        method: 'GET',
-                        cache: false,
-                        success: function(courses) {
-                            var courseListHtml = '';
-                            $.each(courses, function(index, course) {
-                                courseListHtml += '<div class="col d-flex">' +
-                                                '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
-                                                '<h3>' + course.course_id + '</h3> ' + course.course_name +
-                                                '</a></div>';
-                            });
-                            $(".row-cols-md-3").html(courseListHtml);
-                        },
-                        error: function(xhr) {
-                            alert('Error fetching courses: ' + xhr.statusText);
-                        }
-                    });
-                }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function fetchAllCourses() {
+                $.ajax({
+                    url: '/all-courses',
+                    method: 'GET',
+                    cache: false,
+                    success: function (courses) {
+                        var courseListHtml = '';
+                        $.each(courses, function (index, course) {
+                            courseListHtml += '<div class="col d-flex">' +
+                                '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
+                                '<h3>' + course.course_id + '</h3> ' + course.course_name +
+                                '</a></div>';
+                        });
+                        $(".row-cols-md-3").html(courseListHtml);
+                    },
+                    error: function (xhr) {
+                        alert('Error fetching courses: ' + xhr.statusText);
+                    }
+                });
+            }
 
-                // Initial fetch of all courses when the page loads
-                fetchAllCourses();
-            });
-        </script>
-    </body>
+            // Initial fetch of all courses when the page loads
+            fetchAllCourses();
+        });
+    </script>
+</body>
+
 </html>
