@@ -80,8 +80,19 @@
                       <h5>{{ title }}</h5>
                   </div>
                 </div>
-                <div class="job-right my-4 flex-shrink-0 d-flex">
-                  <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
+
+                <div class="large-screen-layout">
+                  <div class="job-right my-4 flex-shrink-0 d-flex">
+                    <a href="/practice-chat/{{ course_id }}" class="assignments-button">Practice</a>
+                  </div>
+                </div>
+
+                <div class="small-screen-layout">
+                  <div class="col d-flex">
+                    <a href="/practice-chat/{{ course_id }}" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">
+                        Practice
+                    </a>
+                  </div>
                 </div>
               </div>
               {% else %}

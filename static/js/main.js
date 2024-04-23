@@ -22,17 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Populates number of turns options automatically
-window.onload = function() {
-    var select = document.getElementById("num-turns-select");
-    for (var i = 1; i <= 20; i++) {
-        var option = document.createElement("option");
-        option.value = i;
-        option.textContent = i;
-        select.appendChild(option);
-    }
-};
-
 // Allows tooltip functionality
 document.addEventListener('DOMContentLoaded', function () {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
