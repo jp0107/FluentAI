@@ -590,7 +590,6 @@ def process_input():
 
 #-----------------------------------------------------------------------
 
-
 @app.route('/student-practice-chat/<course_id>')
 def student_practice_chat(course_id):
     username = auth.authenticate()
