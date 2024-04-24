@@ -378,19 +378,9 @@ def prof_assignments(course_id):
 
     flask.session['course_id'] = course_id
 
-    try:
-        curr_assignments = get_current_assignments_for_prof(course_id)
-        past_assignments = get_past_assignments(course_id)
-    except:
-        # handle empty assignments in case of error
-        curr_assignments = get_curr_prof_default_assignments()
-        past_assignments = get_past_default_assignments()
-
     return flask.render_template('prof-assignments.html',
                                  username = username,
-                                 course_id = course_id,
-                                 curr_assignments = curr_assignments,
-                                 past_assignments = past_assignments)
+                                 course_id = course_id)
     
 #-----------------------------------------------------------------------
 @app.route('/delete-assignment/<int:prompt_id>', methods=['POST'])
@@ -749,8 +739,14 @@ def delete_prof_click(prof_id):
 @app.route('/get-assignments', methods=['GET'])
 def get_assignments():
     course_id = flask.request.args.get('course_id')
-    assignments = get_assignments_for_course(course_id)
-    return flask.jsonify(assignments)
+    if course_id:
+        try:
+            assignments = get_assignments_for_course(course_id)
+            return flask.jsonify(assignments)
+        except Exception:
+            return flask.jsonify({'error': 'Failed to fetch assignments'}), 500
+    else:
+        return flask.jsonify({'error': 'No course ID provided'}), 400
 
 #-----------------------------------------------------------------------
 @app.route('/get-past-assignments', methods=['GET'])

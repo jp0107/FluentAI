@@ -620,21 +620,36 @@ def get_prompt_by_id(prompt_id):
 #-----------------------------------------------------------------------
 def get_assignments_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        # Query to get all prompts for a given course ID
-        assignments = session.query(Prompt).filter(Prompt.course_id == course_id).all()
-        course_assignments = []
+        now = datetime.now()
+        assignments = session.query(
+            Prompt.prompt_id,
+            Prompt.prompt_title,
+            Prompt.prompt_text,
+            Prompt.deadline,
+            Prompt.num_turns,
+            Prompt.created_at
+        ).filter(Prompt.course_id == course_id).all()
+
+        current_assignments = []
+        past_assignments = []
         for assignment in assignments:
-            assignment_data = {
-            'prompt_id': assignment.prompt_id,
-            'prompt_title': assignment.prompt_title,
-            'prompt_text': assignment.prompt_text,
-            'deadline': assignment.deadline if assignment.deadline else None,
-            'num_turns': assignment.num_turns,
-            'created_at': assignment.created_at,
-            'past_deadline': assignment.past_deadline
+            # Format the deadline in the desired format
+            formatted_deadline = assignment.deadline.strftime('%m/%d/%Y %I:%M%p') if assignment.deadline else 'No deadline set'
+            
+            assignment_info = {
+                'prompt_id': assignment.prompt_id,
+                'prompt_title': assignment.prompt_title,
+                'prompt_text': assignment.prompt_text,
+                'deadline': formatted_deadline,
+                'num_turns': assignment.num_turns,
+                'created_at': assignment.created_at.strftime('%Y-%m-%d %H:%M:%S')
             }
-            course_assignments.append(assignment_data)
-        return course_assignments
+            if assignment.deadline is None or assignment.deadline > now:
+                current_assignments.append(assignment_info)
+            else:
+                past_assignments.append(assignment_info)
+
+        return {'current_assignments': current_assignments, 'past_assignments': past_assignments}
 #-----------------------------------------------------------------------
 def get_assignments_for_student(student_id, course_id):
     with sqlalchemy.orm.Session(engine) as session:
@@ -671,47 +686,47 @@ def categorize_assignments(assignments, now):
     
 #-----------------------------------------------------------------------
 
-def get_past_assignments_for_course(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        assignments = (session.query(Prompt)
-                    .filter(Prompt.course_id == course_id, Prompt.past_deadline == True)
-                    .order_by(sqlalchemy.desc(Prompt.deadline))).all()
+# def get_past_assignments_for_course(course_id):
+#     with sqlalchemy.orm.Session(engine) as session:
+#         assignments = (session.query(Prompt)
+#                     .filter(Prompt.course_id == course_id, Prompt.past_deadline == True)
+#                     .order_by(sqlalchemy.desc(Prompt.deadline))).all()
 
-        past_assignments = []
+#         past_assignments = []
 
-        # default case
-        if not assignments:
-            assignments = get_full_past_default_assignments()
-            assignment_data = {
-                'prompt_id': assignments[0][0],
-                'prompt_title': assignments[0][1],
-                'prompt_text': assignments[0][2],
-                'deadline': assignments[0][3],
-                'num_turns': assignments[0][4],
-                'created_at': assignments[0][5],
-                'past_deadline': assignments[0][6]
-            }
-            past_assignments.append(assignment_data)
-            return past_assignments
+#         # default case
+#         if not assignments:
+#             assignments = get_full_past_default_assignments()
+#             assignment_data = {
+#                 'prompt_id': assignments[0][0],
+#                 'prompt_title': assignments[0][1],
+#                 'prompt_text': assignments[0][2],
+#                 'deadline': assignments[0][3],
+#                 'num_turns': assignments[0][4],
+#                 'created_at': assignments[0][5],
+#                 'past_deadline': assignments[0][6]
+#             }
+#             past_assignments.append(assignment_data)
+#             return past_assignments
 
-        # normal case
-        for assignment in assignments:
-            assignment_data = {
-            'prompt_id': assignment.prompt_id,
-            'prompt_title': assignment.prompt_title,
-            'prompt_text': assignment.prompt_text,
-            'deadline': assignment.deadline if assignment.deadline else None,
-            'num_turns': assignment.num_turns,
-            'created_at': assignment.created_at,
-            'past_deadline': assignment.past_deadline
-            }
-            past_assignments.append(assignment_data)
-        return past_assignments
+#         # normal case
+#         for assignment in assignments:
+#             assignment_data = {
+#             'prompt_id': assignment.prompt_id,
+#             'prompt_title': assignment.prompt_title,
+#             'prompt_text': assignment.prompt_text,
+#             'deadline': assignment.deadline if assignment.deadline else None,
+#             'num_turns': assignment.num_turns,
+#             'created_at': assignment.created_at,
+#             'past_deadline': assignment.past_deadline
+#             }
+#             past_assignments.append(assignment_data)
+#         return past_assignments
 
-# get default past assignments with full info (FOR PROF ASSIGNMENTS PAGE)
-def get_full_past_default_assignments():
-    now = datetime.now()
-    return [(12345, 'Assignment 0: Say Hello', "Say hello to the student", now - timedelta(days=3), 5, now - timedelta(days=10), True)]
+# # get default past assignments with full info (FOR PROF ASSIGNMENTS PAGE)
+# def get_full_past_default_assignments():
+#     now = datetime.now()
+#     return [(12345, 'Assignment 0: Say Hello', "Say hello to the student", now - timedelta(days=3), 5, now - timedelta(days=10), True)]
 
 #-----------------------------------------------------------------------
 
