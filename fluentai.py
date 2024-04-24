@@ -20,7 +20,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
-                      get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
+                      get_students_in_course, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_in_course, get_default_student_roster, get_assignments_for_course, get_assignments_for_student)
 
 #-----------------------------------------------------------------------
@@ -163,8 +163,31 @@ def delete_assignment(prompt_id):
             session.rollback()  # Roll back in case of error
             print(f"An error occurred: {e}")  # Log the actual exception
             return False
-        
+
 #-----------------------------------------------------------------------
+
+def delete_prof_from_course(prof_id, course_id):
+    with Session() as session:
+        try:
+            # Delete the association between the professor and the course
+            association_deleted = session.query(CoursesProfs).filter(
+                CoursesProfs.prof_id == prof_id,
+                CoursesProfs.course_id == course_id
+            ).delete(synchronize_session=False)
+
+            if association_deleted:
+                session.commit()
+                print(f"Deleted association for professor ID {prof_id} from course ID {course_id}")
+                return True
+            
+            print("No association found to delete.")
+            return False
+        except Exception as e:
+            session.rollback()
+            print(f"An error occurred: {e}")
+            return False
+
+#-----------------------------------------------------------------------        
 # Routes for authentication.
 
 @app.route('/logoutapp', methods=['GET'])
@@ -391,6 +414,8 @@ def delete_assignment_click(prompt_id):
         return flask.jsonify({'message': str(e)}), 500
 
 #-----------------------------------------------------------------------
+
+
 
 @app.route('/prof-roster/<course_id>')
 def prof_roster(course_id):
@@ -715,12 +740,13 @@ def delete_student_click(student_id):
 
 #-----------------------------------------------------------------------
 
-# FIX LATER
+
 @app.route('/delete-prof/<prof_id>', methods=['POST'])
-def delete_prof_click(prof_id):
-    prof_id = flask.request.form.get('prof_id')
-    return flask.jsonify({'message': 'Professor deleted successfully'}), 200
-    
+def delete_prof(prof_id):
+    if delete_prof_from_db(prof_id):
+        return flask.jsonify({'message': 'Professor deleted successfully'}), 200
+    else:
+        return flask.jsonify({'error': 'Failed to delete professor'}), 500
 
 #-----------------------------------------------------------------------
 @app.route('/get-assignments', methods=['GET'])
