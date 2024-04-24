@@ -308,7 +308,7 @@
         }
 
         function updateAssignmentsHTML(assignments, isPast) {
-          var assignmentsHtml = '';
+          var assignmentsHtml = '<div class="col-lg-10 mx-auto">';
           if (assignments.length > 0) {
             assignments.forEach(function (assignment) {
               assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
@@ -332,7 +332,7 @@
             });
           } else {
             // Display a message if no assignments are available
-            assignmentsHtml = '<div class="large-screen-layout job-box" role="alert" style="font-size: 20px; text-align: center; padding: 20px 35px;">' +
+            assignmentsHtml = '<div class="col-lg-10 mx-auto">' + '<div class="large-screen-layout job-box" role="alert" style="font-size: 20px; text-align: center; padding: 20px 35px;">' +
               'No assignments currently available.' +
               '</div>' +
               '<div class="small-screen-layout job-box" role="alert" style="font-size: 15px; text-align: center; padding: 20px 35px;">' +
