@@ -221,8 +221,7 @@
     <script type="text/javascript">
       $(document).ready(function () {
         // Load assignments when the page loads
-        fetchAssignments();
-        fetchPastAssignments();
+        fetchAllAssignments();
 
         // Delegate click event for dynamically added delete buttons
         $('body').on('click', '.delete-button', function () {
