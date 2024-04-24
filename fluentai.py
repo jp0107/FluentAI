@@ -771,7 +771,7 @@ def add_assignment():
     
     if deadline_str:
         try:
-            deadline = datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
+            deadline = datetime.datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
         except ValueError:
             return flask.jsonify({"message": "Invalid deadline format"}), 400
     else:
