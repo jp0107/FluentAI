@@ -525,8 +525,8 @@ def conversation_history(course_id, conv_id):
 
 #-----------------------------------------------------------------------
 
-@app.route('/assignment-chat/<course_id>/<int:prompt_id>')
-def assignment_chat(course_id, prompt_id):
+@app.route('/student-assignment-chat/<course_id>/<int:prompt_id>')
+def student_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
 
     flask.session['course_id'] = course_id
@@ -541,10 +541,34 @@ def assignment_chat(course_id, prompt_id):
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
-    return flask.render_template('assignment-chat.html',  
+    return flask.render_template('student-assignment-chat.html',
                                 course_id = course_id,
-                                initial_data=initial_response, 
-                                prompt=prompt.prompt_text, 
+                                initial_data=initial_response,
+                                prompt=prompt.prompt_text,
+                                username=username)
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-assignment-chat/<course_id>/<int:prompt_id>')
+def prof_assignment_chat(course_id, prompt_id):
+    username = auth.authenticate()
+
+    flask.session['course_id'] = course_id
+
+    # Use the function from database.py to fetch the prompt
+    prompt = get_prompt_by_id(prompt_id)
+    if not prompt:
+        # Handle cases where no prompt is found for the given ID
+        return "Prompt not found", 404
+    
+    flask.session['prompt_used'] = False  # Initialize prompt usage state
+    flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
+    initial_response = get_gpt_response(prompt.prompt_text)
+    # Render the chat page with the initial prompt data
+    return flask.render_template('prof-assignment-chat.html',
+                                course_id = course_id,
+                                initial_data=initial_response,
+                                prompt=prompt.prompt_text,
                                 username=username)
 
 #-----------------------------------------------------------------------
@@ -567,12 +591,12 @@ def process_input():
 #-----------------------------------------------------------------------
 
 
-@app.route('/practice-chat/<course_id>')
-def practice_chat(course_id):
+@app.route('/student-practice-chat/<course_id>')
+def student_practice_chat(course_id):
     username = auth.authenticate()
     flask.session['course_id'] = course_id
 
-    return flask.render_template('practice-chat.html',
+    return flask.render_template('student-practice-chat.html',
                                  username = username,
                                  course_id = course_id)
 
