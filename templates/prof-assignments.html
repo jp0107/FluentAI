@@ -278,7 +278,7 @@
             success: function (response) {
               alert(response.message);  // Display a success message
               $('#addAssignmentModal').modal('hide');  // Hide the modal
-              fetchAssignments();  // Refresh the assignments list
+              fetchAllAssignments();  // Refresh the assignments list
             },
             error: function (xhr) {
               console.error("Error adding assignment: ", xhr.responseText);
