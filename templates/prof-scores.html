@@ -93,7 +93,7 @@
       </div>
       <div class="col py-3">
         <div class="container-fluid">
-          <table class="col offset-sm-1 table score-table">
+          <table class="col offset-sm-1 table score-table" style="display: none;">
             <thead>
               <tr>
                 <th>Student</th>
@@ -121,32 +121,47 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const menuItems = document.querySelectorAll('#menu a');
-      menuItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-          e.preventDefault();
-          const promptId = this.getAttribute('data-assignment');
-          fetch(`/get-scores/${promptId}`)
-            .then(response => response.json())
-            .then(data => updateTable(data))
-            .catch(error => console.error('Error fetching data:', error));
-        });
-      });
+    const scoreTable = document.querySelector('.score-table'); // Select the table
+    const menuItems = document.querySelectorAll('#menu a');
+    
+    function updateScoresDisplay(promptId) {
+      fetch(`/get-scores/${promptId}`)
+        .then(response => response.json())
+        .then(data => {
+          updateTable(data);
+          scoreTable.style.display = promptId === 'general' ? 'none' : '';
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
 
-      function updateTable(data) {
-        const tbody = document.getElementById('score-body');
-        tbody.innerHTML = ''; // Clear existing data
-        data.forEach(d => {
-          const row = `<tr>
-                  <td>${d.name}</td>
-                  <td>${d.score}</td>
-                  <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
-              </tr>`;
-          tbody.innerHTML += row;
-        });
-      }
+    function updateTable(data) {
+      const tbody = document.getElementById('score-body');
+      tbody.innerHTML = ''; // Clear existing data
+      data.forEach(d => {
+        const row = `<tr>
+              <td>${d.name}</td>
+              <td>${d.score}</td>
+              <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
+          </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Initially hide the score table when page loads
+    updateScoresDisplay('general');
+
+    // Add click event to each menu item
+    menuItems.forEach(item => {
+      item.addEventListener('click', function (e) {
+        e.preventDefault();
+        const promptId = this.getAttribute('data-assignment');
+        updateScoresDisplay(promptId);
+      });
     });
+  });
   </script>
+
+  
 </body>
 
 </html>
