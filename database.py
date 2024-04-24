@@ -661,19 +661,19 @@ def get_assignments_for_course(course_id):
 def get_assignments_for_student(student_id, course_id):
     with sqlalchemy.orm.Session(engine) as session:
         now = datetime.now()
-        completed_subquery = session.query(Conversation.conv_id).filter(
+       # Define the subquery for the completed status
+        completed_subquery = sqlalchemy.sql.exists().where(
             Conversation.student_id == student_id,
             Conversation.course_id == course_id,
             Conversation.prompt_id == Prompt.prompt_id
-        ).exists().label('completed')
+        ).label('completed')
         assignments = session.query(
             Prompt.prompt_id,
             Prompt.prompt_title,
             Prompt.deadline,
             Prompt.created_at,
-            completed_subquery.as_scalar().label('completed')
+            completed_subquery  # This already behaves as a scalar subquery
         ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
-
         return categorize_assignments(assignments, now)
 #-----------------------------------------------------------------------
 
