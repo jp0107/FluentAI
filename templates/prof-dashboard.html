@@ -63,7 +63,7 @@
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                data-bs-target="#deleteCourseModal">
+                                data-bs-target="#deleteCourseModal" data-course-id="{{ course.id }}">
                                 Delete Course</a>
                         </li>
                     </ul>
@@ -266,13 +266,15 @@
 
             $('#deleteCourseModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);  // Button that triggered the modal
-                var courseId = button.data('course-id');
-                $(this).find('#confirmDelete').data('course-id', courseId);
+                var courseId = button.data('course-id');  // Retrieve the course ID from the button
+                console.log("Course ID to delete:", courseId);  // Log course ID for debugging
+                $(this).find('#confirmDelete').data('course-id', courseId);  // Set the course ID on the confirm button
             });
 
             // Handle the confirmation button click
             $('#confirmDelete').click(function () {
                 var courseId = $(this).data('course-id');  // Get the course ID set earlier
+                console.log("Deleting course with ID:", courseId);  // Log deletion attempt
                 $.ajax({
                     url: '/delete-course/' + courseId,
                     type: 'POST',
@@ -281,8 +283,8 @@
                         window.location.href = 'https://fluentai.onrender.com/prof-classes'; // Redirect
                     },
                     error: function (error) {
-                        alert('Error deleting course');
-                        console.log(error);
+                        alert('Error deleting course: ' + error.responseText);  // Provide more detailed error information
+                        console.log('AJAX error:', error);  // Log detailed error
                     }
                 });
             });
