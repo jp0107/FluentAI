@@ -64,41 +64,50 @@
     <div class="container-fluid">
 
         <div class="row mt-4">
-          <div class="col-lg-10 mx-auto">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2>Current Assignments</h2>
-                <div class="large-screen-layout">
-                  <a href="/student-practice-chat/{{ course_id }}" class="btn chat-button d-flex align-items-center">
-                    General Practice
-                  </a>
-                </div>
-  
-                <div class="small-screen-layout">
-                  <a href="/student-practice-chat/{{ course_id }}" class="btn chat-button d-flex align-items-center" style="padding: 15px 15px;">
-                  Practice
-                </a>
+            <div class="col-lg-10 mx-auto">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2>Current Assignments</h2>
+                    <div class="large-screen-layout">
+                        <a href="/student-practice-chat/{{ course_id }}"
+                            class="btn chat-button d-flex align-items-center">
+                            General Practice
+                        </a>
+                    </div>
+
+                    <div class="small-screen-layout">
+                        <a href="/student-practice-chat/{{ course_id }}"
+                            class="btn chat-button d-flex align-items-center" style="padding: 15px 15px;">
+                            Practice
+                        </a>
+                    </div>
                 </div>
             </div>
-          </div>
         </div>
 
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 {% if curr_assignments %}
-                    {% for prompt_id, title, deadline, created_at, completed in curr_assignments %}
-                    <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-                        <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                            <div class="job-content">
-                                <h5>{{ title }}</h5>
-                                <h5 id="deadline-text">Deadline: {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}</h5>
-                                <!-- Insert completion status -->
-                                {% if completed %}
-                                Completed
+                {% for prompt_id, title, deadline, created_at, completed in curr_assignments %}
+                <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+                    <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                        <div class="job-content">
+                            <h5>{{ title }}</h5>
+                            <h5 id="deadline-text">
+                                Deadline:
+                                {% if deadline %}
+                                {{ deadline.strftime('%m/%d/%Y %I:%M%p %Z') }}
                                 {% else %}
-                                Not Completed
+                                No deadline set
                                 {% endif %}
-                            </div>
+                            </h5>
+                            <!-- Insert completion status -->
+                            {% if completed %}
+                            Completed
+                            {% else %}
+                            Not Completed
+                            {% endif %}
                         </div>
+                    </div>
 
                     <div class="large-screen-layout">
                         <div class="job-right my-4 flex-shrink-0 d-flex">
@@ -121,11 +130,13 @@
                 </div>
                 {% endfor %}
                 {% else %}
-                <div class="large-screen-layout job-box" role="alert" style="font-size: 20px; text-align: center; padding: 20px 35px;">
+                <div class="large-screen-layout job-box" role="alert"
+                    style="font-size: 20px; text-align: center; padding: 20px 35px;">
                     No assignments currently available.
                 </div>
 
-                <div class="small-screen-layout job-box" role="alert" style="font-size: 15px; text-align: center; padding: 20px 35px;">
+                <div class="small-screen-layout job-box" role="alert"
+                    style="font-size: 15px; text-align: center; padding: 20px 35px;">
                     No assignments currently available.
                 </div>
                 {% endif %}
@@ -157,11 +168,13 @@
                 </div>
                 {% endfor %}
                 {% else %}
-                <div class="large-screen-layout job-box" role="alert" style="font-size: 20px; text-align: center; padding: 20px 35px;">
+                <div class="large-screen-layout job-box" role="alert"
+                    style="font-size: 20px; text-align: center; padding: 20px 35px;">
                     No past assignments currently available.
                 </div>
 
-                <div class="small-screen-layout job-box" role="alert" style="font-size: 15px; text-align: center; padding: 20px 35px;">
+                <div class="small-screen-layout job-box" role="alert"
+                    style="font-size: 15px; text-align: center; padding: 20px 35px;">
                     No past assignments currently available.
                 </div>
                 {% endif %}
