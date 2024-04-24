@@ -224,6 +224,40 @@
         fetchAssignments();
         fetchPastAssignments();
 
+        // Delegate click event for dynamically added delete buttons
+        $('body').on('click', '.delete-button', function () {
+          var promptId = $(this).data('prompt-id');
+          console.log("Delete button clicked for prompt_id:", promptId);
+          $('#delete-btn').data('prompt-id', promptId); // Set prompt ID on the delete confirmation button
+        });
+
+        // Handle the deletion confirmation from the modal
+        $('#delete-btn').click(function () {
+          var promptId = $(this).data('prompt-id');
+          if (!promptId) {
+            alert('Error: No assignment selected for deletion.');
+            return;
+          }
+          console.log("Sending delete request for prompt_id:", promptId);
+          $.ajax({
+            type: 'POST',
+            url: '/delete-assignment/' + promptId,
+            success: function (response) {
+              alert(response.message);
+              $('#deleteAssignmentModal').modal('hide');
+              fetchAssignments();  // Reload assignments to reflect deletion
+            },
+            error: function (xhr) {
+              alert('Error deleting assignment: ' + xhr.responseText);
+            }
+          });
+        });
+
+        // Clear prompt ID when modal is closed
+        $('#deleteAssignmentModal').on('hidden.bs.modal', function () {
+          $('#delete-btn').data('prompt-id', ''); // Clear prompt ID
+        });
+
         // Function to create a new assignment
         $('#addAssignmentModal .btn-primary').click(function () {
           var deadlineDate = $('#deadline-date').val();
@@ -256,31 +290,6 @@
 
         $('#addAssignmentModal').on('hidden.bs.modal', function () {
           $(this).find('form').trigger('reset');  // Reset all form fields
-        });
-
-        // This function will be triggered when the delete button for an assignment is clicked.
-        $('.delete-button').click(function () {
-          var promptId = $(this).data('prompt-id');
-          console.log("Delete button clicked for prompt_id:", promptId);
-          $('#delete-btn').data('prompt-id', promptId); // Set it on the delete confirmation button in the modal
-        });
-
-        // This handles the deletion confirmation from the modal.
-        $('#delete-btn').click(function () {
-          var promptId = $(this).data('prompt-id');
-          console.log("Sending delete request for prompt_id:", promptId);  // Confirm this before sending
-          $.ajax({
-            type: 'POST',
-            url: '/delete-assignment/' + promptId,
-            success: function (response) {
-              alert(response.message);
-              $('#deleteAssignmentModal').modal('hide');
-              fetchAssignments();  // Reload assignments to reflect deletion
-            },
-            error: function (xhr) {
-              alert('Error deleting assignment: ' + xhr.responseText);
-            }
-          });
         });
 
         // Function to fetch and display assignments
