@@ -261,12 +261,14 @@
         // This function will be triggered when the delete button for an assignment is clicked.
         $('.delete-button').click(function () {
           var promptId = $(this).data('prompt-id');
+          console.log("Delete button clicked for prompt_id:", promptId);
           $('#delete-btn').data('prompt-id', promptId); // Set it on the delete confirmation button in the modal
         });
 
         // This handles the deletion confirmation from the modal.
         $('#delete-btn').click(function () {
           var promptId = $(this).data('prompt-id');
+          console.log("Sending delete request for prompt_id:", promptId);  // Confirm this before sending
           $.ajax({
             type: 'POST',
             url: '/delete-assignment/' + promptId,
