@@ -300,11 +300,10 @@ def student_assignments(course_id):
     
     try:
         curr_assignments = get_current_assignments_for_student(username, course_id)
-        past_assignments = get_past_assignments(course_id)
+        past_assignments = get_past_assignments_for_course(course_id)
     except Exception as e:
-        # Handle empty assignments in case of error
-        curr_assignments = get_curr_student_default_assignments()
-        past_assignments = get_past_default_assignments()
+        # Log the error and continue with empty assignments
+        app.logger.error(f"Error fetching assignments: {str(e)}")
 
     return flask.render_template('student-assignments.html',
                                  username = username,
