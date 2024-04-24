@@ -295,7 +295,9 @@ def student_assignments(course_id):
     username = auth.authenticate()
 
     flask.session['course_id'] = course_id
-
+    curr_assignments = []
+    past_assignments = []
+    
     try:
         curr_assignments = get_current_assignments_for_student(username, course_id)
         past_assignments = get_past_assignments(course_id)

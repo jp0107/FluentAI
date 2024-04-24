@@ -64,6 +64,7 @@
         </div>
         <div class="row">
             <div class="col-lg-10 mx-auto">
+                {% if curr_assignments %}
                 {% for prompt_id, title, deadline, past_deadline, created_at, completed in curr_assignments %}
                 <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                     <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
@@ -106,9 +107,12 @@
                         </div>
                     </div>
                 </div>
-                {% else %}
-                <p>No current assignments available.</p>
                 {% endfor %}
+                {% else %}
+                <div class="alert alert-info" role="alert" style="font-size: 24px; text-align: center;">
+                    No assignments currently available.
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
