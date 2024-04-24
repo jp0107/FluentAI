@@ -18,11 +18,11 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_superadmins, check_user_type, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_current_assignments_for_student,
-                      get_past_assignments, get_curr_student_default_assignments, get_past_default_assignments,
+                    get_curr_student_default_assignments, get_past_default_assignments,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_in_course, get_default_student_roster, get_past_assignments, get_assignments_for_course, get_past_assignments_for_course)
+                      get_profs_in_course, get_default_student_roster, get_assignments_for_course, get_past_assignments_for_course)
 
 #-----------------------------------------------------------------------
 
@@ -117,26 +117,26 @@ def store_admininfo(user_id, first_name, last_name, email):
 def delete_course(course_id):
     with Session() as session:
         try:
-            # # Delete associated professor entries, if any
-            # profs_deleted = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session=False)
-            # print(f"Deleted {profs_deleted} professor associations for course ID {course_id}")
+            # Delete associated professor entries, if any
+            profs_deleted = session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete()
+            print(f"Deleted {profs_deleted} professor associations for course ID {course_id}")
 
-            # # Delete associated student entries, if any
-            # students_deleted = session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session=False)
-            # print(f"Deleted {students_deleted} student associations for course ID {course_id}")
+            # Delete associated student entries, if any
+            students_deleted = session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete()
+            print(f"Deleted {students_deleted} student associations for course ID {course_id}")
 
             # Try to find and delete the course itself
-            course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one()
+            course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
             if course_entry_to_delete:
                 session.delete(course_entry_to_delete)
                 session.commit()
                 print("Course deleted successfully.")
                 return True
-            else:
-                # No course found to delete; not necessarily an error, but nothing was done
-                print("No course found to delete.")
-                session.commit()
-                return False
+            
+            # No course found to delete; not necessarily an error, but nothing was done
+            print("No course found to delete.")
+            session.commit()
+            return False
         except Exception as e:
             session.rollback()
             print(f"An error occurred: {e}")  # Log the actual exception
