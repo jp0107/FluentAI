@@ -295,8 +295,6 @@ def student_assignments(course_id):
     username = auth.authenticate()  # Assuming this retrieves the student ID
 
     flask.session['course_id'] = course_id
-    curr_assignments = []  # Fallback
-    past_assignments = []
     try:
         curr_assignments, past_assignments = get_assignments_for_student(username, course_id)
     except Exception as e:

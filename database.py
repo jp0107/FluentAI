@@ -8,6 +8,7 @@ import sqlalchemy
 import sqlalchemy.orm
 from typing import List
 from datetime import datetime, timedelta
+import logging
 
 #-----------------------------------------------------------------------
 
@@ -670,7 +671,7 @@ def get_assignments_for_student(student_id, course_id):
             Prompt.prompt_title,
             Prompt.deadline,
             Prompt.created_at,
-            completed_subquery
+            completed_subquery.as_scalar().label('completed')
         ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
 
         return categorize_assignments(assignments, now)
@@ -679,11 +680,15 @@ def get_assignments_for_student(student_id, course_id):
 def categorize_assignments(assignments, now):
     current_assignments = []
     past_assignments = []
-    for assignment in assignments:
-        if assignment.deadline > now:
-            current_assignments.append(assignment)
+    for a in assignments:
+        # Tuple construction
+        assignment_tuple = (a.prompt_id, a.prompt_title, a.deadline, a.created_at, a.completed)
+
+        if a.deadline > now:
+            current_assignments.append(assignment_tuple)
         else:
-            past_assignments.append(assignment)
+            past_assignments.append(assignment_tuple)
+
     return current_assignments, past_assignments
     
 #-----------------------------------------------------------------------
