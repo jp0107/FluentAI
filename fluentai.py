@@ -602,7 +602,6 @@ def practice_chat(course_id):
 def add_course():
     course_id = flask.request.form.get('course_id')
     course_name = flask.request.form.get('course_name')
-    course_description = flask.request.form.get('course_description')
     language = flask.request.form.get('language')  # Get the actual language text
 
     if not course_id or not course_name:
@@ -615,7 +614,7 @@ def add_course():
         return flask.jsonify({"message": "You are not allowed to create a course"}), 403
 
     course_code = generate_course_code()  # Generate a random course code
-    new_course = Course(course_id=course_id, course_code=course_code, course_name=course_name, course_description=course_description, owner=prof_id, language=language)
+    new_course = Course(course_id=course_id, course_code=course_code, course_name=course_name, owner=prof_id, language=language)
 
     with sqlalchemy.orm.Session(engine) as session:
         session.add(new_course)
