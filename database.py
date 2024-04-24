@@ -684,7 +684,7 @@ def categorize_assignments(assignments, now):
         # Tuple construction
         assignment_tuple = (a.prompt_id, a.prompt_title, a.deadline, a.created_at, a.completed)
 
-        if a.deadline > now or a.deadline is None:
+        if a.deadline is None or a.deadline > now:
             current_assignments.append(assignment_tuple)
         else:
             past_assignments.append(assignment_tuple)
