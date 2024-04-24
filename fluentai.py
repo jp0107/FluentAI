@@ -18,12 +18,10 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       CoursesStudents, CoursesProfs, engine, Base, Prompt, get_profs, get_all_profs,
                       get_superadmins, check_user_type, get_student_firstname, get_professor_courses,
                       get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
-                      edit_course_code, get_admin_firstname, get_prompt_by_id, get_current_assignments_for_student,
-                    get_curr_student_default_assignments, get_past_default_assignments,
-                      get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
+                      edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_in_course, get_default_student_roster, get_assignments_for_course, get_past_assignments_for_course, get_assignments_for_student)
+                      get_profs_in_course, get_default_student_roster, get_assignments_for_course, get_assignments_for_student)
 
 #-----------------------------------------------------------------------
 
@@ -287,9 +285,8 @@ def student_assignments(course_id):
     flask.session['course_id'] = course_id
     try:
         curr_assignments, past_assignments = get_assignments_for_student(username, course_id)
-    except Exception as e:
-        app.logger.error("Error fetching assignments: %s" % e)
-
+    except Exception:
+        return flask.jsonify({'error': 'Failed to fetch assignments'}), 500
     return flask.render_template('student-assignments.html',
                                  username=username,
                                  course_id=course_id,
