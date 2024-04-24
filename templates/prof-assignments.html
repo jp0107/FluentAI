@@ -309,6 +309,11 @@
 
         function updateAssignmentsHTML(assignments, isPast) {
           var assignmentsHtml = '<div class="col-lg-10 mx-auto">';
+          var noAssignmentsMessage = isPast ?
+            '<div class="large-screen-layout job-box" role="alert" style="font-size: 20px; text-align: center; padding: 20px 35px;">No past assignments currently available.</div>' +
+            '<div class="small-screen-layout job-box" role="alert" style="font-size: 15px; text-align: center; padding: 20px 35px;">No past assignments currently available.</div>' :
+            '<div class="large-screen-layout job-box" role="alert" style="font-size: 20px; text-align: center; padding: 20px 35px;">No current assignments available.</div>' +
+            '<div class="small-screen-layout job-box" role="alert" style="font-size: 15px; text-align: center; padding: 20px 35px;">No current assignments available.</div>';
           if (assignments.length > 0) {
             assignments.forEach(function (assignment) {
               assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
@@ -331,14 +336,9 @@
                 '</div></div></div>';
             });
           } else {
-            // Display a message if no assignments are available
-            assignmentsHtml = '<div class="col-lg-10 mx-auto">' + '<div class="large-screen-layout job-box" role="alert" style="font-size: 20px; text-align: center; padding: 20px 35px;">' +
-              'No assignments currently available.' +
-              '</div>' +
-              '<div class="small-screen-layout job-box" role="alert" style="font-size: 15px; text-align: center; padding: 20px 35px;">' +
-              'No assignments currently available.' +
-              '</div>';
+            assignmentsHtml += noAssignmentsMessage;  // Append the no assignments message inside the container div
           }
+          assignmentsHtml += '</div>';
           var containerId = isPast ? '#past-assignments-container' : '#assignments-container';
           $(containerId).html(assignmentsHtml); // Update the assignments container
         }
