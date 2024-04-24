@@ -115,7 +115,7 @@ h2 {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (orientation : portrait) {
   header img {
     width: 20%; /* Adjust the logo size for smaller screens */
   }
@@ -135,11 +135,11 @@ h2 {
 
   p {
     margin-top: -20vw;
-    font-size: 3vw;
+    font-size: 15px;
   }
 
   .container2 {
-    padding: 30px; /* Reduce padding for smaller screens */
+    padding: 20px; /* Reduce padding for smaller screens */
   }
 
   .button {
@@ -165,5 +165,25 @@ h2 {
 @media (min-width: 768px) and (max-width: 1024px) and (orientation : portrait) {
   h1 {
     margin-top: 300px;
+  }
+  .container2 {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: justify;
+    font-size: 19px;
+    align-items: center;
+    background-color: #EAF2FF;
+    color: #1E1E1E;
+    padding: 0 50px; /* Add 20px padding to the left and right */
+  }
+
+}
+
+/* Styles for ipad / tablet screens */
+@media (max-width: 1024px) and (orientation : landscape) {
+  .container2 {
+    display: none;
   }
 }
