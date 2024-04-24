@@ -61,21 +61,32 @@ def get_profs():
         query = session.query(Professor) # SELECT * FROM Professor
         return query.all()
 
-# get default professor roster
-def get_default_prof_roster():
-    return [
-        ('bd0101', 'Bob', 'Dondero')
-    ]
+# # get default professor roster
+# def get_default_prof_roster():
+#     return [
+#         ('bd0101', 'Bob', 'Dondero')
+#     ]
 
 # get all professors for a given course (FOR PROF ROSTER PAGE)
 def get_profs_in_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Professor.prof_id, Professor.first_name, Professor.last_name)
+        try:
+            query = (
+                session.query(
+                    Professor.prof_id,
+                    Professor.first_name,
+                    Professor.last_name
+                )
                 .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
                 .filter(CoursesProfs.course_id == course_id)
-                .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name))) 
-        results = query.all()
-        return results if results else get_default_prof_roster()
+                .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name))
+            )
+            results = query.all()
+            return [{"prof_id": prof.prof_id, "first_name": prof.first_name, "last_name": prof.last_name} for prof in results]
+        except sqlalchemy.exc.SQLAlchemyError as e:
+            session.rollback()
+            raise Exception("Failed to fetch professors due to a database error.")
+
 
 # gets prof first name given their netid
 def get_prof_firstname(prof_id):

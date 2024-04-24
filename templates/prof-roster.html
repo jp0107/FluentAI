@@ -1,62 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
-    <title>FluentAI - {{ course_id }} Professor Course Roster</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/assignments.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-  </head>
 
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
+  <title>FluentAI - {{ course_id }} Professor Course Roster</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/assignments.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
 
-    <nav class="navbar navbar-expand-sm bg-dark navbar-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/prof-classes">
-          <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130"/> 
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href= "/prof-assignments/{{ course_id }}">Assignments</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/prof-scores/{{ course_id }}">Scores</a>
-            </li>    
-            <li class="nav-item">
-                <a class="nav-link" href="/prof-roster/{{ course_id }}" id="underlined">Roster</a>
-              </li>   
-          </ul>
-          <ul class="navbar-nav d-flex flex-row ms-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{username}}
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
+<body>
+
+  <nav class="navbar navbar-expand-sm bg-dark navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/prof-classes">
+        <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/prof-assignments/{{ course_id }}">Assignments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/prof-scores/{{ course_id }}">Scores</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/prof-roster/{{ course_id }}" id="underlined">Roster</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav d-flex flex-row ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              {{username}}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
+            </ul>
+          </li>
+        </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
 
 
   <div class="container-fluid">
     <div class="row mt-4">
-        <div class="col offset-sm-1">
-            <h1>{{ course_id }}</h1> 
-        </div>
+      <div class="col offset-sm-1">
+        <h1>{{ course_id }}</h1>
+      </div>
     </div>
   </div>
 
@@ -64,24 +67,29 @@
     <div class="row mt-4">
       <div class="col-lg-10 col-md-10 mx-auto">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Professors</h2>
-            <div class="large-screen-layout">
-              <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addProfModal">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16" style="padding-right: 5px;">
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg>
-                Add Professor
-              </button>
-            </div>
+          <h2>Professors</h2>
+          <div class="large-screen-layout">
+            <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal"
+              data-bs-target="#addProfModal">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus"
+                viewBox="0 0 16 16" style="padding-right: 5px;">
+                <path
+                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+              Add Professor
+            </button>
+          </div>
 
-            <div class="small-screen-layout">
-              <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addProfModal"
-              style="padding: 8px 8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg>
-              </button>
-            </div>
+          <div class="small-screen-layout">
+            <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal"
+              data-bs-target="#addProfModal" style="padding: 8px 8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus"
+                viewBox="0 0 16 16">
+                <path
+                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -90,37 +98,35 @@
 
   <div class="container-fluid">
     <table class="col offset-sm-1 table score-table">
-        <thead>
-            <tr>
-                <th class="col-name">Name</th>
-                <th class="col-netid">NetID</th>
-                <th class="col-delete">Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-              {% for prof_id, first_name, last_name in prof_roster %}
-              <tr>
-                <td>{{ first_name}} {{ last_name }}</td>
-                <td>{{ prof_id }}</td>
-                <td>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteProfModal"
-                    data-studentid="{{ prof_id }}"
-                    data-firstname="{{ first_name }}"
-                    data-lastname="{{ last_name }}"
-                    onclick="prepareDeleteProfModal(this);"
-                  >
-                    <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#5E5E5E" class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px;">
-                      <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                    </svg>
-                  </a>
-                </td>
-              </tr>
-              {% else %}
-                <td>No professors in this course.</td>
-                <td></td>
-                <td></td>
-              {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th class="col-name">Name</th>
+          <th class="col-netid">NetID</th>
+          <th class="col-delete">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prof_id, first_name, last_name in prof_roster %}
+        <tr>
+          <td>{{ first_name}} {{ last_name }}</td>
+          <td>{{ prof_id }}</td>
+          <td>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteProfModal" data-studentid="{{ prof_id }}"
+              data-firstname="{{ first_name }}" data-lastname="{{ last_name }}" onclick="prepareDeleteProfModal(this);">
+              <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#5E5E5E"
+                class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px;">
+                <path
+                  d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+              </svg>
+            </a>
+          </td>
+        </tr>
+        {% else %}
+        <td>No professors in this course.</td>
+        <td></td>
+        <td></td>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 
@@ -130,24 +136,29 @@
     <div class="row mt-4">
       <div class="col-lg-10 col-md-10 mx-auto">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Students</h2>
-            <div class="large-screen-layout">
-              <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16" style="padding-right: 5px;">
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg>
-                Add Student
-              </button>
-            </div>
+          <h2>Students</h2>
+          <div class="large-screen-layout">
+            <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal"
+              data-bs-target="#addStudentModal">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus"
+                viewBox="0 0 16 16" style="padding-right: 5px;">
+                <path
+                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+              Add Student
+            </button>
+          </div>
 
-            <div class="small-screen-layout">
-              <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addStudentModal"
-              style="padding: 8px 8px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg>
-              </button>
-            </div>
+          <div class="small-screen-layout">
+            <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal"
+              data-bs-target="#addStudentModal" style="padding: 8px 8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus"
+                viewBox="0 0 16 16">
+                <path
+                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -155,148 +166,153 @@
 
   <div class="container-fluid">
     <table class="col offset-sm-1 table score-table">
-        <thead>
-            <tr>
-              <th class="col-name">Name</th>
-              <th class="col-netid">NetID</th>
-              <th class="col-delete">Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-              {% for student_id, first_name, last_name in student_roster %}
-              <tr>
-                <td>{{ first_name}} {{ last_name }}</td>
-                <td>{{ student_id }}</td>
-                <td>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#deleteStudentModal"
-                    data-studentid="{{ student_id }}"
-                    data-firstname="{{ first_name }}"
-                    data-lastname="{{ last_name }}"
-                    onclick="prepareDeleteStudentModal(this);"
-                  >
-                    <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#5E5E5E" class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px;">
-                      <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                    </svg>
-                  </a>
-                </td>
-              </tr>
-              {% else %}
-                <td>No students in this course.</td>
-                <td></td>
-                <td></td>
-              {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th class="col-name">Name</th>
+          <th class="col-netid">NetID</th>
+          <th class="col-delete">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student_id, first_name, last_name in student_roster %}
+        <tr>
+          <td>{{ first_name}} {{ last_name }}</td>
+          <td>{{ student_id }}</td>
+          <td>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteStudentModal" data-studentid="{{ student_id }}"
+              data-firstname="{{ first_name }}" data-lastname="{{ last_name }}"
+              onclick="prepareDeleteStudentModal(this);">
+              <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#5E5E5E"
+                class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px;">
+                <path
+                  d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+              </svg>
+            </a>
+          </td>
+        </tr>
+        {% else %}
+        <td>No students in this course.</td>
+        <td></td>
+        <td></td>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 
   <!-- Modals -->
 
-  <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addStudentModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addStudentModalLabel">Add a New Student</h5>
-                <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                <div class="form-group">
-                  <label for="message-text" class="col-form-label">Student Name:</label>
-                  <textarea class="form-control" id="student-name" rows="1" data-max-length="20" 
-                  placeholder="Type full name of student"></textarea>
-                  <small>Characters left: <span id="char-count-student-name">20</span></small>
-                </div>
-                <div class="form-group">
-                  <label for="message-text" class="col-form-label">Student NetID:</label>
-                  <textarea class="form-control" id="student-netid" rows="1" data-max-length="10" 
-                  placeholder="Type netID of student"></textarea>
-                  <small>Characters left: <span id="char-count-student-netid">10</span></small>
-                </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="add-course-button">Add student</button>
-            </div>
-        </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="addProfModal" tabindex="-1" role="dialog" aria-labelledby="addProfModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addProfModalLabel">Add a New Professor</h5>
-                <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                <div class="form-group">
-                  <label for="message-text" class="col-form-label">Professor Name:</label>
-                  <textarea class="form-control" id="prof-name" rows="1" data-max-length="20" 
-                  placeholder="Type full name of professor"></textarea>
-                  <small>Characters left: <span id="char-count-prof-name">20</span></small>
-                </div>
-                <div class="form-group">
-                  <label for="message-text" class="col-form-label">Professor NetID:</label>
-                  <textarea class="form-control" id="prof-netid" rows="1" data-max-length="10" 
-                  placeholder="Type netID of professor"></textarea>
-                  <small>Characters left: <span id="char-count-prof-netid">10</span></small>
-                </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="add-course-button">Add professor</button>
-            </div>
-        </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
       <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteStudentModalLabel">Delete Student</h5>
-            <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              <p></p>
-              <p>Warning: By deleting this student, you will not be able to access nor recover any data for this student upon deletion.</p>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="delete-btn"
-              data-bs-dismiss="modal"> Yes, delete student</button>
-          </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStudentModalLabel">Add a New Student</h5>
+          <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Student Name:</label>
+              <textarea class="form-control" id="student-name" rows="1" data-max-length="20"
+                placeholder="Type full name of student"></textarea>
+              <small>Characters left: <span id="char-count-student-name">20</span></small>
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Student NetID:</label>
+              <textarea class="form-control" id="student-netid" rows="1" data-max-length="10"
+                placeholder="Type netID of student"></textarea>
+              <small>Characters left: <span id="char-count-student-netid">10</span></small>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="add-course-button">Add student</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="modal fade" id="deleteProfModal" tabindex="-1" role="dialog" aria-labelledby="deleteProfModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addProfModal" tabindex="-1" role="dialog" aria-labelledby="addProfModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProfModalLabel">Add a New Professor</h5>
+          <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Professor Name:</label>
+              <textarea class="form-control" id="prof-name" rows="1" data-max-length="20"
+                placeholder="Type full name of professor"></textarea>
+              <small>Characters left: <span id="char-count-prof-name">20</span></small>
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Professor NetID:</label>
+              <textarea class="form-control" id="prof-netid" rows="1" data-max-length="10"
+                placeholder="Type netID of professor"></textarea>
+              <small>Characters left: <span id="char-count-prof-netid">10</span></small>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="add-course-button">Add professor</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="deleteStudentModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteProfModalLabel">Delete Professor</h5>
-            <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              <p></p>
-              <p>Warning: By deleting this professor, you will not be able to access nor recover any data for this professor upon deletion.</p>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="delete-btn"
-              data-bs-dismiss="modal"> Yes, delete professor</button>
-          </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteStudentModalLabel">Delete Student</h5>
+          <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p></p>
+          <p>Warning: By deleting this student, you will not be able to access nor recover any data for this student
+            upon deletion.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="delete-btn" data-bs-dismiss="modal"> Yes, delete
+            student</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteProfModal" tabindex="-1" role="dialog" aria-labelledby="deleteProfModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteProfModalLabel">Delete Professor</h5>
+          <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p></p>
+          <p>Warning: By deleting this professor, you will not be able to access nor recover any data for this professor
+            upon deletion.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="delete-btn" data-bs-dismiss="modal"> Yes, delete
+            professor</button>
+        </div>
       </div>
     </div>
   </div>
@@ -304,6 +320,71 @@
 
 
   <script type="text/javascript">
+    // Fetch Professors Initially
+    fetchProfessors();
+
+    // Add Professor Event
+    $('#addProfModal .btn-primary').click(function () {
+      var profName = $('#prof-name').val();
+      var profNetID = $('#prof-netid').val();
+      var courseID = '{{ course_id }}';  // Ensure this is dynamically set correctly.
+
+      $.ajax({
+        type: 'POST',
+        url: '/add-professor-to-course',
+        data: {
+          'course_id': courseID,
+          'prof_name': profName,
+          'prof_netid': profNetID
+        },
+        success: function (response) {
+          $('#addProfModal').modal('hide');
+          alert(response.message);
+          fetchProfessors(); // Refresh the professor list
+        },
+        error: function (xhr) {
+          alert('Failed to add professor: ' + xhr.responseText);
+        }
+      });
+    });
+
+    // Fetch Professors Function
+    function fetchProfessors() {
+      $.ajax({
+        type: 'GET',
+        url: '/get-profs-in-course/' + '{{ course_id }}',
+        success: function (professors) {
+          if (professors) {
+            updateProfessorTable(professors);
+          }
+        },
+        error: function (xhr) {
+          console.error('Error fetching professors:', xhr.responseText);
+        }
+      });
+    }
+
+    }
+
+    // Update Professor Table
+    function updateProfessorTable(professors) {
+      var tableHtml = '';
+      if (professors.length > 0) {
+        professors.forEach(function (prof) {
+          tableHtml += '<tr>' +
+            '<td>' + prof.first_name + ' ' + prof.last_name + '</td>' +
+            '<td>' + prof.prof_id + '</td>' +
+            '<td><a href="#" data-bs-toggle="modal" data-bs-target="#deleteProfModal" ' +
+            'data-prof_id="' + prof.prof_id + '" onclick="prepareDeleteProfModal(this);">' +
+            '<svg class="delete-icon" ... >...</svg></a></td>' +
+            '</tr>';
+        });
+      } else {
+        tableHtml = '<tr><td colspan="3" style="text-align:center;">No professors in this course.</td></tr>';
+      }
+      $('.score-table tbody').html(tableHtml);
+    }
+
     function prepareDeleteStudentModal(anchorElement) {
       const studentId = anchorElement.getAttribute('data-studentid');
       const firstName = anchorElement.getAttribute('data-firstname');
@@ -316,23 +397,23 @@
 
       // Attach the student ID to the delete button in the modal for later use in deletion
       deleteButton.setAttribute('data-studentid', studentId);
-      deleteButton.onclick = function() { deleteStudent(this.getAttribute('data-studentid')); };
+      deleteButton.onclick = function () { deleteStudent(this.getAttribute('data-studentid')); };
     }
 
     function deleteStudent(studentId) {
       fetch(`/delete-student/${studentId}`, { method: 'POST' })
-      .then(response => {
+        .then(response => {
           if (response.ok) {
-              alert('Student deleted successfully.');
-              window.location.reload(); 
+            alert('Student deleted successfully.');
+            window.location.reload();
           } else {
-              alert('Error deleting student.');
+            alert('Error deleting student.');
           }
-      })
-      .catch(error => {
+        })
+        .catch(error => {
           console.error('Error:', error);
           alert('Failed to delete student.');
-      });
+        });
     }
 
     function prepareDeleteProfModal(element) {
@@ -342,28 +423,29 @@
       const deleteButton = document.getElementById('delete-btn');
 
       modalBody.textContent = `Are you sure you want to delete ${profName}?`;
-      
+
       // Attach the course id to the delete button in the modal for later use in deletion
       deleteButton.setAttribute('data-profid', profId);
-      deleteButton.onclick = function() { deleteProf(this.getAttribute('data-profid')); };
+      deleteButton.onclick = function () { deleteProf(this.getAttribute('data-profid')); };
     }
 
     function deleteProf(prof_id) {
       fetch(`/delete-prof/${prof_id}`, { method: 'POST' })
-      .then(response => {
+        .then(response => {
           if (response.ok) {
-              alert('Professor deleted successfully.');
-              window.location.reload(); 
+            alert('Professor deleted successfully.');
+            window.location.reload();
           } else {
-              alert('Error deleting professor.');
+            alert('Error deleting professor.');
           }
-      })
-      .catch(error => {
+        })
+        .catch(error => {
           console.error('Error:', error);
           alert('Failed to delete professor.');
-      });
+        });
     }
   </script>
 
-  </body>
+</body>
+
 </html>
