@@ -21,7 +21,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_in_course, get_default_student_roster, get_assignments_for_course, get_assignments_for_student)
+                      get_profs_for_course, get_default_student_roster, get_assignments_for_course, get_assignments_for_student)
 
 #-----------------------------------------------------------------------
 
@@ -743,7 +743,7 @@ def delete_student_click(student_id):
 
 @app.route('/delete-prof/<prof_id>', methods=['POST'])
 def delete_prof(prof_id):
-    if delete_prof_from_db(prof_id):
+    if delete_prof_from_course(prof_id):
         return flask.jsonify({'message': 'Professor deleted successfully'}), 200
     else:
         return flask.jsonify({'error': 'Failed to delete professor'}), 500
@@ -823,10 +823,36 @@ def add_professor_to_course():
 #-----------------------------------------------------------------------
 @app.route('/get-profs-in-course/<course_id>')
 def get_profs_in_course(course_id):
-    try:
-        prof_roster = get_profs_in_course(course_id)  # Assume this is a function that fetches professors
-        return flask.jsonify(prof_roster)
-    except Exception as e:
-        app.logger.error("Failed to fetch professors: %s", str(e))
-        return flask.jsonify({'error': 'Failed to fetch professors'}), 500
+    course_id = flask.request.form.get('course_id')
+    full_name = flask.request.form.get('prof_name')
+    prof_netid = flask.request.form.get('prof_netid')
+
+    if not course_id or not full_name or not prof_netid:
+        return flask.jsonify({"message": "All fields (course ID, professor name, and NetID) are required."}), 400
+
+    # Splitting the name into first and last name
+    name_parts = full_name.split()
+    first_name = name_parts[0]
+    last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
+
+    with Session() as session:
+        # Check if the professor already exists by NetID
+        professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
+        
+        # If the professor doesn't exist, create a new one
+        if not professor:
+            professor = Professor(prof_id=prof_netid, first_name=first_name, last_name=last_name)
+            session.add(professor)
+
+        # Check if the professor is already linked to the course
+        existing_link = session.query(CoursesProfs).filter_by(course_id=course_id, prof_id=prof_netid).first()
+        if existing_link:
+            return flask.jsonify({"message": "Professor already added to this course."}), 409
+
+        # Create a new link between the professor and the course
+        new_course_prof = CoursesProfs(course_id=course_id, prof_id=prof_netid)
+        session.add(new_course_prof)
+        session.commit()
+
+    return flask.jsonify({"message": "Professor added successfully to the course."})
 #-----------------------------------------------------------------------

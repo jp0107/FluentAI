@@ -68,7 +68,7 @@ def get_profs():
 #     ]
 
 # get all professors for a given course (FOR PROF ROSTER PAGE)
-def get_profs_in_course(course_id):
+def get_profs_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
             query = (

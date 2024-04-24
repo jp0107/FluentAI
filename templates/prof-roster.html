@@ -327,15 +327,15 @@
     $('#addProfModal .btn-primary').click(function () {
       var profName = $('#prof-name').val();
       var profNetID = $('#prof-netid').val();
-      var courseID = '{{ course_id }}';  // Ensure this is dynamically set correctly.
+      var courseID = '{{ course_id }}'; 
 
       $.ajax({
         type: 'POST',
         url: '/add-professor-to-course',
         data: {
-          'course_id': courseID,
           'prof_name': profName,
-          'prof_netid': profNetID
+          'prof_netid': profNetID,
+          'course_id': courseID
         },
         success: function (response) {
           $('#addProfModal').modal('hide');
@@ -353,17 +353,14 @@
       $.ajax({
         type: 'GET',
         url: '/get-profs-in-course/' + '{{ course_id }}',
-        success: function (professors) {
-          if (professors) {
-            updateProfessorTable(professors);
-          }
+        success: function (response) {
+          updateProfessorTable(response);
         },
         error: function (xhr) {
           console.error('Error fetching professors:', xhr.responseText);
         }
       });
     }
-
 
     // Update Professor Table
     function updateProfessorTable(professors) {
@@ -384,64 +381,28 @@
       $('.score-table tbody').html(tableHtml);
     }
 
-    function prepareDeleteStudentModal(anchorElement) {
-      const studentId = anchorElement.getAttribute('data-studentid');
-      const firstName = anchorElement.getAttribute('data-firstname');
-      const lastName = anchorElement.getAttribute('data-lastname');
-
-      const modalBody = document.querySelector('#deleteStudentModal .modal-body p:first-child');
-      const deleteButton = document.getElementById('delete-btn');
-
-      modalBody.textContent = `Are you sure you want to delete ${firstName} ${lastName}?`;
-
-      // Attach the student ID to the delete button in the modal for later use in deletion
-      deleteButton.setAttribute('data-studentid', studentId);
-      deleteButton.onclick = function () { deleteStudent(this.getAttribute('data-studentid')); };
-    }
-
-    function deleteStudent(studentId) {
-      fetch(`/delete-student/${studentId}`, { method: 'POST' })
-        .then(response => {
-          if (response.ok) {
-            alert('Student deleted successfully.');
-            window.location.reload();
-          } else {
-            alert('Error deleting student.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Failed to delete student.');
-        });
-    }
-
     function prepareDeleteProfModal(element) {
-      const profName = element.getAttribute('data-profname');
-      const profId = element.getAttribute('data-profid');
-      const modalBody = document.querySelector('#deleteProfModal .modal-body p:first-child');
-      const deleteButton = document.getElementById('delete-btn');
+      const profId = element.getAttribute('data-prof_id');
+      const profName = element.parentElement.parentElement.querySelector('td:first-child').textContent;
+      const modalBody = document.querySelector('#deleteProfModal .modal-body p');
+      const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
 
       modalBody.textContent = `Are you sure you want to delete ${profName}?`;
-
-      // Attach the course id to the delete button in the modal for later use in deletion
-      deleteButton.setAttribute('data-profid', profId);
-      deleteButton.onclick = function () { deleteProf(this.getAttribute('data-profid')); };
+      deleteButton.onclick = function () { deleteProf(profId); };
     }
 
-    function deleteProf(prof_id) {
-      fetch(`/delete-prof/${prof_id}`, { method: 'POST' })
-        .then(response => {
-          if (response.ok) {
-            alert('Professor deleted successfully.');
-            window.location.reload();
-          } else {
-            alert('Error deleting professor.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Failed to delete professor.');
-        });
+    function deleteProf(profId) {
+      $.ajax({
+        type: 'POST',
+        url: `/delete-prof/${profId}`,
+        success: function (response) {
+          alert('Professor deleted successfully.');
+          fetchProfessors(); // Refresh the professor list
+        },
+        error: function (xhr) {
+          alert('Error deleting professor: ' + xhr.responseText);
+        }
+      });
     }
   </script>
 
