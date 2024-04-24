@@ -656,6 +656,42 @@ def get_assignments_for_course(course_id):
             }
             course_assignments.append(assignment_data)
         return course_assignments
+#-----------------------------------------------------------------------
+def get_assignments_for_student(student_id, course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        now = datetime.now()
+
+        # Subquery for checking completion
+        completed_subquery = session.query(Conversation.conv_id).filter(
+            Conversation.student_id == student_id,
+            Conversation.course_id == course_id,
+            Conversation.prompt_id == Prompt.prompt_id
+        ).exists().label('completed')
+
+        # Main query to fetch all assignments
+        assignments = session.query(
+            Prompt.prompt_id,
+            Prompt.prompt_title,
+            Prompt.deadline,
+            Prompt.created_at,
+            completed_subquery
+        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
+
+        # Categorize assignments into current and past based on the deadline
+        current_assignments = []
+        past_assignments = []
+
+        for assignment in assignments:
+            if assignment.deadline > now:
+                # Still current
+                current_assignments.append(assignment)
+            else:
+                # Already past
+                past_assignments.append(assignment)
+
+        return current_assignments, past_assignments
+    
+#-----------------------------------------------------------------------
 
 def get_past_assignments_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:

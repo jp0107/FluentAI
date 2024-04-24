@@ -22,7 +22,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_current_assignments_for_prof, get_curr_prof_default_assignments, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, get_default_prof_roster, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_in_course, get_default_student_roster, get_assignments_for_course, get_past_assignments_for_course)
+                      get_profs_in_course, get_default_student_roster, get_assignments_for_course, get_past_assignments_for_course, get_assignments_for_student)
 
 #-----------------------------------------------------------------------
 
@@ -292,24 +292,21 @@ def student_dashboard(course_id):
 
 @app.route('/student-assignments/<course_id>')
 def student_assignments(course_id):
-    username = auth.authenticate()
+    username = auth.authenticate()  # Assuming this retrieves the student ID
 
     flask.session['course_id'] = course_id
-    curr_assignments = []
+    curr_assignments = []  # Fallback
     past_assignments = []
-    
     try:
-        curr_assignments = get_current_assignments_for_student(username, course_id)
-        past_assignments = get_past_assignments_for_course(course_id)
+        curr_assignments, past_assignments = get_assignments_for_student(username, course_id)
     except Exception as e:
-        # Log the error and continue with empty assignments
-        app.logger.error(f"Error fetching assignments: {str(e)}")
+        app.logger.error("Error fetching assignments: %s" % e)
 
     return flask.render_template('student-assignments.html',
-                                 username = username,
-                                 course_id = course_id,
-                                 curr_assignments = curr_assignments,
-                                 past_assignments = past_assignments
+                                 username=username,
+                                 course_id=course_id,
+                                 curr_assignments=curr_assignments,
+                                 past_assignments=past_assignments
                                  )
 
 #-----------------------------------------------------------------------
