@@ -143,6 +143,30 @@ def delete_course(course_id):
             print(f"An error occurred: {e}")  # Log the actual exception
             return False
 #-----------------------------------------------------------------------
+def delete_assignment(prompt_id):
+    with Session() as session:
+        try:
+            # First, delete associated conversations for the assignment
+            conversations_deleted = session.query(Conversation).filter(Conversation.prompt_id == prompt_id).delete()
+            print(f"Deleted {conversations_deleted} conversations for prompt ID {prompt_id}")
+
+            # Now try to find and delete the assignment itself
+            prompt_entry_to_delete = session.query(Prompt).filter(Prompt.prompt_id == prompt_id).one_or_none()
+            if prompt_entry_to_delete:
+                session.delete(prompt_entry_to_delete)
+                session.commit()
+                print("Assignment deleted successfully.")
+                return True
+            
+            print("No assignment found to delete.")
+            session.commit()
+            return False
+        except Exception as e:
+            session.rollback()  # Roll back in case of error
+            print(f"An error occurred: {e}")  # Log the actual exception
+            return False
+        
+#-----------------------------------------------------------------------
 # Routes for authentication.
 
 @app.route('/logoutapp', methods=['GET'])
@@ -207,41 +231,6 @@ def login():
 @app.route('/student-classes')
 def student_classes():
     username = auth.authenticate()
-
-    # # if new user, store user info in database
-    # user_type = check_user_type(username)
-
-    # if user_type is None:
-    #     req_lib = ReqLib()
-
-    #     req = req_lib.getJSON(
-    #         req_lib.configs.USERS,
-    #         uid=username
-    #     )
-
-    #     # get user first/last name, email, and pustatus from netid
-    #     user_info = req[0]
-
-    #     full_name = user_info.get("displayname")
-    #     temp = full_name.split()
-    #     first_name = temp[0]
-    #     last_name = temp[-1]
-
-    #     pustatus = user_info.get("pustatus")
-    #     email = user_info.get("mail")
-
-    #     # store user info in corresponding table
-    #     store_userinfo(username, first_name, last_name, pustatus, email)
-    
-    # direct user to the correct page based on user type
-    # if user_type == "Student":
-    #     # Fetch student-specific data and render the student dashboard
-    #     pass
-
-    # elif user_type == "Professor":
-    #     return flask.redirect('/prof-classes')
-    # else:
-    #     return flask.redirect('/admin-classes')
 
     html_code = flask.render_template(
         'student-classes.html', username = username)
@@ -402,6 +391,17 @@ def prof_assignments(course_id):
                                  course_id = course_id,
                                  curr_assignments = curr_assignments,
                                  past_assignments = past_assignments)
+    
+#-----------------------------------------------------------------------
+@app.route('/delete-assignment/<int:prompt_id>', methods=['POST'])
+def delete_assignment_click(prompt_id):
+    try:
+        if delete_assignment(prompt_id):
+            return flask.jsonify({'message': 'Assignment deleted successfully'}), 200
+        
+        return flask.jsonify({'message': 'Error deleting assignment'}), 200
+    except Exception as e:
+        return flask.jsonify({'message': str(e)}), 500
 
 #-----------------------------------------------------------------------
 
