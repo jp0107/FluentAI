@@ -6,6 +6,7 @@
 import os
 import sys
 import random
+import datetime
 import string
 import logging
 from openai import OpenAI
@@ -766,9 +767,20 @@ def add_assignment():
     assignment_prompt = flask.request.form.get('assignment_prompt')
     num_turns = flask.request.form.get('num_turns')
     course_id = flask.request.form.get('course_id')
+    deadline_str = flask.request.form.get('deadline')
+    
+    if deadline_str:
+        try:
+            deadline = datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
+        except ValueError:
+            return flask.jsonify({"message": "Invalid deadline format"}), 400
+    else:
+        deadline = None
 
-    if not all([assignment_name, assignment_description, assignment_prompt, num_turns]):
+
+    if not all([assignment_name, assignment_description, assignment_prompt, num_turns, course_id]):
         return flask.jsonify({"message": "All fields are required."}), 400
+
 
     prof_id = flask.session.get('username')
     new_assignment = Prompt(
@@ -777,7 +789,7 @@ def add_assignment():
         prof_id=prof_id,
         prompt_text=assignment_prompt,
         num_turns=int(num_turns),
-        deadline=flask.request.form.get('deadline'),  # Assuming deadline is passed as form data
+        deadline=deadline,  # Assuming deadline is passed as form data
         assignment_description = assignment_description
     )
 

@@ -214,13 +214,16 @@
       
           // Function to create a new assignment
           $('#addAssignmentModal .btn-primary').click(function() {
+            var deadlineDate = $('#deadline-date').val();
+            var deadlineTime = $('#deadline-time').val();
+            var deadline = deadlineDate + 'T' + deadlineTime + ':00'; // ISO 8601 format
               var formData = {
                   'assignment_name': $('#assignment-name').val(),
                   'assignment_description': $('#assignment-description').val(),
                   'assignment_prompt': $('#assignment-prompt').val(),
                   'num_turns': $('#num-turns-select').val(),
                   'course_id': '{{ course_id }}',
-                   
+                  'deadline': deadline 
               };
       
               $.ajax({
