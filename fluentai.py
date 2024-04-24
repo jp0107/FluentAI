@@ -805,25 +805,6 @@ def add_assignment():
 @app.route('/add-professor-to-course', methods=['POST'])
 def add_professor_to_course():
     course_id = flask.request.form.get('course_id')
-    prof_id = flask.request.form.get('prof_id')
-    
-    if not course_id or not prof_id:
-        return flask.jsonify({"message": "Course ID and Professor ID are required."}), 400
-
-    with sqlalchemy.orm.Session(engine) as session:
-        existing_link = session.query(CoursesProfs).filter_by(course_id=course_id, prof_id=prof_id).first()
-        if existing_link:
-            return flask.jsonify({"message": "Professor already added to this course."}), 409
-        
-        new_course_prof = CoursesProfs(course_id=course_id, prof_id=prof_id)
-        session.add(new_course_prof)
-        session.commit()
-
-    return flask.jsonify({"message": "Professor added successfully to the course."})
-#-----------------------------------------------------------------------
-@app.route('/get-profs-in-course/<course_id>')
-def get_profs_in_course(course_id):
-    course_id = flask.request.form.get('course_id')
     full_name = flask.request.form.get('prof_name')
     prof_netid = flask.request.form.get('prof_netid')
 
@@ -855,4 +836,13 @@ def get_profs_in_course(course_id):
         session.commit()
 
     return flask.jsonify({"message": "Professor added successfully to the course."})
+#-----------------------------------------------------------------------
+@app.route('/get-profs-in-course/<course_id>')
+def get_profs_in_course(course_id):
+    try:
+        prof_roster = get_profs_for_course(course_id)  # Assume this is a function that fetches professors
+        return flask.jsonify(prof_roster)
+    except Exception as e:
+        app.logger.error("Failed to fetch professors: %s", str(e))
+        return flask.jsonify({'error': 'Failed to fetch professors'}), 500
 #-----------------------------------------------------------------------
