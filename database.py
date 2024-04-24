@@ -60,6 +60,12 @@ def get_profs():
         query = session.query(Professor) # SELECT * FROM Professor
         return query.all()
 
+# get default professor roster
+def get_default_prof_roster():
+    return [
+        ('bd0101', 'Bob', 'Dondero')
+    ]
+
 # get all professors for a given course (FOR PROF ROSTER PAGE)
 def get_profs_in_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
@@ -124,6 +130,28 @@ def edit_course_code(course_id, new_course_code):
         else:
             return False 
 
+# # delete course
+# def delete_course(course_id):
+#     with Session() as session:
+#         try:
+#             # Delete associated entries from CoursesProfs
+#             session.query(CoursesProfs).filter(CoursesProfs.course_id == course_id).delete(synchronize_session='fetch')
+#             # Delete associated entries from CoursesStudents
+#             session.query(CoursesStudents).filter(CoursesStudents.course_id == course_id).delete(synchronize_session='fetch')
+#             # Delete the course entry
+#             course_entry_to_delete = session.query(Course).filter(Course.course_id == course_id).one_or_none()
+#             if course_entry_to_delete:
+#                 session.delete(course_entry_to_delete)
+#                 session.commit()
+#                 return True
+           
+#                 session.commit()
+#                 return False
+#         except Exception as e:
+#             session.rollback()
+#             print(f"An error occurred: {e}")
+#             return False
+
 #-----------------------------------------------------------------------
 
 # creates table storing student info
@@ -134,6 +162,15 @@ class Student(Base):
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
+
+# get default student roster
+def get_default_student_roster():
+    return [
+        ('ik1234', 'Irene', 'Kim'),
+        ('tm0261', 'Tinney', 'Mak'),
+        ('jp2024', 'Jonathan', 'Peixoto'),
+        ('jw2003', 'Jessie', 'Wang')
+    ]
 
 # get student info and the courses they belong to in alphabetical order by student first name
 def get_all_students():
@@ -151,7 +188,7 @@ def get_students_in_course(course_id):
                 .filter(CoursesStudents.course_id == course_id)
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
         results = query.all()
-        return results if results 
+        return results if results else get_default_student_roster()
 
 # gets student first name based on their netid
 def get_student_firstname(student_id):
@@ -192,6 +229,24 @@ class CoursesProfs(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
+# get default courses and profs
+def get_default_courses_and_profs():
+    return [
+        ('SPA100', 'Irene', 'Kim'),
+        ('SPA100', 'Tinney', 'Mak'),
+        ('SPA200', 'Jonathan', 'Peixoto'),
+        ('SPA300', 'Jessie', 'Wang')
+    ]
+
+# get default profs
+def get_default_profs():
+    return [
+        ('SPA100', 'ik1234', 'Irene', 'Kim'),
+        ('SPA200', 'ik1234', 'Irene', 'Kim'),
+        ('SPA200', 'jp2024', 'Jonathan', 'Peixoto'),
+        ('SPA300', 'jw2003', 'Jessie', 'Wang')
+    ]
+
 # get courses and professors for each one (FOR ADMIN COURSES PAGE)
 def get_courses_and_profs():
     with sqlalchemy.orm.Session(engine) as session:
@@ -201,6 +256,8 @@ def get_courses_and_profs():
         
         results = query.all()
         
+        if not results:
+            results = get_default_courses_and_profs()
 
         # format query results
         courses = {}
@@ -221,6 +278,8 @@ def get_prof_info():
         
         results = query.all()
         
+        if not results:
+            results = get_default_profs()
 
         # format query results
         profs = {}
@@ -240,7 +299,13 @@ class CoursesStudents(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
-
+# get default students
+def get_default_students():
+    return [
+        ('SPA200', 'jp2024', 'Jonathan', 'Peixoto'),
+        ('SPA300', 'jw2003', 'Jessie', 'Wang'),
+        ('SPA500', 'jp2024', 'Jonathan', 'Peixoto')
+    ]
 
 # get student info (FOR ADMIN STUDENTS PAGE)
 def get_student_info():
@@ -251,6 +316,8 @@ def get_student_info():
         
         results = query.all()
         
+        if not results:
+            results = get_default_students()
 
         # format query results
         students = {}
@@ -277,6 +344,38 @@ class Prompt(Base):
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     assignment_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
+
+# get default current assignments for student
+def get_curr_student_default_assignments():
+    now = datetime.now()
+    return [
+        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10), False, now, True),
+        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20), False, now, False),
+        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now, False)
+    ]
+
+# get default current assignments for prof
+def get_curr_prof_default_assignments():
+    now = datetime.now()
+    return [
+        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10), False, now),
+        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20), False, now),
+        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now)
+    ]
+
+# get default assignments for a course
+def get_default_assignments():
+    now = datetime.now()
+    return [
+        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10)),
+        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20)),
+        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30))
+    ]
+
+# get default past assignments
+def get_past_default_assignments():
+    now = datetime.now()
+    return [(12345, 'Assignment 0: Say Hello', now - timedelta(days=3), True, now - timedelta(days=5))]
 
 # get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
 # mark whether assignment has been completed or not
@@ -307,14 +406,26 @@ def get_current_assignments_for_prof(course_id):
 
         results = query.all()
 
-        return results if results 
+        return results if results else get_curr_prof_default_assignments()
+
+# get all past assignments for a given course, with the most recent assignment first
+def get_past_assignments(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
+                 .filter(Prompt.course_id == course_id, Prompt.past_deadline == True)  
+                 .order_by(sqlalchemy.desc(Prompt.deadline))) 
+
+        results = query.all()
+
+        return results if results else get_past_default_assignments()
 
 # get all asssignments for a course (FOR PROF SCORES PAGE)
 def get_all_assignments_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         # check if course exists in the database
         course_exists = session.query(sqlalchemy.exists().where(Course.course_id == course_id)).scalar()
-
+        if not course_exists:
+            return get_default_assignments()
 
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline)
                 .filter(Prompt.course_id == course_id)
@@ -322,7 +433,7 @@ def get_all_assignments_for_course(course_id):
 
         results = query.all()
 
-        return results if results
+        return results if results else get_default_assignments()
 
 #-----------------------------------------------------------------------
 
@@ -334,6 +445,16 @@ class PracticePrompt(Base):
     prof_id = sqlalchemy.Column(sqlalchemy.Integer)
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
+
+# get default practice prompts
+def get_default_practice():
+    now = datetime.now()
+    return [
+        (98762, 'Assignment 0: Say Hello', now),
+        (98765, 'Assignment 1: Café Fluent', now),
+        (87654, 'Assignment 2: Job Interview', now),
+        (76543, 'Assignment 3: Airport Troubles', now)
+    ]
 
 # get all practice prompts for a given course, ordered by most to least recently created
 def get_practice_prompts(course_id) -> List[Prompt]:
@@ -360,6 +481,15 @@ class Conversation(Base):
     score = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
+# get default student scores for a course
+def get_default_student_scores():
+    return [
+        (98762, 'Assignment 0: Say Hello', 1, 100),
+        (98765, 'Assignment 1: Café Fluent', 2, 96),
+        (87654, 'Assignment 2: Job Interview', 3, 25),
+        (76543, 'Assignment 3: Airport Troubles', 4, None)
+    ]
+
 # get default scores for an assignment for each student in a course
 def get_default_scores_for_assignment():
     return [
@@ -367,6 +497,10 @@ def get_default_scores_for_assignment():
         ('Jonathan', 'Peixoto', 2, 25),
         ('Jessie', 'Wang', 3, None)
     ]
+
+# get default conversation
+def get_default_conversation():
+    return [('Assignment 0: Default', 'Mi nueva casa está en una calle ancha que tiene muchos árboles. El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña terraza con piscina donde puedo tomar el sol en verano.')]
 
 # gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
