@@ -381,10 +381,6 @@ def get_past_default_assignments():
 # mark whether assignment has been completed or not
 def get_current_assignments_for_student(student_id, course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        # Check if the student exists in the database
-        student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
-        if not student_exists:
-            return get_curr_student_default_assignments()
         
         subquery = (session.query(Conversation.prompt_id)
                     .filter(Conversation.student_id == student_id, Conversation.prompt_id == Prompt.prompt_id)
@@ -395,8 +391,7 @@ def get_current_assignments_for_student(student_id, course_id):
                  .order_by(sqlalchemy.asc(Prompt.deadline)))
 
         results = query.all()
-        return results if results else get_curr_student_default_assignments()
-
+        return results
 # get all current assignments for a given course, with the earliest deadline first (FOR PROFESSOR ASSIGNMENTS PAGE)
 def get_current_assignments_for_prof(course_id):
     with sqlalchemy.orm.Session(engine) as session:
