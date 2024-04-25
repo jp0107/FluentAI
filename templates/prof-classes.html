@@ -133,6 +133,7 @@
 
                 // Add course button click event
                 $("#add-course-button").click(function () {
+                    var courseOwner = $('#navbarDropdownMenuLink').text().trim();
                     var courseId = $("#course-id").val();
                     var courseName = $("#course-name").val();
                     var language = $("#department-select").find(":selected").text();
@@ -146,6 +147,7 @@
                         url: '/add-course',
                         method: 'POST',
                         data: {
+                            course_owner: courseOwner,
                             course_id: courseId,
                             course_name: courseName,
                             language: language
