@@ -453,15 +453,13 @@ def admin_dashboard():
 
     # get user's type to make sure they can access page and display name if correct
     user_type = check_user_type(username)
-
+    if(user_type == "SuperAdmin"):
+        first_name = get_admin_firstname(username)
+    if(user_type == "Professor"):
+        flask.flash("Access denied: Unauthorized access.", "error")
     if (user_type == "Student"):
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_classes'))  # Redirecting to the home page or a suitable route
-    if(user_type == "Professor"):
-        flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('prof_classes'))  # Redirecting to the home page or a suitable route
-    if(user_type == "SuperAdmin"):
-        first_name = get_admin_firstname(username)
 
     return flask.render_template('admin-dashboard.html',
                                  username = username,
@@ -814,28 +812,27 @@ def add_professor_to_course():
     course_id = flask.request.form.get('course_id')
     full_name = flask.request.form.get('prof_name')
     prof_netid = flask.request.form.get('prof_netid')
+    user_type = check_user_type(prof_netid)
 
     if not course_id or not full_name or not prof_netid:
         return flask.jsonify({"message": "All fields (course ID, professor name, and NetID) are required."}), 400
 
-    # Splitting the name into first and last name
-    name_parts = full_name.split()
-    first_name = name_parts[0]
-    last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
-
     with Session() as session:
-        # Check if the professor already exists by NetID
-        professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
-        
-        # If the professor doesn't exist, create a new one
-        if not professor:
-            professor = Professor(prof_id=prof_netid, first_name=first_name, last_name=last_name)
-            session.add(professor)
+        if user_type != "SuperAdmin":
+            # Check if the professor already exists by NetID
+            professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
+            if not professor:
+                # Splitting the name into first and last name
+                name_parts = full_name.split()
+                first_name = name_parts[0]
+                last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
+                professor = Professor(prof_id=prof_netid, first_name=first_name, last_name=last_name)
+                session.add(professor)
 
         # Check if the professor is already linked to the course
         existing_link = session.query(CoursesProfs).filter_by(course_id=course_id, prof_id=prof_netid).first()
         if existing_link:
-            return flask.jsonify({"message": "Professor already added to this course."}), 409
+            return flask.sonify({"message": "Professor already added to this course."}), 409
 
         # Create a new link between the professor and the course
         new_course_prof = CoursesProfs(course_id=course_id, prof_id=prof_netid)
