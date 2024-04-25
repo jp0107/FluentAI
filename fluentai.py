@@ -344,10 +344,7 @@ def student_scores(course_id):
 
     flask.session['course_id'] = course_id
 
-    try:
-        scores = get_assignments_and_scores_for_student(course_id, username)
-    except:
-        scores = get_default_student_scores()
+    scores = get_assignments_and_scores_for_student(course_id, username)
 
     return flask.render_template('student-scores.html',
                                  username = username,

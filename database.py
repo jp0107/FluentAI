@@ -501,7 +501,7 @@ def get_assignments_and_scores_for_student(course_id, student_id):
         # check if the student exists in the database
         student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
         if not student_exists:
-            return get_default_student_scores()
+            return None
 
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
                  .outerjoin(Conversation, sqlalchemy.and_(Conversation.prompt_id == Prompt.prompt_id, Conversation.student_id == student_id))
@@ -509,7 +509,7 @@ def get_assignments_and_scores_for_student(course_id, student_id):
                  .order_by(sqlalchemy.asc(Prompt.created_at)))
 
         results = query.all()
-        return results if results else get_default_student_scores()
+        return results if results else None
 
 # gets all student scores in alphabetical order for an assignment given the assignment id (FOR PROF SCORES PAGE)
 def get_all_scores(prompt_id):
