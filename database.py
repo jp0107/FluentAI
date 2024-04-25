@@ -641,8 +641,8 @@ def get_students_for_course(course_id):
                     Professor.first_name,
                     Professor.last_name
                 )
-                .join(CoursesProfs, Professor.prof_id == CoursesStudents.student_id)
-                .filter(CoursesProfs.course_id == course_id)
+                .join(CoursesStudents, Professor.prof_id == CoursesStudents.student_id)
+                .filter(CoursesStudents.course_id == course_id)
                 .order_by(Professor.first_name, Professor.last_name)
             )
             professors = [
@@ -657,8 +657,8 @@ def get_students_for_course(course_id):
                     SuperAdmin.first_name,
                     SuperAdmin.last_name
                 )
-                .join(CoursesProfs, SuperAdmin.admin_id == CoursesStudents.student_id)
-                .filter(CoursesProfs.course_id == course_id)
+                .join(CoursesStudents, SuperAdmin.admin_id == CoursesStudents.student_id)
+                .filter(CoursesStudents.course_id == course_id)
                 .order_by(SuperAdmin.first_name, SuperAdmin.last_name)
             )
             superadmins = [
