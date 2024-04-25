@@ -20,7 +20,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
-                      get_prompt_title, get_students_for_course)
+                      get_prompt_title, get_students_for_course, get_language)
 
 #-----------------------------------------------------------------------
 
@@ -550,6 +550,9 @@ def student_assignment_chat(course_id, prompt_id):
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
 
+    # get the course language
+    language = get_language(course_id)[0][0]
+
     if not prompt:
         # Handle cases where no prompt is found for the given ID
         return "Prompt not found", 404
@@ -566,7 +569,8 @@ def student_assignment_chat(course_id, prompt_id):
                                 prompt_title = title,
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
-                                username=username)
+                                username=username,
+                                language = language)
 
 #-----------------------------------------------------------------------
 

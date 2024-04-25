@@ -137,6 +137,13 @@ class Course(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
+# get language for course
+def get_language(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(Course.language)
+                .filter(Course.course_id == course_id)) 
+        return query.all()    
+
 def get_courses() -> List[Course]:
     with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Course) # SELECT * FROM Course
