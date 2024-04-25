@@ -631,7 +631,7 @@ def categorize_assignments(assignments, now):
     
 #-----------------------------------------------------------------------
 
-def get_course_participants(course_id):
+def get_students_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
             # Query for professors associated with the course
