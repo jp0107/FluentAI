@@ -663,6 +663,10 @@ def get_prof_courses():
 @app.route('/get-admin-courses')
 def get_admin_courses():
     course_data = get_courses_and_profs()
+
+    if course_data is None:
+        course_data = {}
+        
     return flask.jsonify(course_data)
 
 #-----------------------------------------------------------------------

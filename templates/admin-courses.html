@@ -195,6 +195,13 @@
 
         // Function to display courses
         function displayCourses(data) {
+          if (!data || Object.keys(data).length === 0) {
+            var tbody = $('.score-table tbody');
+            tbody.empty();
+            tbody.append('<tr><td colspan="3" class="text-center">No courses to display.</td></tr>');
+            return; // Exit the function if no data
+          }
+
           var courses = Object.values(data); // Convert object of objects into an array
           var tbody = $('.score-table tbody');
           tbody.empty();
