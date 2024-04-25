@@ -836,7 +836,7 @@ def add_professor_to_course():
         # Check if the professor is already linked to the course
         existing_link = session.query(CoursesProfs).filter_by(course_id=course_id, prof_id=prof_netid).first()
         if existing_link:
-            return flask.sonify({"message": "Professor already added to this course."}), 409
+            return flask.jsonify({"message": "Professor already added to this course."}), 409
 
         # Create a new link between the professor and the course
         new_course_prof = CoursesProfs(course_id=course_id, prof_id=prof_netid)
