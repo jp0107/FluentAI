@@ -70,11 +70,11 @@ def get_profs_for_course(course_id):
                 session.query(
                     CoursesProfs.prof_id,
                     sqlalchemy.case(
-                        [(Professor.prof_id != None, Professor.first_name), (SuperAdmin.admin_id != None, SuperAdmin.first_name)],
+                        [(Professor.prof_id is not None, Professor.first_name), (SuperAdmin.admin_id is not None, SuperAdmin.first_name)],
                         else_='Unknown'
                     ).label('first_name'),
                     sqlalchemy.case(
-                        [(Professor.prof_id != None, Professor.last_name), (SuperAdmin.admin_id != None, SuperAdmin.last_name)],
+                        [(Professor.prof_id is not None, Professor.last_name), (SuperAdmin.admin_id is not None, SuperAdmin.last_name)],
                         else_='Unknown'
                     ).label('last_name')
                 )
