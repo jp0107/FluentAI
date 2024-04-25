@@ -379,12 +379,11 @@
       $.ajax({
         type: 'POST',
         url: '/add-student-to-course',
-        data: JSON.stringify({
+        data: {
           'student_name': studentName,
           'student_netid': studentNetID,
           'course_id': courseID
-        }),
-        contentType: 'application/json',
+        },
         success: function (response) {
           $('#addStudentModal').modal('hide');
           alert(response.message);

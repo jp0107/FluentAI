@@ -172,15 +172,6 @@ class Student(Base):
     email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# get default student roster
-def get_default_student_roster():
-    return [
-        ('ik1234', 'Irene', 'Kim'),
-        ('tm0261', 'Tinney', 'Mak'),
-        ('jp2024', 'Jonathan', 'Peixoto'),
-        ('jw2003', 'Jessie', 'Wang')
-    ]
-
 # get student info and the courses they belong to in alphabetical order by student first name
 def get_all_students():
     with sqlalchemy.orm.Session(engine) as session:
@@ -188,16 +179,6 @@ def get_all_students():
                 .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
         return query.all()
-
-# get all students in a given course (FOR PROF ROSTER PAGE)
-def get_students_in_course(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Student.student_id, Student.first_name, Student.last_name)
-                .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
-                .filter(CoursesStudents.course_id == course_id)
-                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
-        results = query.all()
-        return results if results else get_default_student_roster()
 
 # gets student first name based on their netid
 def get_student_firstname(student_id):
@@ -308,14 +289,6 @@ class CoursesStudents(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
-# get default students
-def get_default_students():
-    return [
-        ('SPA200', 'jp2024', 'Jonathan', 'Peixoto'),
-        ('SPA300', 'jw2003', 'Jessie', 'Wang'),
-        ('SPA500', 'jp2024', 'Jonathan', 'Peixoto')
-    ]
-
 # get student info (FOR ADMIN STUDENTS PAGE)
 def get_student_info():
     with sqlalchemy.orm.Session(engine) as session:
@@ -362,38 +335,6 @@ def get_prompt_title(prompt_id):
 
         return query.all()
 
-# get default current assignments for student
-def get_curr_student_default_assignments():
-    now = datetime.now()
-    return [
-        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10), False, now, True),
-        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20), False, now, False),
-        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now, False)
-    ]
-
-# get default current assignments for prof
-def get_curr_prof_default_assignments():
-    now = datetime.now()
-    return [
-        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10), False, now),
-        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20), False, now),
-        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30), False, now)
-    ]
-
-# get default assignments for a course
-def get_default_assignments():
-    now = datetime.now()
-    return [
-        (11111, 'Assignment 1: Café Fluent', now + timedelta(days=10)),
-        (22222, 'Assignment 2: Job Interview', now + timedelta(days=20)),
-        (33333, 'Assignment 3: Airport Troubles', now + timedelta(days=30))
-    ]
-
-# get default past assignments
-def get_past_default_assignments():
-    now = datetime.now()
-    return [(12345, 'Assignment 0: Say Hello', now - timedelta(days=3), True, now - timedelta(days=5))]
-
 # get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
 # mark whether assignment has been completed or not
 def get_current_assignments_for_student(student_id, course_id):
@@ -409,43 +350,6 @@ def get_current_assignments_for_student(student_id, course_id):
 
         results = query.all()
         return results
-# get all current assignments for a given course, with the earliest deadline first (FOR PROFESSOR ASSIGNMENTS PAGE)
-def get_current_assignments_for_prof(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
-                .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
-                .order_by(sqlalchemy.asc(Prompt.deadline)))
-
-        results = query.all()
-
-        return results if results else get_curr_prof_default_assignments()
-
-# get all past assignments for a given course, with the most recent assignment first
-def get_past_assignments(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at)
-                 .filter(Prompt.course_id == course_id, Prompt.past_deadline == True)  
-                 .order_by(sqlalchemy.desc(Prompt.deadline))) 
-
-        results = query.all()
-
-        return results if results else get_past_default_assignments()
-
-# get all asssignments for a course (FOR PROF SCORES PAGE)
-def get_all_assignments_for_course(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        # check if course exists in the database
-        course_exists = session.query(sqlalchemy.exists().where(Course.course_id == course_id)).scalar()
-        if not course_exists:
-            return get_default_assignments()
-
-        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline)
-                .filter(Prompt.course_id == course_id)
-                .order_by(sqlalchemy.asc(Prompt.deadline)))
-
-        results = query.all()
-
-        return results if results else get_default_assignments()
 
 #-----------------------------------------------------------------------
 
