@@ -80,6 +80,7 @@
           <th>Conversation History</th>
         </tr>
       </thead>
+      {% if scores %}
       <tbody>
         {% for prompt_id, title, conv_id, score in scores %}
         <tr>
@@ -87,12 +88,15 @@
           <td>{{ (score if score else '-') }}/100</td>
           <td><a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a></td>
         </tr>
-        {% else %}
-        <td>No scores currently available.</td>
-        <td></td>
-        <td></td>
         {% endfor %}
       </tbody>
+      {% else %}
+      <tbody>
+        <tr>
+          <td colspan="3" class="text-center">No scores currently available.</td>
+        </tr>
+      </tbody>
+      {% endif %}
     </table>
   </div>
   
