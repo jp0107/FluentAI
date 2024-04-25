@@ -157,9 +157,12 @@
           {% endfor %}
         </tbody>
         {% else %}
-          <tr>
-            <td colspan="3">No professors found.</td>
-          </tr>
+          <tbody>
+            <tr>
+              <td colspan="3" class="text-center">No professors to display.</td>
+            </tr>
+          </tbody>
+        {% endif %}
       </table>
     </div>
 
