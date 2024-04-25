@@ -431,6 +431,33 @@
       $('#student-tbody').html(tableHtml);
     }
 
+    function prepareDeleteStudentModal(element) {
+      const studentId = element.getAttribute('data-student_id');
+      const studentName = element.parentElement.parentElement.querySelector('td:first-child').textContent;
+      const courseID = '{{ course_id }}'; 
+      const modalBody = document.querySelector('#deleteStudentModal .modal-body p:first-child');
+      const deleteButton = document.querySelector('#deleteStudentModal .btn-primary');
+
+      modalBody.textContent = `Are you sure you want to delete ${studentName}?`;
+      deleteButton.onclick = function () {
+        deleteStudent(courseID, studentId);
+      };
+    }
+
+    function deleteStudent(courseID, studentId) {
+      $.ajax({
+        type: 'POST',
+        url: `/delete-student/${courseID}/${studentId}`,
+        success: function (response) {
+          alert('Student deleted successfully.');
+          fetchStudents(); // Refresh the student list
+        },
+        error: function (xhr) {
+          alert('Error deleting student: ' + xhr.responseText);
+        }
+      });
+    }
+
   </script>
 
 </body>
