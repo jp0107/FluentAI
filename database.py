@@ -499,9 +499,9 @@ def get_default_conversation():
 def get_assignments_and_scores_for_student(course_id, student_id):
     with sqlalchemy.orm.Session(engine) as session:
         # check if the student exists in the database
-        student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
-        if not student_exists:
-            return None
+        # student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
+        # if not student_exists:
+        #     return None
 
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
                  .outerjoin(Conversation, sqlalchemy.and_(Conversation.prompt_id == Prompt.prompt_id, Conversation.student_id == student_id))
