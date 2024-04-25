@@ -72,7 +72,6 @@
   </div>
 
   <div class="container-fluid">
-    {% if scores %}
     <table class="col offset-sm-1 table score-table">
       <thead>
         <tr>
@@ -88,14 +87,13 @@
           <td>{{ (score if score else '-') }}/100</td>
           <td><a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a></td>
         </tr>
-        % else %
-        {% endfor %}
+        {% else %}
         <td>No scores currently available.</td>
         <td></td>
         <td></td>
+        {% endfor %}
       </tbody>
     </table>
-    {% endif %}
   </div>
   
   <br>
