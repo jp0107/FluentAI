@@ -625,7 +625,7 @@ def student_practice_chat(course_id):
 
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = practice_prompt  # Store the initial prompt text for future use
-    initial_response = get_gpt_response(practice_prompt.prompt_text)
+    initial_response = get_gpt_response(practice_prompt)
 
     return flask.render_template('student-practice-chat.html',
                                  course_id = course_id,
