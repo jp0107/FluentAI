@@ -105,7 +105,7 @@
           <th class="col-delete">Delete</th>
         </tr>
       </thead>
-      <tbody id="#professor-tbody">
+      <tbody id="professor-tbody">
       </tbody>
     </table>
   </div>
@@ -314,6 +314,7 @@
         type: 'GET',
         url: '/get-profs-in-course/' + courseID,
         success: function (response) {
+          console.log(response); // Check what's being received exactly
           updateProfessorTable(response);
         },
         error: function (xhr) {
