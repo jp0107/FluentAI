@@ -247,7 +247,8 @@ def get_courses_and_profs():
         results = query.all()
         
         if not results:
-            return None
+            print("No courses fetched from database.")
+            return {}
 
         # format query results
         courses = {}
@@ -256,6 +257,8 @@ def get_courses_and_profs():
             if course_id not in courses:
                 courses[course_id] = {'course_id': course_id, 'professors': []}
             courses[course_id]['professors'].append(f"{first_name} {last_name}")
+
+        print("success")
 
         return courses
 
