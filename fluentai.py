@@ -840,9 +840,8 @@ def add_professor_to_course():
 @app.route('/get-profs-in-course/<course_id>')
 def get_profs_in_course(course_id):
     try:
-        prof_roster = get_profs_for_course(course_id)  # Assume this is a function that fetches professors
-        return flask.jsonify(prof_roster)
+        profs = get_profs_for_course(course_id)
+        return flask.jsonify(profs)
     except Exception as e:
-        app.logger.error("Failed to fetch professors: %s", str(e))
         return flask.jsonify({'error': 'Failed to fetch professors'}), 500
 #-----------------------------------------------------------------------
