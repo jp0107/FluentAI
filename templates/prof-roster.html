@@ -343,28 +343,32 @@
     }
 
     function prepareDeleteProfModal(element) {
-      const profId = element.getAttribute('data-prof_id');
-      const profName = element.parentElement.parentElement.querySelector('td:first-child').textContent;
-      const modalBody = document.querySelector('#deleteProfModal .modal-body p');
-      const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
+    const profId = element.getAttribute('data-prof_id');
+    const profName = element.parentElement.parentElement.querySelector('td:first-child').textContent;
+    const courseID = '{{ course_id }}'; // Ensure this is available in the scope or find another way to get it dynamically.
+    const modalBody = document.querySelector('#deleteProfModal .modal-body p');
+    const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
 
-      modalBody.textContent = `Are you sure you want to delete ${profName}?`;
-      deleteButton.onclick = function () { deleteProf(profId); };
-    }
+    modalBody.textContent = `Are you sure you want to delete ${profName}?`;
+    deleteButton.onclick = function () {
+        deleteProf(courseID, profId);
+    };
+}
 
-    function deleteProf(profId) {
-      $.ajax({
+function deleteProf(courseID, profId) {
+    $.ajax({
         type: 'POST',
-        url: `/delete-prof/${profId}`,
+        url: `/delete-prof/${courseID}/${profId}`,
         success: function (response) {
-          alert('Professor deleted successfully.');
-          fetchProfessors(); // Refresh the professor list
+            alert('Professor deleted successfully.');
+            fetchProfessors(); // Refresh the professor list
         },
         error: function (xhr) {
-          alert('Error deleting professor: ' + xhr.responseText);
+            alert('Error deleting professor: ' + xhr.responseText);
         }
-      });
-    }
+    });
+}
+
   </script>
 
 </body>
