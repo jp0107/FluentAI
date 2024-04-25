@@ -244,7 +244,7 @@
             success: function (response) {
               alert(response.message);
               $('#deleteAssignmentModal').modal('hide');
-              fetchAssignments();  // Reload assignments to reflect deletion
+              fetchAllAssignments();  // Reload assignments to reflect deletion
             },
             error: function (xhr) {
               alert('Error deleting assignment: ' + xhr.responseText);
