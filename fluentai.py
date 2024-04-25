@@ -8,7 +8,6 @@ import sys
 import random
 import datetime
 import string
-import logging
 from openai import OpenAI
 import flask
 import sqlalchemy
@@ -22,7 +21,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_default_student_roster, get_assignments_for_course, get_assignments_for_student,
-                      get_prompt_title)
+                      get_prompt_title, get_students_for_course)
 
 #-----------------------------------------------------------------------
 
@@ -804,7 +803,7 @@ def add_assignment():
         prof_id=prof_id,
         prompt_text=assignment_prompt,
         num_turns=int(num_turns),
-        deadline=deadline,  # Assuming deadline is passed as form data
+        deadline=deadline,  
         assignment_description = assignment_description
     )
 
@@ -856,4 +855,13 @@ def get_profs_in_course(course_id):
         return flask.jsonify(profs)
     except Exception:
         return flask.jsonify({'error': 'Failed to fetch professors'}), 500
+#-----------------------------------------------------------------------
+@app.route('/get-students-in-course/<course_id>')
+def get_students_in_course(course_id):
+    try:
+        students = get_students_for_course(course_id)
+        return flask.jsonify(students)
+    except Exception as e:
+        print(f"Failed to fetch students: {e}")
+        return flask.jsonify({'error': 'Failed to fetch students'}), 500
 #-----------------------------------------------------------------------

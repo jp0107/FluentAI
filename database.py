@@ -724,47 +724,23 @@ def categorize_assignments(assignments, now):
     
 #-----------------------------------------------------------------------
 
-# def get_past_assignments_for_course(course_id):
-#     with sqlalchemy.orm.Session(engine) as session:
-#         assignments = (session.query(Prompt)
-#                     .filter(Prompt.course_id == course_id, Prompt.past_deadline == True)
-#                     .order_by(sqlalchemy.desc(Prompt.deadline))).all()
-
-#         past_assignments = []
-
-#         # default case
-#         if not assignments:
-#             assignments = get_full_past_default_assignments()
-#             assignment_data = {
-#                 'prompt_id': assignments[0][0],
-#                 'prompt_title': assignments[0][1],
-#                 'prompt_text': assignments[0][2],
-#                 'deadline': assignments[0][3],
-#                 'num_turns': assignments[0][4],
-#                 'created_at': assignments[0][5],
-#                 'past_deadline': assignments[0][6]
-#             }
-#             past_assignments.append(assignment_data)
-#             return past_assignments
-
-#         # normal case
-#         for assignment in assignments:
-#             assignment_data = {
-#             'prompt_id': assignment.prompt_id,
-#             'prompt_title': assignment.prompt_title,
-#             'prompt_text': assignment.prompt_text,
-#             'deadline': assignment.deadline if assignment.deadline else None,
-#             'num_turns': assignment.num_turns,
-#             'created_at': assignment.created_at,
-#             'past_deadline': assignment.past_deadline
-#             }
-#             past_assignments.append(assignment_data)
-#         return past_assignments
-
-# # get default past assignments with full info (FOR PROF ASSIGNMENTS PAGE)
-# def get_full_past_default_assignments():
-#     now = datetime.now()
-#     return [(12345, 'Assignment 0: Say Hello', "Say hello to the student", now - timedelta(days=3), 5, now - timedelta(days=10), True)]
+def get_students_for_course(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        try:
+            query = (
+                session.query(
+                    CoursesStudents.student_id,
+                    Student.first_name,
+                    Student.last_name
+                )
+                .join(Student, Student.student_id == CoursesStudents.student_id)
+                .filter(CoursesStudents.course_id == course_id)
+                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))
+            )
+            results = query.all()
+            return [{"student_id": student.student_id, "first_name": student.first_name, "last_name": student.last_name} for student in results]
+        except sqlalchemy.exc.SQLAlchemyError as e:
+            session.rollback()
+            raise Exception(f"Failed to fetch students due to a database error: {str(e)}")
 
 #-----------------------------------------------------------------------
-
