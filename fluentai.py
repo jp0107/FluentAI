@@ -861,3 +861,34 @@ def get_students_in_course(course_id):
         print(f"Failed to fetch students: {e}")
         return flask.jsonify({'error': 'Failed to fetch students'}), 500
 #-----------------------------------------------------------------------
+@app.route('/add-student-to-course', methods=['POST'])
+def add_student_to_course():
+    course_id = flask.request.form.get('course_id')
+    full_name = flask.request.form.get('student_name')
+    student_netid = flask.request.form.get('student_netid')
+
+    if not course_id or not full_name or not student_netid:
+        return flask.jsonify({"message": "All fields (course ID, student name, and NetID) are required."}), 400
+
+    with Session() as session:
+        # Check if the student already exists by NetID
+        student = session.query(Student).filter_by(student_id=student_netid).first()
+        if not student:
+            # Splitting the name into first and last name
+            name_parts = full_name.split()
+            first_name = name_parts[0]
+            last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
+            student = Student(student_id=student_netid, first_name=first_name, last_name=last_name)
+            session.add(student)
+
+        # Check if the student is already linked to the course
+        existing_link = session.query(CoursesStudents).filter_by(course_id=course_id, student_id=student_netid).first()
+        if existing_link:
+            return flask.jsonify({"message": "Student already added to this course."}), 409
+
+        # Create a new link between the student and the course
+        new_course_student = CoursesStudents(course_id=course_id, student_id=student_netid)
+        session.add(new_course_student)
+        session.commit()
+
+    return flask.jsonify({"message": "Student added successfully to the course."})
