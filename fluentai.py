@@ -453,14 +453,15 @@ def admin_dashboard():
 
     # get user's type to make sure they can access page and display name if correct
     user_type = check_user_type(username)
-    if user_type == "SuperAdmin":
-        first_name = get_admin_firstname(username)
-    if user_type == "Professor":
-        flask.flash("Access denied: Unauthorized access.", "error")
-    if user_type == "Student":
+    
+    if (user_type == "Student"):
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_classes'))  # Redirecting to the home page or a suitable route
-
+    if(user_type == "Professor"):
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('prof_classes'))  # Redirecting to the home page or a suitable route
+    if(user_type == "SuperAdmin"):
+        first_name = get_admin_firstname(username)
     return flask.render_template('admin-dashboard.html',
                                  username = username,
                                  first_name = first_name)
@@ -748,14 +749,12 @@ def delete_student_click(student_id):
     #     return flask.jsonify({'message': str(e)}), 500
 
 #-----------------------------------------------------------------------
-
-
-@app.route('/delete-prof/<prof_id>', methods=['POST'])
-def delete_prof(prof_id):
-    if delete_prof_from_course(prof_id):
+@app.route('/delete-prof/<course_id>/<prof_id>', methods=['POST'])
+def delete_prof(course_id, prof_id):
+    if delete_prof_from_course(prof_id, course_id):
         return flask.jsonify({'message': 'Professor deleted successfully'}), 200
-    else:
-        return flask.jsonify({'error': 'Failed to delete professor'}), 500
+    
+    return flask.jsonify({'error': 'Failed to delete professor'}), 500
 
 #-----------------------------------------------------------------------
 @app.route('/get-assignments', methods=['GET'])
