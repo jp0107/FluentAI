@@ -471,11 +471,8 @@ def admin_dashboard():
 def admin_courses():
     username = auth.authenticate()
 
-    courses_profs = get_courses_and_profs()
-
     return flask.render_template('admin-courses.html',
-                                 username = username,
-                                 courses_profs = courses_profs)
+                                 username = username)
 
 #-----------------------------------------------------------------------
 
@@ -657,6 +654,13 @@ def add_course():
 def get_prof_courses():
     id = flask.session.get('username')
     course_data = get_professor_courses(id)
+    return flask.jsonify(course_data)
+
+#-----------------------------------------------------------------------
+
+@app.route('/get-admin-courses')
+def get_admin_courses():
+    course_data = get_courses_and_profs()
     return flask.jsonify(course_data)
 
 #-----------------------------------------------------------------------
