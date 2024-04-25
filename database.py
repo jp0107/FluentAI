@@ -335,6 +335,14 @@ class Prompt(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     assignment_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
+# get prompt title by id
+def get_prompt_title(prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        
+        query = (session.query(Prompt.prompt_title).filter(Prompt.prompt_id == prompt_id))
+
+        return query.all()
+
 # get default current assignments for student
 def get_curr_student_default_assignments():
     now = datetime.now()
@@ -491,9 +499,9 @@ def get_default_conversation():
 def get_assignments_and_scores_for_student(course_id, student_id):
     with sqlalchemy.orm.Session(engine) as session:
         # check if the student exists in the database
-        student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
-        if not student_exists:
-            return get_default_student_scores()
+        # student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
+        # if not student_exists:
+        #     return None
 
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
                  .outerjoin(Conversation, sqlalchemy.and_(Conversation.prompt_id == Prompt.prompt_id, Conversation.student_id == student_id))
@@ -501,7 +509,7 @@ def get_assignments_and_scores_for_student(course_id, student_id):
                  .order_by(sqlalchemy.asc(Prompt.created_at)))
 
         results = query.all()
-        return results if results else get_default_student_scores()
+        return results if results else None
 
 # gets all student scores in alphabetical order for an assignment given the assignment id (FOR PROF SCORES PAGE)
 def get_all_scores(prompt_id):

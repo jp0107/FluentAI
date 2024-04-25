@@ -80,20 +80,40 @@
           <th>Conversation History</th>
         </tr>
       </thead>
+      {% if scores %}
       <tbody>
         {% for prompt_id, title, conv_id, score in scores %}
         <tr>
           <td>{{ title }}</td>
           <td>{{ (score if score else '-') }}/100</td>
-          <td><a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation
-              History</a></td>
+          <td>
+            {% if conv_id %}
+            <a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a>
+            {% else %}
+            <button id = "convHistoryButton{{ prompt_id}}" onclick="showNotCompletedMessage('convHistoryButton{{ prompt_id }}')" class="small-button">See Conversation History</button>
+            {% endif %}
+        </td>
         </tr>
-        {% else %}
-        <p>No scores available.</p>
         {% endfor %}
       </tbody>
+      {% else %}
+      <tbody>
+        <tr>
+          <td colspan="3" class="text-center">No scores currently available.</td>
+        </tr>
+      </tbody>
+      {% endif %}
     </table>
   </div>
+
+  <script>
+    function showNotCompletedMessage(buttonId) {
+      var button = document.getElementById(buttonId);
+      button.blur();  // remove focus from button
+      alert("Assignment has not been completed yet.");
+    }
+  </script>
+  
   <br>
 </body>
 

@@ -21,7 +21,8 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation,
                       get_students_in_course, delete_student, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_for_course, get_default_student_roster, get_assignments_for_course, get_assignments_for_student)
+                      get_profs_for_course, get_default_student_roster, get_assignments_for_course, get_assignments_for_student,
+                      get_prompt_title)
 
 #-----------------------------------------------------------------------
 
@@ -343,10 +344,7 @@ def student_scores(course_id):
 
     flask.session['course_id'] = course_id
 
-    try:
-        scores = get_assignments_and_scores_for_student(course_id, username)
-    except:
-        scores = get_default_student_scores()
+    scores = get_assignments_and_scores_for_student(course_id, username)
 
     return flask.render_template('student-scores.html',
                                  username = username,
@@ -534,9 +532,13 @@ def student_assignment_chat(course_id, prompt_id):
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
+
     if not prompt:
         # Handle cases where no prompt is found for the given ID
         return "Prompt not found", 404
+    
+    # get prompt title
+    title = get_prompt_title(prompt_id)[0][0]
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
@@ -544,6 +546,7 @@ def student_assignment_chat(course_id, prompt_id):
     # Render the chat page with the initial prompt data
     return flask.render_template('student-assignment-chat.html',
                                 course_id = course_id,
+                                prompt_title = title,
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username)
@@ -562,12 +565,16 @@ def prof_assignment_chat(course_id, prompt_id):
         # Handle cases where no prompt is found for the given ID
         return "Prompt not found", 404
     
+    # get prompt title
+    title = get_prompt_title(prompt_id)[0][0]
+    
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('prof-assignment-chat.html',
                                 course_id = course_id,
+                                prompt_title = title,
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username)
