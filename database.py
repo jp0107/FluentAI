@@ -65,38 +65,46 @@ def get_profs():
 def get_profs_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            query = (
+            # Query for professors associated with the course
+            profs_query = (
                 session.query(
-                    CoursesProfs.prof_id,
-                    sqlalchemy.case(
-                        [
-                            (Professor.first_name is not None, Professor.first_name),
-                            (SuperAdmin.first_name is not None, SuperAdmin.first_name)
-                        ],
-                        else_='Unknown'
-                    ).label('first_name'),
-                    sqlalchemy.case(
-                        [
-                            (Professor.last_name is not None, Professor.last_name),
-                            (SuperAdmin.last_name is not None, SuperAdmin.last_name)
-                        ],
-                        else_='Unknown'
-                    ).label('last_name')
+                    Professor.prof_id,
+                    Professor.first_name,
+                    Professor.last_name
                 )
-                .outerjoin(Professor, Professor.prof_id == CoursesProfs.prof_id)
-                .outerjoin(SuperAdmin, SuperAdmin.admin_id == CoursesProfs.prof_id)
+                .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
                 .filter(CoursesProfs.course_id == course_id)
-                .order_by(sqlalchemy.asc('first_name'), sqlalchemy.asc('last_name'))
+                .order_by(Professor.first_name, Professor.last_name)
             )
-            results = query.all()
-            return [{
-                "prof_id": prof.prof_id,
-                "first_name": prof.first_name,
-                "last_name": prof.last_name
-            } for prof in results]
+            professors = [
+                {"prof_id": prof.prof_id, "first_name": prof.first_name, "last_name": prof.last_name}
+                for prof in profs_query.all()
+            ]
+
+            # Query for superadmins associated with the course
+            admins_query = (
+                session.query(
+                    SuperAdmin.admin_id.label('prof_id'),
+                    SuperAdmin.first_name,
+                    SuperAdmin.last_name
+                )
+                .join(CoursesProfs, SuperAdmin.admin_id == CoursesProfs.prof_id)
+                .filter(CoursesProfs.course_id == course_id)
+                .order_by(SuperAdmin.first_name, SuperAdmin.last_name)
+            )
+            superadmins = [
+                {"prof_id": admin.prof_id, "first_name": admin.first_name, "last_name": admin.last_name}
+                for admin in admins_query.all()
+            ]
+
+            # Combine both lists
+            combined_results = professors + superadmins
+            return combined_results
+
         except sqlalchemy.exc.SQLAlchemyError as e:
             session.rollback()
-            raise Exception(f"Failed to fetch professors due to a database error: {str(e)}")
+            raise Exception(f"Failed to fetch course staff due to a database error: {str(e)}")
+
 
 
 # gets prof first name given their netid
