@@ -86,7 +86,13 @@
         <tr>
           <td>{{ title }}</td>
           <td>{{ (score if score else '-') }}/100</td>
-          <td><a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a></td>
+          <td>
+            {% if conv_id %}
+            <a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a>
+            {% else %}
+            <button onclick="showNotCompletedMessage()" class="small-button">See Conversation History</button>
+            {% endif %}
+        </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -99,9 +105,14 @@
       {% endif %}
     </table>
   </div>
+
+  <script>
+    function showNotCompletedMessage() {
+      alert("Assignment has not been completed yet.");
+    }
+  </script>
   
   <br>
-  </script>
 </body>
 
 </html>
