@@ -65,21 +65,33 @@ def get_profs():
 def get_profs_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
+            # Query both Professor and SuperAdmins who are linked to the course
             query = (
                 session.query(
-                    Professor.prof_id,
-                    Professor.first_name,
-                    Professor.last_name
+                    CoursesProfs.prof_id,
+                    sqlalchemy.case(
+                        [(Professor.prof_id != None, Professor.first_name), (SuperAdmin.admin_id != None, SuperAdmin.first_name)],
+                        else_='Unknown'
+                    ).label('first_name'),
+                    sqlalchemy.case(
+                        [(Professor.prof_id != None, Professor.last_name), (SuperAdmin.admin_id != None, SuperAdmin.last_name)],
+                        else_='Unknown'
+                    ).label('last_name')
                 )
-                .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
+                .outerjoin(Professor, Professor.prof_id == CoursesProfs.prof_id)
+                .outerjoin(SuperAdmin, SuperAdmin.admin_id == CoursesProfs.prof_id)
                 .filter(CoursesProfs.course_id == course_id)
-                .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name))
+                .order_by(sqlalchemy.asc('first_name'), sqlalchemy.asc('last_name'))
             )
             results = query.all()
-            return [{"prof_id": prof.prof_id, "first_name": prof.first_name, "last_name": prof.last_name} for prof in results]
-        except sqlalchemy.exc.SQLAlchemyError:
+            return [{
+                "prof_id": prof.prof_id,
+                "first_name": prof.first_name,
+                "last_name": prof.last_name
+            } for prof in results]
+        except sqlalchemy.exc.SQLAlchemyError as e:
             session.rollback()
-            raise Exception("Failed to fetch professors due to a database error.")
+            raise Exception(f"Failed to fetch professors due to a database error: {str(e)}")
 
 
 # gets prof first name given their netid
