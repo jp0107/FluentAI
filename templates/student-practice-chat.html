@@ -58,7 +58,7 @@
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col offset-sm-1">
-        <h1>SPA101</h1> <!-- replace w classid-->
+        <h1>{{ course_id }}</h1>
       </div>
     </div>
   </div>
@@ -73,8 +73,6 @@
 
   <br>
 
-  <!-- Need to implement ajax so that getting GPT response and fetching conversation history still leads to /https://fluentai.onrender.com/assignment-chat -->
-  <!-- rather than https://fluentai.onrender.com/fetch-conversation and https://fluentai.onrender.com/process-gpt-request -->
   <div id="welcome-message" style="margin-bottom: 50px;">
     <h5 class="text-center" style="margin-bottom: 20px;">Chat</h5>
     <textarea id="gptResponse" class="form-control" rows="10" readonly
@@ -87,6 +85,33 @@
       <button type="submit" class="btn chat-button" style="margin-bottom: 22px;">Submit</button>
     </form>
   </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#chatForm').submit(function (event) {
+        event.preventDefault();
+        var userInput = $('input[name="userInput"]').val();
+        var currentContent = $('#gptResponse').val();
+        currentContent += "\n\nYou: " + userInput;  // Append user input to the chat
+
+        $.ajax({
+          url: '/process-input',
+          type: 'POST',
+          data: { userInput: userInput },
+          success: function (response) {
+            currentContent += "\n\nGPT: " + response.gpt_response;  // Append GPT response
+            $('#gptResponse').val(currentContent);  // Update the textarea
+            $('input[name="userInput"]').val('');  // Clear input field
+            $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
+          },
+          error: function (xhr, status, error) {
+            alert('Please type in a response before pressing submit.');
+          }
+        });
+      });
+    });
+  </script>
 
 </body>
 
