@@ -177,13 +177,47 @@
     </div>
 
     <script type="text/javascript">
-      $(document).ready(function () {
+      // fetch courses initially
+      fetchCourses();
+
+      // Add course button click event
+      $("#add-course-button").click(function () {
+            var courseOwner = $("#course-owner").val();
+            var courseId = $("#course-id").val();
+            var courseName = $("#course-name").val();
+            var language = $("#department-select").find(":selected").text();
+
+            if (!courseOwner || !courseId || !courseName) {
+                alert("Course owner, ID, and name are required.");
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/add-course',
+                data: {
+                    'course_owner': courseOwner,
+                    'course_id': courseId,
+                    'course_name': courseName,
+                    'language': language
+                },
+                success: function (response) {
+                    alert(response.message);
+                    $('#addCourseModal').modal('hide');
+                    $('#addCourseModal').find('form').trigger('reset');
+                    fetchCourses();   // refresh course list
+                },
+                error: function (xhr, status, error) {
+                    alert('Error adding course: ' + xhr.statusText);
+                }
+            });
+        });
+        
+        // fetch courses function
         function fetchCourses() {
-          var nocache = new Date().getTime();
           $.ajax({
+              type: 'GET',
               url: '/get-admin-courses',
-              method: 'GET',
-              cache: false,
               success: function (response) {
                   displayCourses(response); // Update the courses on the page
               },
@@ -193,7 +227,7 @@
           });
         }
 
-        // Function to display courses
+        // Function to update courses
         function displayCourses(data) {
           if (!data || Object.keys(data).length === 0) {
             var tbody = $('.score-table tbody');
@@ -227,49 +261,16 @@
           }
         }
 
-        // Add course button click event
-        $("#add-course-button").click(function () {
-            var courseOwner = $("#course-owner").val();
-            var courseId = $("#course-id").val();
-            var courseName = $("#course-name").val();
-            var language = $("#department-select").find(":selected").text();
+      function prepareDeleteCourseModal(element) {
+        const courseId = element.getAttribute('data-courseid');
+        const modalBody = document.querySelector('#deleteCourseModal .modal-body p:first-child');
+        const deleteButton = document.getElementById('delete-btn');
 
-            if (!courseOwner || !courseId || !courseName) {
-                alert("Course owner, ID, and name are required.");
-                return;
-            }
+        modalBody.textContent = `Are you sure you want to delete ${courseId}?`;
 
-            $.ajax({
-                url: '/add-course',
-                method: 'POST',
-                data: {
-                    course_owner: courseOwner,
-                    course_id: courseId,
-                    course_name: courseName,
-                    language: language
-                },
-                success: function (response) {
-                    alert(response.message);
-                    $('#addCourseModal').modal('hide');
-                    $('#addCourseModal').find('form').trigger('reset');
-                    fetchCourses();
-                },
-                error: function (xhr, status, error) {
-                    alert('Error adding course: ' + xhr.statusText);
-                }
-            });
-        });
-
-        function prepareDeleteCourseModal(element) {
-          const courseId = element.getAttribute('data-courseid');
-          const modalBody = document.querySelector('#deleteCourseModal .modal-body p:first-child');
-          const deleteButton = document.getElementById('delete-btn');
-
-          modalBody.textContent = `Are you sure you want to delete ${courseId}?`;
-
-          // Attach the course id to the delete button in the modal for later use in deletion
-          deleteButton.setAttribute('data-courseid', courseId);
-          deleteButton.onclick = function () { deleteCourse(this.getAttribute('data-courseid')); };
+        // Attach the course id to the delete button in the modal for later use in deletion
+        deleteButton.setAttribute('data-courseid', courseId);
+        deleteButton.onclick = function () { deleteCourse(this.getAttribute('data-courseid')); };
       }
 
       function deleteCourse(course_id) {
@@ -287,11 +288,6 @@
             alert('Failed to delete course.');
           });
       }
-
-      // Initial fetch of courses when the page loads
-      fetchCourses();
-
-      })
     </script>
 </body>
 
