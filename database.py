@@ -631,36 +631,65 @@ def categorize_assignments(assignments, now):
     
 #-----------------------------------------------------------------------
 
-def get_students_for_course(course_id):
+def get_course_participants(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            # Query for professors and superadmins as if they were students
-            prof_query = (
+            # Query for professors associated with the course
+            profs_query = (
                 session.query(
-                    Professor.prof_id.label('id'),
+                    Professor.prof_id.label('student_id'),
                     Professor.first_name,
-                    Professor.last_name,
-                    sqlalchemy.literal('Professor').label('role')
+                    Professor.last_name
                 )
-                .join(CoursesStudents, Professor.prof_id == CoursesStudents.student_id)
-                .filter(CoursesStudents.course_id == course_id)
+                .join(CoursesProfs, Professor.prof_id == CoursesProfs.prof_id)
+                .filter(CoursesProfs.course_id == course_id)
+                .order_by(Professor.first_name, Professor.last_name)
             )
-            admin_query = (
-                session.query(
-                    SuperAdmin.admin_id.label('id'),
-                    SuperAdmin.first_name,
-                    SuperAdmin.last_name,
-                    sqlalchemy.literal('SuperAdmin').label('role')
-                )
-                .join(CoursesStudents, SuperAdmin.admin_id == CoursesStudents.student_id)
-                .filter(CoursesStudents.course_id == course_id)
-            )
-            combined_query = prof_query.union_all(admin_query)
-            result = combined_query.order_by(sqlalchemy.asc('first_name'), sqlalchemy.asc('last_name')).all()
-            return [{'id': person.id, 'first_name': person.first_name, 'last_name': person.last_name, 'role': person.role} for person in result]
+            professors = [
+                {"student_id": prof.student_.id, "first_name": prof.first_name, "last_name": prof.last_name}
+                for prof in profs_query.all()
+            ]
 
-        except Exception as e:
+            # Query for superadmins associated with the course
+            admins_query = (
+                session.query(
+                    SuperAdmin.admin_id.label('student_id'),
+                    SuperAdmin.first_name,
+                    SuperAdmin.last_name
+                )
+                .join(CoursesProfs, SuperAdmin.admin_id == CoursesProfs.prof_id)
+                .filter(CoursesProfs.course_id == course_id)
+                .order_by(SuperAdmin.first_name, SuperAdmin.last_name)
+            )
+            superadmins = [
+                {"student_id": admin.student_id, "first_name": admin.first_name, "last_name": admin.last_name}
+                for admin in admins_query.all()
+            ]
+
+            # Query for students associated with the course
+            students_query = (
+                session.query(
+                    Student.student_id,
+                    Student.first_name,
+                    Student.last_name
+                )
+                .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
+                .filter(CoursesStudents.course_id == course_id)
+                .order_by(Student.first_name, Student.last_name)
+            )
+            students = [
+                {"student_id": student.student_id, "first_name": student.first_name, "last_name": student.last_name}
+                for student in students_query.all()
+            ]
+
+            # Combine all results
+            combined_results = professors + superadmins + students
+            return combined_results
+
+        except sqlalchemy.exc.SQLAlchemyError as e:
             session.rollback()
-            raise Exception(f"Failed to fetch course staff as students due to a database error: {str(e)}")
+            raise Exception(f"Failed to fetch course participants due to a database error: {str(e)}")
+
 
 #-----------------------------------------------------------------------
+
