@@ -61,12 +61,6 @@ def get_profs():
         query = session.query(Professor) # SELECT * FROM Professor
         return query.all()
 
-# # get default professor roster
-# def get_default_prof_roster():
-#     return [
-#         ('bd0101', 'Bob', 'Dondero')
-#     ]
-
 # get all professors for a given course (FOR PROF ROSTER PAGE)
 def get_profs_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
@@ -83,7 +77,7 @@ def get_profs_for_course(course_id):
             )
             results = query.all()
             return [{"prof_id": prof.prof_id, "first_name": prof.first_name, "last_name": prof.last_name} for prof in results]
-        except sqlalchemy.exc.SQLAlchemyError as e:
+        except sqlalchemy.exc.SQLAlchemyError:
             session.rollback()
             raise Exception("Failed to fetch professors due to a database error.")
 
