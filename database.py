@@ -65,16 +65,21 @@ def get_profs():
 def get_profs_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            # Query both Professor and SuperAdmins who are linked to the course
             query = (
                 session.query(
                     CoursesProfs.prof_id,
                     sqlalchemy.case(
-                        [(Professor.prof_id is not None, Professor.first_name), (SuperAdmin.admin_id is not None, SuperAdmin.first_name)],
+                        [
+                            (Professor.first_name is not None, Professor.first_name),
+                            (SuperAdmin.first_name is not None, SuperAdmin.first_name)
+                        ],
                         else_='Unknown'
                     ).label('first_name'),
                     sqlalchemy.case(
-                        [(Professor.prof_id is not None, Professor.last_name), (SuperAdmin.admin_id is not None, SuperAdmin.last_name)],
+                        [
+                            (Professor.last_name is not None, Professor.last_name),
+                            (SuperAdmin.last_name is not None, SuperAdmin.last_name)
+                        ],
                         else_='Unknown'
                     ).label('last_name')
                 )
