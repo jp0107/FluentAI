@@ -322,7 +322,7 @@
                 (isPast ? '' : '<a href="/prof-assignment-chat/{{ course_id }}/' + assignment.prompt_id + '" class="assignments-button">Start Assignment</a>') +
                 '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" data-prompt-id="' + assignment.prompt_id + '">' +
                 'Delete <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px;">' +
-                '<path d="..."></path>' +
+                '<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"></path>' +
                 '</svg></a></div></div>' +
                 '<div class="small-screen-layout">' +
                 '<div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">' +
@@ -342,81 +342,6 @@
           var containerId = isPast ? '#past-assignments-container' : '#assignments-container';
           $(containerId).html(assignmentsHtml); // Update the assignments container
         }
-        // // Function to fetch and display assignments
-        // function fetchAssignments() {
-        //   $.ajax({
-        //     type: 'GET',
-        //     url: '/get-assignments',
-        //     data: { 'course_id': '{{ course_id }}' },
-        //     success: function (assignments) {
-        //       var assignmentsHtml = '<div class="col-lg-10 mx-auto">';
-        //       assignments.forEach(function (assignment) {
-        //         assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
-        //           '<div class="job-left my-4 d-md-flex align-items-center flex-wrap">' +
-        //           '<div class="job-content">' +
-        //           '<h5>' + assignment.prompt_title + '</h5>' +
-        //           '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
-        //           '</div></div>' +
-        //           '<div class="large-screen-layout">' +
-        //           '<div class="job-right my-4 flex-shrink-0 d-flex">' +
-        //           '<a href="/prof-assignment-chat/{{ course_id }}/' + assignment.prompt_id + '" class="assignments-button">Start Assignment</a>' +
-        //           '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal" data-prompt-id="' + assignment.prompt_id + '">' +
-        //           'Delete <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px;">' +
-        //           '<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>' +
-        //           '</svg></a></div></div>' +
-        //           '<div class="small-screen-layout">' +
-        //           '<div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">' +
-        //           '<div class="col d-flex">' +
-        //           '<a href="/prof-assignment-chat/{{ course_id }}/' + assignment.prompt_id + '" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">Start Assignment</a></div>' +
-        //           '<div class="col d-flex">' +
-        //           '<a class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
-        //           'Delete <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px; left: 3px;">' +
-        //           '<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>' +
-        //           '</svg></a></div></div></div></div>';
-        //       });
-        //       $('#assignments-container').html(assignmentsHtml);  // Update the assignments container
-        //     },
-        //     error: function (xhr) {
-        //       console.error("Error fetching assignments: ", xhr.responseText);
-        //     }
-        //   });
-        // }
-
-        // // Function to fetch and display past assignments
-        // function fetchPastAssignments() {
-        //   $.ajax({
-        //     type: 'GET',
-        //     url: '/get-past-assignments',
-        //     data: { 'course_id': '{{ course_id }}' },
-        //     success: function (assignments) {
-        //       var assignmentsHtml = '<div class="col-lg-10 mx-auto">';
-        //       assignments.forEach(function (assignment) {
-        //         assignmentsHtml += '<div class="job-box d-md-flex align-items-center justify-content-between mb-30">' +
-        //           '<div class="job-left my-4 d-md-flex align-items-center flex-wrap">' +
-        //           '<div class="job-content">' +
-        //           '<h5>' + assignment.prompt_title + '</h5>' +
-        //           '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
-        //           '</div></div>' +
-        //           '<div class="large-screen-layout">' +
-        //           '<div class="job-right my-4 flex-shrink-0 d-flex">' +
-        //           '<a class="assignments-button delete-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
-        //           'Delete <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px;">' +
-        //           '<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>' +
-        //           '</svg></a></div></div>' +
-        //           '<div class="small-screen-layout">' +
-        //           '<div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">' +
-        //           '<div class="col d-flex">' +
-        //           '<a class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button" data-bs-toggle="modal" data-bs-target="#deleteAssignmentModal">' +
-        //           'Delete <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16" style="position: relative; top: -2px; left: 3px;">' +
-        //           '<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>' +
-        //           '</svg></a></div></div></div></div>';
-        //       });
-        //       $('#past-assignments-container').html(assignmentsHtml);  // Update the past assignments container
-        //     },
-        //     error: function (xhr) {
-        //       console.error("Error fetching past assignments: ", xhr.responseText);
-        //     }
-        //   });
       });
 
     </script>
