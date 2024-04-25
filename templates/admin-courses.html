@@ -143,6 +143,7 @@
             <th>Delete</th>
           </tr>
         </thead>
+        {% if courses_profs %}
         <tbody>
           {% for course_info in courses_profs.values() %}
           <tr>
@@ -159,12 +160,13 @@
               </a>
             </td>
           </tr>
-          {% else %}
-          <tr>
-            <td colspan="3">No courses found.</td>
-          </tr>
           {% endfor %}
         </tbody>
+        {% else %}
+        <tr>
+          <td colspan="3">No courses found.</td>
+        </tr>
+        {% endif %}
       </table>
     </div>
 

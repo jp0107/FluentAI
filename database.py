@@ -241,7 +241,7 @@ def get_courses_and_profs():
         results = query.all()
         
         if not results:
-            results = get_default_courses_and_profs()
+            return None
 
         # format query results
         courses = {}
@@ -263,7 +263,7 @@ def get_prof_info():
         results = query.all()
         
         if not results:
-            results = get_default_profs()
+            return None
 
         # format query results
         profs = {}
@@ -301,7 +301,7 @@ def get_student_info():
         results = query.all()
         
         if not results:
-            results = get_default_students()
+            return None
 
         # format query results
         students = {}

@@ -134,6 +134,7 @@
             <th>Delete</th>
           </tr>
         </thead>
+        {% if student_list %}
         <tbody>
           {% for student_info in student_list.values() %}
           <tr>
@@ -152,12 +153,12 @@
               </a>
             </td>
           </tr>
-          {% else %}
-          <tr>
-            <td colspan="3">No students found.</td>
-          </tr>
           {% endfor %}
         </tbody>
+        {% else %}
+        <tr>
+          <td colspan="3">No students found.</td>
+        </tr>
       </table>
     </div>
 
