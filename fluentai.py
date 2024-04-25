@@ -631,8 +631,6 @@ def add_course():
     if not course_id or not course_name:
         return flask.jsonify({"message": "Course ID and name are required."}), 400
 
-    prof_id = flask.session.get('username')  # Assuming this is set correctly in the session
-
     if not any(prof.prof_id == prof_id for prof in get_profs()) and \
        not any(admin.admin_id == prof_id for admin in get_superadmins()):
         return flask.jsonify({"message": "You are not allowed to create a course"}), 403
