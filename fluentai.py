@@ -453,11 +453,11 @@ def admin_dashboard():
 
     # get user's type to make sure they can access page and display name if correct
     user_type = check_user_type(username)
-    if(user_type == "SuperAdmin"):
+    if user_type == "SuperAdmin":
         first_name = get_admin_firstname(username)
-    if(user_type == "Professor"):
+    if user_type == "Professor":
         flask.flash("Access denied: Unauthorized access.", "error")
-    if (user_type == "Student"):
+    if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_classes'))  # Redirecting to the home page or a suitable route
 
