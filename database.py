@@ -631,20 +631,33 @@ def categorize_assignments(assignments, now):
 def get_students_for_course(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            query = (
+            # Query for professors and superadmins as if they were students
+            prof_query = (
                 session.query(
-                    CoursesStudents.student_id,
-                    Student.first_name,
-                    Student.last_name
+                    Professor.prof_id.label('id'),
+                    Professor.first_name,
+                    Professor.last_name,
+                    sqlalchemy.literal('Professor').label('role')
                 )
-                .join(Student, Student.student_id == CoursesStudents.student_id)
+                .join(CoursesStudents, Professor.prof_id == CoursesStudents.student_id)
                 .filter(CoursesStudents.course_id == course_id)
-                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))
             )
-            results = query.all()
-            return [{"student_id": student.student_id, "first_name": student.first_name, "last_name": student.last_name} for student in results]
-        except sqlalchemy.exc.SQLAlchemyError as e:
+            admin_query = (
+                session.query(
+                    SuperAdmin.admin_id.label('id'),
+                    SuperAdmin.first_name,
+                    SuperAdmin.last_name,
+                    sqlalchemy.literal('SuperAdmin').label('role')
+                )
+                .join(CoursesStudents, SuperAdmin.admin_id == CoursesStudents.student_id)
+                .filter(CoursesStudents.course_id == course_id)
+            )
+            combined_query = prof_query.union_all(admin_query)
+            result = combined_query.order_by(sqlalchemy.asc('first_name'), sqlalchemy.asc('last_name')).all()
+            return [{'id': person.id, 'first_name': person.first_name, 'last_name': person.last_name, 'role': person.role} for person in result]
+
+        except Exception as e:
             session.rollback()
-            raise Exception(f"Failed to fetch students due to a database error: {str(e)}")
+            raise Exception(f"Failed to fetch course staff as students due to a database error: {str(e)}")
 
 #-----------------------------------------------------------------------
