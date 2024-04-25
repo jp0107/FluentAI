@@ -329,9 +329,10 @@
 
     // Fetch Professors Function
     function fetchProfessors() {
+      var courseID = '{{ course_id }}';
       $.ajax({
         type: 'GET',
-        url: '/get-profs-in-course/' + '{{ course_id }}',
+        url: '/get-profs-in-course/' + courseID,
         success: function (response) {
           updateProfessorTable(response);
         },
@@ -344,7 +345,7 @@
     // Update Professor Table
     function updateProfessorTable(professors) {
       var tableHtml = '';
-      if (professors.length > 0) {
+      if (professors && professors.length > 0) {
         professors.forEach(function (prof) {
           tableHtml += '<tr>' +
             '<td>' + prof.first_name + ' ' + prof.last_name + '</td>' +

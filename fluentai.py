@@ -849,6 +849,6 @@ def get_profs_in_course(course_id):
     try:
         profs = get_profs_for_course(course_id)
         return flask.jsonify(profs)
-    except Exception as e:
+    except Exception:
         return flask.jsonify({'error': 'Failed to fetch professors'}), 500
 #-----------------------------------------------------------------------
