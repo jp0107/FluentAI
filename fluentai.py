@@ -624,8 +624,11 @@ def student_practice_chat(course_id):
     username = auth.authenticate()
     flask.session['course_id'] = course_id
 
-    # initialize practice prompt here
-    practice_prompt = "You are conversing with a student in Spanish. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them."
+    # get the course language
+    language = get_language(course_id)[0][0]
+
+    # initialize practice prompt here based on the language of the course
+    practice_prompt = f"You are conversing with a student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them."
 
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = practice_prompt  # Store the initial prompt text for future use
@@ -635,7 +638,8 @@ def student_practice_chat(course_id):
                                  course_id = course_id,
                                  initial_data = initial_response,
                                  prompt = practice_prompt,
-                                 username = username)
+                                 username = username,
+                                 language = language)
 
 #-----------------------------------------------------------------------
 # @app.route('/fetch-conversation')
