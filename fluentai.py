@@ -541,7 +541,7 @@ def student_assignment_chat(course_id, prompt_id):
         return "Prompt not found", 404
     
     # get prompt title
-    title = get_prompt_title(prompt_id)
+    title = get_prompt_title(prompt_id)[0][0]
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
