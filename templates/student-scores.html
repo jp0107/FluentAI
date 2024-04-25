@@ -88,19 +88,13 @@
           <td>{{ (score if score else '-') }}/100</td>
           <td><a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a></td>
         </tr>
+        % else %
         {% endfor %}
+        <td>No scores currently available.</td>
+        <td></td>
+        <td></td>
       </tbody>
     </table>
-    {% else %}
-    <div class="col-lg-10 mx-auto">
-      <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
-        <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-          <div class="job-content">
-            <h5>No scores currently available.</h5>
-          </div>
-        </div>
-      </div>
-    </div>
     {% endif %}
   </div>
   
