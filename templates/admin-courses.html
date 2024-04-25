@@ -222,12 +222,13 @@
 
         // Add course button click event
         $("#add-course-button").click(function () {
+            var courseOwner = $("#course-owner").val();
             var courseId = $("#course-id").val();
             var courseName = $("#course-name").val();
             var language = $("#department-select").find(":selected").text();
 
-            if (!courseId || !courseName) {
-                alert("Course ID and name are required.");
+            if (!courseOwner || !courseId || !courseName) {
+                alert("Course owner, ID, and name are required.");
                 return;
             }
 
@@ -235,6 +236,7 @@
                 url: '/add-course',
                 method: 'POST',
                 data: {
+                    course_owner: courseOwner,
                     course_id: courseId,
                     course_name: courseName,
                     language: language

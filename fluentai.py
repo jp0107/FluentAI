@@ -624,6 +624,7 @@ def student_practice_chat(course_id):
 
 @app.route('/add-course', methods=['POST'])
 def add_course():
+    prof_id = flask.request.form.get('course_owner')
     course_id = flask.request.form.get('course_id')
     course_name = flask.request.form.get('course_name')
     language = flask.request.form.get('language')  # Get the actual language text
