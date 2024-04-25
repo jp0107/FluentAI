@@ -56,7 +56,7 @@
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col offset-sm-1">
-        <h1>SPA101</h1> <!-- replace w classid-->
+        <h1>{{ course_id }}</h1> 
       </div>
     </div>
   </div>
@@ -64,7 +64,7 @@
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col offset-sm-1">
-        <h2>Assignment Name</h2> <!-- replace w assignment name-->
+        <h2>{{ prompt_title }}</h2> 
       </div>
     </div>
   </div>
@@ -100,14 +100,14 @@
         event.preventDefault();
         var userInput = $('input[name="userInput"]').val();
         var currentContent = $('#gptResponse').val();
-        currentContent += "\nYou: " + userInput;  // Append user input to the chat
+        currentContent += "\n\nYou: " + userInput;  // Append user input to the chat
 
         $.ajax({
           url: '/process-input',
           type: 'POST',
           data: { userInput: userInput },
           success: function (response) {
-            currentContent += "\nGPT: " + response.gpt_response;  // Append GPT response
+            currentContent += "\n\nGPT: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
           },

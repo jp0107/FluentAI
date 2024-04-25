@@ -335,6 +335,14 @@ class Prompt(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     assignment_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
+# get prompt title by id
+def get_prompt_title(prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        
+        query = (session.query(Prompt.prompt_title).filter(Prompt.prompt_id == prompt_id))
+
+        return query.all()
+
 # get default current assignments for student
 def get_curr_student_default_assignments():
     now = datetime.now()
