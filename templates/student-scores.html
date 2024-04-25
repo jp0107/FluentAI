@@ -90,7 +90,7 @@
             {% if conv_id %}
             <a href="/conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation History</a>
             {% else %}
-            <button onclick="showNotCompletedMessage()" class="small-button">See Conversation History</button>
+            <button id = "convHistoryButton{{ prompt_id}}" onclick="showNotCompletedMessage('convHistoryButton{{ prompt_id }}')" class="small-button">See Conversation History</button>
             {% endif %}
         </td>
         </tr>
@@ -107,7 +107,9 @@
   </div>
 
   <script>
-    function showNotCompletedMessage() {
+    function showNotCompletedMessage(buttonId) {
+      var button = document.getElementById(buttonId);
+      button.blur();  // remove focus from button
       alert("Assignment has not been completed yet.");
     }
   </script>
