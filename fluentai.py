@@ -580,6 +580,9 @@ def prof_assignment_chat(course_id, prompt_id):
 
     flask.session['course_id'] = course_id
 
+    # get the course language
+    language = get_language(course_id)[0][0]
+
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
     if not prompt:
@@ -598,7 +601,8 @@ def prof_assignment_chat(course_id, prompt_id):
                                 prompt_title = title,
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
-                                username=username)
+                                username=username,
+                                language = language)
 
 #-----------------------------------------------------------------------
 
