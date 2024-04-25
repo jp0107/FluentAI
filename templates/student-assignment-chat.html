@@ -110,6 +110,7 @@
             currentContent += "\n\nGPT: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
+            $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
           },
           error: function (xhr, status, error) {
             alert('Error processing the request: ' + error);

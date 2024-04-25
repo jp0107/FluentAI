@@ -55,7 +55,7 @@
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col offset-sm-1">
-        <h1>SPA101</h1> <!-- replace w classid-->
+        <h1>{{ course_id }}</h1> 
       </div>
     </div>
   </div>
@@ -63,7 +63,7 @@
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col offset-sm-1">
-        <h2>Assignment Name</h2> <!-- replace w assignment name-->
+        <h2>{{ prompt_title }}</h2> 
       </div>
     </div>
   </div>
@@ -109,6 +109,7 @@
             currentContent += "\nGPT: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
+            $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
           },
           error: function (xhr, status, error) {
             alert('Error processing the request: ' + error);
