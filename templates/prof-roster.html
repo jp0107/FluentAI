@@ -340,8 +340,9 @@
       } else {
         tableHtml = '<tr><td colspan="3" style="text-align:center;">No professors in this course.</td></tr>';
       }
-      $('#professor-tbody').html(tableHtml);
+      $('#professor-tbody').html(tableHtml); // Ensure the ID matches your HTML
     }
+
 
     function prepareDeleteProfModal(element) {
       const profId = element.getAttribute('data-prof_id');
