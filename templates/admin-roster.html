@@ -190,35 +190,97 @@
         <!-- End Modals -->
 
         <script type="text/javascript">
+            $(document).ready(function() {
+              fetchAdmins();
+          
+              $('#add-admin-button').click(function() {
+                var adminName = $('#admin-name').val().trim();
+                var adminNetID = $('#admin-netid').val().trim();
+          
+                $.ajax({
+                  type: 'POST',
+                  url: '/admin-add-admin',
+                  data: {
+                    'admin_name': adminName,
+                    'admin_netid': adminNetID
+                  },
+                  success: function(response) {
+                    $('#addAdminModal').modal('hide');
+                    alert(response.message);
+                    fetchAdmins(); // Refresh the admin list
+                  },
+                  error: function(xhr) {
+                    alert('Failed to add admin: ' + xhr.responseText);
+                  }
+                });
+              });
+            });
+          
+            function fetchAdmins() {
+              $.ajax({
+                type: 'GET',
+                url: '/admin-admins',
+                success: function(response) {
+                  updateAdminsTable(response);
+                },
+                error: function(xhr) {
+                  console.error('Error fetching admins:', xhr.responseText);
+                }
+              });
+            }
+          
+            function updateAdminsTable(admins) {
+              let tableHtml = '';
+              if (admins && admins.length > 0) {
+                admins.forEach(function(admin) {
+                  tableHtml += `<tr>
+                    <td>${admin.name}</td>
+                    <td>${admin.net_id}</td>
+                    <td>
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#deleteAdminModal"
+                        data-adminname="${admin.name}" data-adminid="${admin.net_id}"
+                        onclick="prepareDeleteAdminModal(this);">
+                        <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#5E5E5E"
+                          class="bi bi-trash3" aria-label="Delete" viewBox="0 0 16 16">
+                          <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"></path>
+                        </svg>
+                      </a>
+                    </td>
+                  </tr>`;
+                });
+              } else {
+                tableHtml = '<tr><td colspan="3" style="text-align:center;">No administrators to display.</td></tr>';
+              }
+              $('#admin-tbody').html(tableHtml);
+            }
+          
             function prepareDeleteAdminModal(element) {
-                const adminName = element.getAttribute('data-adminname');
-                const adminId = element.getAttribute('data-adminid');
-                const modalBody = document.querySelector('#deleteAdminModal .modal-body p:first-child');
-                const deleteButton = document.getElementById('delete-btn');
-
-                modalBody.textContent = `Are you sure you want to delete ${adminName}?`;
-
-                // Attach the course id to the delete button in the modal for later use in deletion
-                deleteButton.setAttribute('data-adminid', adminId);
-                deleteButton.onclick = function () { deleteAdmin(this.getAttribute('data-adminid')); };
+              const adminName = element.getAttribute('data-adminname');
+              const adminId = element.getAttribute('data-adminid');
+              const modalBody = document.querySelector('#deleteAdminModal .modal-body p');
+              const deleteButton = document.querySelector('#deleteAdminModal .btn-primary');
+          
+              modalBody.textContent = `Are you sure you want to delete ${adminName}?`;
+              deleteButton.onclick = function() {
+                deleteAdmin(adminId);
+              };
             }
-
-            function deleteAdmin(admin_id) {
-                fetch(`/delete-admin/${admin_id}`, { method: 'POST' })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Admin deleted successfully.');
-                            window.location.reload();
-                        } else {
-                            alert('Error deleting admin.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Failed to delete admin.');
-                    });
+          
+            function deleteAdmin(adminId) {
+              $.ajax({
+                type: 'POST',
+                url: `/delete-admin/${adminId}`,
+                success: function(response) {
+                  alert('Admin deleted successfully.');
+                  fetchAdmins(); // Refresh the admin list
+                },
+                error: function(xhr) {
+                  alert('Error deleting admin: ' + xhr.responseText);
+                }
+              });
             }
-        </script>
+          </script>
+          
 
 </body>
 

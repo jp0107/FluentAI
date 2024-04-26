@@ -22,7 +22,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
-                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses)
+                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins)
 
 #-----------------------------------------------------------------------
 
@@ -521,11 +521,9 @@ def admin_student_roster():
 def admin_roster():
     username = auth.authenticate()
 
-    admin_list = get_superadmins_roster()
 
     return flask.render_template('admin-roster.html',
-                                 username = username,
-                                 admin_list = admin_list)
+                                 username = username)
 
 #------------------------   OTHER PAGES   ------------------------------
 #-----------------------------------------------------------------------
@@ -1098,3 +1096,56 @@ def admin_add_student_to_course():
         session.commit()
 
         return flask.jsonify({"message": "Student added successfully to the course."}), 200
+
+
+@app.route('/admin-admins', methods=['GET'])
+def fetch_admins():
+    # Call the function to get the superadmins roster
+    try:
+        admin_list = get_superadmins_roster()
+        return flask.jsonify(admin_list)
+    except Exception as e:
+        return flask.jsonify({'error': str(e)}), 500
+    
+
+
+@app.route('/admin-add-admin', methods=['POST'])
+def add_admin():
+    admin_id = flask.request.form.get('admin_netid')
+    admin_name = flask.request.form.get('admin_name')
+
+    if admin_id is None or admin_name is None:
+        return flask.jsonify({'error': 'Missing data for required fields'}), 400
+    
+    first_name, last_name = (admin_name.split(maxsplit=1) + [None])[:2]
+
+    if in_superadmins(admin_id):
+        return flask.jsonify({'error': 'This user is already an admin'}), 409
+
+    # Add new admin to the database
+    new_admin = SuperAdmin(
+        admin_id=admin_id,
+        first_name=first_name,
+        last_name=last_name,
+    )
+
+    with Session(engine) as session:
+        session.add(new_admin)
+        session.commit()
+
+    return flask.jsonify({'message': 'Admin added successfully'}), 201
+
+@app.route('/delete-admin/<adminId>', methods=['POST'])
+def delete_admin(adminid):
+    if not adminid:
+        return flask.jsonify({'error': 'Admin ID is required'}), 400
+
+    with Session(engine) as session:
+        admin = session.query(SuperAdmin).filter_by(admin_id=adminid).first()
+        if not admin:
+            return flask.jsonify({'error': 'Admin not found'}), 404
+
+        session.delete(admin)
+        session.commit()
+
+    return flask.jsonify({'message': 'Admin deleted successfully'}), 200
