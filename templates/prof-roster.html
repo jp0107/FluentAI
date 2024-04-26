@@ -346,7 +346,7 @@
     function prepareDeleteProfModal(element) {
       const profId = element.getAttribute('data-prof_id');
       const profName = element.parentElement.parentElement.querySelector('td:first-child').textContent;
-      const courseID = '{{ course_id }}'; 
+      const courseID = '{{ course_id }}';
       const modalBody = document.querySelector('#deleteProfModal .modal-body p');
       const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
 
@@ -397,7 +397,7 @@
 
 
     function fetchStudents() {
-      const courseID = '{{ course_id }}';  
+      const courseID = '{{ course_id }}';
       $.ajax({
         type: 'GET',
         url: `/get-students-in-course/${courseID}`,
@@ -434,7 +434,7 @@
     function prepareDeleteStudentModal(element) {
       const studentId = element.getAttribute('data-student_id');
       const studentName = element.parentElement.parentElement.querySelector('td:first-child').textContent;
-      const courseID = '{{ course_id }}'; 
+      const courseID = '{{ course_id }}';
       const modalBody = document.querySelector('#deleteStudentModal .modal-body p:first-child');
       const deleteButton = document.querySelector('#deleteStudentModal .btn-primary');
 
