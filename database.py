@@ -400,12 +400,13 @@ def get_practice_prompts(course_id) -> List[Prompt]:
 class Conversation(Base):
     __tablename__ = 'conversations'
     conv_id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-    course_id = sqlalchemy.Column(sqlalchemy.Integer)
-    student_id = sqlalchemy.Column(sqlalchemy.Integer)
+    course_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    student_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
     prompt_id = sqlalchemy.Column(sqlalchemy.Integer)
     conv_text = sqlalchemy.Column(sqlalchemy.Text)
     score = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
+    prof_scores = sqlalchemy.Column(sqlalchemy.Integer)
 
 # get default student scores for a course
 def get_default_student_scores():

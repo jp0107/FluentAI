@@ -934,7 +934,7 @@ def add_student_to_course():
 
     return flask.jsonify({"message": "Student added successfully to the course."})
 #-----------------------------------------------------------------------
-@app.route('/admin-courses')
+@app.route('/admin-profs')
 def get_professors_and_courses():
     try:
         data = fetch_professors_and_courses()
