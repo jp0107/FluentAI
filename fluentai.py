@@ -494,11 +494,9 @@ def admin_dashboard():
 def admin_prof_roster():
     username = auth.authenticate()
 
-    prof_list = get_prof_info()
-
+   
     return flask.render_template('admin-prof-roster.html',
-                                 username = username,
-                                 prof_list = prof_list)
+                                 username = username)
 
 #-----------------------------------------------------------------------
 
