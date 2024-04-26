@@ -476,7 +476,7 @@ def get_conversation(course_id, conv_id):
                  ))
                  .filter(Prompt.course_id == course_id))
 
-        results = query.one_or_none()
+        results = query.all()
         return results
 
 #-----------------------------------------------------------------------
