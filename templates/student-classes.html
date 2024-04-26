@@ -23,8 +23,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="joinCourseModalLabel" data-intro="You can join a course here!" data-step="2">Join a Course</h5>
-                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="joinCourseModalLabel">Join a Course</h5>
+                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close" data-intro="You can join a course here!" data-step="2">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -64,7 +64,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary" id="start-tour-button" >Start Tour</button>
+                    <button type="button" class="btn btn-primary" id="startTutorial" >Start Tour</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -108,9 +108,7 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $("#start-tour-button").click(function () {
-                    introJs().start();
-                });
+
                 // Function to fetch updated student course list
                 function fetchStudentCourses() {
                     $.ajax({
@@ -140,6 +138,11 @@
                     });
                     $(".row-cols-md-3").html(courseListHtml);
                 }
+
+                // starting the tutorial
+                $("#startTutorial").click(function () {
+                    introJs().start();
+                });
 
                 // Join course button click event from the modal
                 $("#join-course-button").click(function () {
