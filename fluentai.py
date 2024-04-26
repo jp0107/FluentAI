@@ -20,7 +20,8 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
-                      get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses)
+                      get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
+                      check_student_in_course)
 
 #-----------------------------------------------------------------------
 
@@ -349,7 +350,7 @@ def student_practice(course_id):
 
     try:
         practice_assignments = get_practice_prompts(course_id)
-    except:
+    except Exception:
         practice_assignments = get_default_practice()
 
     return flask.render_template('student-practice.html',
@@ -724,7 +725,8 @@ def all_courses():
     for course in courses:
         course_info = {
             "course_id": course.course_id,
-            "course_name": course.course_name
+            "course_name": course.course_name,
+            "course_code": course.course_code
         }
         course_data.append(course_info)
     return flask.jsonify(course_data)
@@ -939,3 +941,12 @@ def get_professors_and_courses():
         return flask.jsonify(data)
     except Exception as e:
         return flask.sonify({'error': str(e)}), 500
+#-----------------------------------------------------------------------
+
+@app.route('/check-enrollment/<course_id>')
+def check_enrollment(course_id):
+    student_id = flask.request.args.get('student_id')
+
+    enrolled = check_student_in_course(course_id, student_id)
+
+    return flask.jsonify({'enrolled': enrolled})
