@@ -700,3 +700,42 @@ def get_students_for_course(course_id):
 
 #-----------------------------------------------------------------------
 
+def fetch_professors_and_courses():
+    with sqlalchemy.orm.Session(engine) as session:
+        try:
+            # Fetching professors linked to courses
+            profs_query = session.query(
+                Professor.prof_id,
+                Professor.first_name,
+                Professor.last_name,
+                CoursesProfs.course_id
+            ).join(
+                CoursesProfs, Professor.prof_id == CoursesProfs.prof_id
+            ).order_by(Professor.first_name, Professor.last_name)
+
+            # Fetching superadmins linked to courses
+            admins_query = session.query(
+                SuperAdmin.admin_id,
+                SuperAdmin.first_name,
+                SuperAdmin.last_name,
+                CoursesProfs.course_id
+            ).join(
+                CoursesProfs, SuperAdmin.admin_id == CoursesProfs.prof_id
+            ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
+
+            professors = [
+                {"net_id": prof.prof_id, "name": f"{prof.first_name} {prof.last_name}", "courses": [prof.course_id]}
+                for prof in profs_query.all()
+            ]
+
+            superadmins = [
+                {"net_id": admin.admin_id, "name": f"{admin.first_name} {admin.last_name}", "courses": [admin.course_id]}
+                for admin in admins_query.all()
+            ]
+
+            # Combine and return results
+            return professors + superadmins
+
+        except Exception as e:
+            session.rollback()
+            raise Exception(f"Failed to fetch data due to: {str(e)}")
