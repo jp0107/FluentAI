@@ -246,7 +246,7 @@ def login():
             uid=username
         )
 
-        # get user first/last name, email, and pustatus from netid
+        # get user first/last name, and pustatus from netid
         user_info = req[0]
 
         full_name = user_info.get("displayname")
@@ -255,7 +255,6 @@ def login():
         last_name = temp[-1]
 
         pustatus = user_info.get("pustatus")
-        email = user_info.get("mail")
 
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus)

@@ -74,7 +74,6 @@ class Professor(Base):
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # prof net id
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_profs():
@@ -197,7 +196,6 @@ class Student(Base):
     student_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # student net id
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 # get student info and the courses they belong to in alphabetical order by student first name
