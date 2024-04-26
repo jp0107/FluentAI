@@ -24,17 +24,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="underlined">Admin View</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/student-classes">Student View</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/prof-classes">Professor View</a>
-                    </li>
-                </ul>
                 <ul class="navbar-nav d-flex flex-row ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
@@ -42,6 +31,9 @@
                             {{username}}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#" id="underlined">Admin View</a></li>
+                            <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
+                            <li><a class="dropdown-item" href="/student-classes">Student View</a></li>
                             <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
                         </ul>
                     </li>
@@ -74,6 +66,11 @@
             <div class="row justify-content-center">
                 <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
                 <div class="col-auto">
+                    <a href="/admin-roster" id="dashboard-btn" class="text-decoration-none">
+                        <div id="dashboard-box" style="width: 250px;">Admin Roster</div>
+                    </a>
+                </div>
+                <div class="col-auto">
                     <a href="/admin-prof-roster" id="dashboard-btn" class="text-decoration-none">
                         <div id="dashboard-box" style="width: 250px;">Professor Roster</div>
                     </a>
@@ -83,16 +80,18 @@
                         <div id="dashboard-box" style="width: 250px;">Student Roster</div>
                     </a>
                 </div>
-                <div class="col-auto">
-                    <a href="/admin-roster" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" style="width: 250px;">Admin Roster</div>
-                    </a>
-                </div>
             </div>
         </div>
 
         <div class="small-screen-layout">
             <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
+                <div class="col d-flex">
+                    <a href="/admin-roster"
+                        class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
+                        id="class-button">
+                        Admin Roster
+                    </a>
+                </div>
                 <div class="col d-flex">
                     <a href="/admin-prof-roster"
                         class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
@@ -105,13 +104,6 @@
                         class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
                         id="class-button">
                         Student Roster
-                    </a>
-                </div>
-                <div class="col d-flex">
-                    <a href="/admin-roster"
-                        class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
-                        id="class-button">
-                        Admin Roster
                     </a>
                 </div>
             </div>
