@@ -30,9 +30,9 @@
                     <form>
                         <div class="form-group">
                             <label for="join-course-code" class="col-form-label">Course Code:</label>
-                            <textarea class="form-control" id="course-code" rows="1" data-max-length="6"
+                            <textarea class="form-control" id="join-course-code" rows="1" data-max-length="6"
                                 placeholder="Type course code"></textarea>
-                            <small>Characters left: <span id="char-count-course-code"></span></small>
+                            <small>Characters left: <span id="char-count-join-course-code"></span></small>
                         </div>
                     </form>
                 </div>
@@ -94,7 +94,7 @@
         $(document).ready(function () {
             // Fetch the username displayed in the dropdown
             var studentId = $('#navbarDropdownMenuLink').text().trim();
-            var $charCount = $('char-count-course-code');
+            var $charCount = $('char-count-join-course-code');
             var maxLength = parseInt($('#join-course-code').attr('data-max-length'), 10);
             
             // initialize character count
