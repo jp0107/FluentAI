@@ -544,8 +544,8 @@ def admin_roster():
 #------------------------   OTHER PAGES   ------------------------------
 #-----------------------------------------------------------------------
 
-@app.route('/conversation-history/<course_id>/<int:conv_id>')
-def conversation_history(course_id, conv_id):
+@app.route('/student-conversation-history/<course_id>/<int:conv_id>')
+def student_conversation_history(course_id, conv_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
 
@@ -553,7 +553,7 @@ def conversation_history(course_id, conv_id):
 
     conversation = get_conversation(course_id, username, conv_id)
 
-    return flask.render_template('conversation-history.html',
+    return flask.render_template('student-conversation-history.html',
                                  username = username,
                                  course_id = course_id,
                                  conversation = conversation,
@@ -597,6 +597,26 @@ def student_assignment_chat(course_id, prompt_id):
                                 username=username,
                                 language = language,
                                 user_type = user_type)
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-conversation-history/<course_id>/<int:conv_id>')
+def conversation_history(course_id, conv_id):
+    username = auth.authenticate()
+    user_type = check_user_type(username)
+
+    flask.session['course_id'] = course_id
+
+    try:
+        conversation = get_conversation(course_id, username, conv_id)
+    except:
+        conversation = get_default_conversation()
+
+    return flask.render_template('prof-conversation-history.html',
+                                 username = username,
+                                 course_id = course_id,
+                                 conversation = conversation,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
