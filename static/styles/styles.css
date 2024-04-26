@@ -270,6 +270,14 @@ h2 {
   color: #1E1E1E;
 }
 
+.banner {
+  background-color: #1E1E1E; 
+  color: #EAF2FF;           
+  text-align: center;       
+  padding: 10px 0;          
+  font-size: 15px;
+}
+
 /* Responsive styling*/
 @media (max-width: 768px) {
   .small-screen-layout {

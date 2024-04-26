@@ -280,9 +280,11 @@ def login():
 @app.route('/student-classes')
 def student_classes():
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
-    html_code = flask.render_template(
-        'student-classes.html', username = username)
+    html_code = flask.render_template('student-classes.html', 
+                                      username = username, 
+                                      user_type = user_type)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
@@ -290,9 +292,11 @@ def student_classes():
 @app.route('/student-all-classes')
 def student_all_classes():
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
-    html_code = flask.render_template(
-        'student-all-classes.html', username = username)
+    html_code = flask.render_template('student-all-classes.html',
+                                      username = username,
+                                      user_type = user_type)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
@@ -309,6 +313,7 @@ def student_classes_2():
 @app.route('/student-dashboard/<course_id>')
 def student_dashboard(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -324,14 +329,15 @@ def student_dashboard(course_id):
     return flask.render_template('student-dashboard.html', 
                                  username = username,
                                  first_name = first_name,
-                                 course_id = course_id
-                                )
+                                 course_id = course_id,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/student-assignments/<course_id>')
 def student_assignments(course_id):
     username = auth.authenticate()  # Assuming this retrieves the student ID
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
     try:
@@ -342,8 +348,8 @@ def student_assignments(course_id):
                                  username=username,
                                  course_id=course_id,
                                  curr_assignments=curr_assignments,
-                                 past_assignments=past_assignments
-                                 )
+                                 past_assignments=past_assignments,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -368,6 +374,7 @@ def student_practice(course_id):
 @app.route('/student-scores/<course_id>')
 def student_scores(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -376,7 +383,8 @@ def student_scores(course_id):
     return flask.render_template('student-scores.html',
                                  username = username,
                                  course_id = course_id,
-                                 scores = scores)
+                                 scores = scores,
+                                 user_type = user_type)
 
 #------------------------  PROFESSOR PAGES   ---------------------------
 #-----------------------------------------------------------------------
@@ -384,8 +392,10 @@ def student_scores(course_id):
 @app.route('/prof-classes')
 def prof_classes():
     username = auth.authenticate()
+    user_type = check_user_type(username)
     return flask.render_template('prof-classes.html',
-                                 username = username)
+                                 username = username,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -413,19 +423,22 @@ def prof_dashboard(course_id):
                                  username = username,
                                  first_name = first_name,
                                  course_id = course_id,
-                                 course_code = course_code)
+                                 course_code = course_code,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/prof-assignments/<course_id>')
 def prof_assignments(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
     return flask.render_template('prof-assignments.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 user_type = user_type)
     
 #-----------------------------------------------------------------------
 @app.route('/delete-assignment/<int:prompt_id>', methods=['POST'])
@@ -445,18 +458,21 @@ def delete_assignment_click(prompt_id):
 @app.route('/prof-roster/<course_id>')
 def prof_roster(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
     return flask.render_template('prof-roster.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/prof-scores/<course_id>')
 def prof_scores(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -468,8 +484,8 @@ def prof_scores(course_id):
     return flask.render_template('prof-scores.html',
                                  username = username,
                                  course_id = course_id,
-                                 scores = scores
-                                 )
+                                 scores = scores,
+                                 user_type = user_type)
                                 
 #----------------------      ADMIN PAGES    ----------------------------
 #-----------------------------------------------------------------------
@@ -531,6 +547,7 @@ def admin_roster():
 @app.route('/conversation-history/<course_id>/<int:conv_id>')
 def conversation_history(course_id, conv_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -539,13 +556,15 @@ def conversation_history(course_id, conv_id):
     return flask.render_template('conversation-history.html',
                                  username = username,
                                  course_id = course_id,
-                                 conversation = conversation)
+                                 conversation = conversation,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/student-assignment-chat/<course_id>/<int:prompt_id>')
 def student_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
     flask.session['student_id'] = username
@@ -576,13 +595,15 @@ def student_assignment_chat(course_id, prompt_id):
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username,
-                                language = language)
+                                language = language,
+                                user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/prof-assignment-chat/<course_id>/<int:prompt_id>')
 def prof_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -608,7 +629,8 @@ def prof_assignment_chat(course_id, prompt_id):
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username,
-                                language = language)
+                                language = language,
+                                user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -688,6 +710,7 @@ def calculate_score(conversation_text):
 @app.route('/student-practice-chat/<course_id>')
 def student_practice_chat(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
     flask.session['course_id'] = course_id
 
     # get the course language
@@ -705,7 +728,8 @@ def student_practice_chat(course_id):
                                  initial_data = initial_response,
                                  prompt = practice_prompt,
                                  username = username,
-                                 language = language)
+                                 language = language,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 # @app.route('/fetch-conversation')
