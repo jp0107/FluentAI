@@ -1174,7 +1174,7 @@ def add_admin():
 
     return flask.jsonify({'message': 'Admin added successfully'}), 201
 #-----------------------------------------------------------------------
-@app.route('/delete-admin/<adminId>', methods=['POST'])
+@app.route('/delete-admin/<adminid>', methods=['POST'])
 def delete_admin(adminid):
     if not adminid:
         return flask.jsonify({'error': 'Admin ID is required'}), 400

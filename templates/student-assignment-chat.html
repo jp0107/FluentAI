@@ -17,6 +17,11 @@
 </head>
 
 <body class="dark">
+  {% if user_type == 'SuperAdmin' %}
+  <div class="banner" style="background-color: #EAF2FF; color: #1E1E1E;">
+    You are currently in Student View.
+  </div>
+  {% endif %}
 
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
@@ -45,6 +50,11 @@
               {{username}}
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+              {% if user_type == 'SuperAdmin' %}
+              <li><a class="dropdown-item" href="/admin-dashboard">Admin View</a></li>
+              <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
+              <li><a class="dropdown-item" href="#" id="underlined">Student View</a></li>
+              {% endif %}
               <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
             </ul>
           </li>
@@ -56,7 +66,7 @@
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col offset-sm-1">
-        <h1>{{ course_id }}</h1> 
+        <h1>{{ course_id }}</h1>
       </div>
     </div>
   </div>
@@ -64,7 +74,7 @@
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col offset-sm-1">
-        <h2>{{ prompt_title }}</h2> 
+        <h2>{{ prompt_title }}</h2>
       </div>
     </div>
   </div>
@@ -92,7 +102,7 @@
       } else {
         $('input[name="userInput"]').attr('placeholder', 'Type conversation here...');
       }
-      
+
       $('#chatForm').submit(function (event) {
         event.preventDefault();
         var userInput = $('input[name="userInput"]').val();
@@ -110,7 +120,7 @@
             $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
 
             if (response.gpt_response.includes("This conversation has reached its turn limit.")) {
-                $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
+              $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
             }
           },
           error: function (xhr, status, error) {
