@@ -136,10 +136,15 @@
                     var courseOwner = $('#navbarDropdownMenuLink').text().trim();
                     var courseId = $("#course-id").val();
                     var courseName = $("#course-name").val();
-                    var language = $("#department-select").find(":selected").text();
+                    var language = $("#department-select").find(":selected").val();
 
                     if (!courseId || !courseName) {
                         alert("Course ID and name are required.");
+                        return;
+                    }
+
+                    if (!language) {
+                        alert("Please select a language before adding the course.");
                         return;
                     }
 

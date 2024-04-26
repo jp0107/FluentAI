@@ -34,6 +34,14 @@ def get_superadmins() -> List[SuperAdmin]:
     with sqlalchemy.orm.Session(engine) as session:
         query = session.query(SuperAdmin) # SELECT * FROM SuperAdmin
         return query.all()
+    
+def get_superadmins_roster():
+    with sqlalchemy.orm.Session(engine) as session:
+        # Query to select admin_id, first_name, and last_name from SuperAdmin table
+        query = session.query(SuperAdmin.admin_id, SuperAdmin.first_name, SuperAdmin.last_name)
+        # Execute the query and return a list of results
+        result = query.all()
+        return result
 
 # gets admin first name given their netid
 def get_admin_firstname(admin_id):
