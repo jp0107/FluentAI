@@ -14,6 +14,22 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <style>
+    /* Tooltip specific styles */
+    .tooltip .tooltip-inner {
+      min-width: 600px !important;
+    }
+
+    @media (max-width: 768px) {
+      .tooltip .tooltip-inner {
+        min-width: 300px !important;
+      }
+
+      .small-button {
+        padding: 8px 5px;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -69,7 +85,65 @@
     </div>
   </div>
 
-  <div class="container-fluid">
+  <div class="container-fluid small-screen-layout">
+    <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
+      <div class="col d-flex">
+        <button class="class-button w-100 d-flex align-items-center justify-content-center" type="button"
+          data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+          See Specific Assignment Scores
+        </button>
+        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+          <div class="offcanvas-header">
+            <h5 id="offcanvasTopLabel">Assignment Scores</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+              <li class="nav-item">
+                <a href="#" class="nav-link align-middle px-0" data-assignment="general">
+                  Scores Overview
+                </a>
+              </li>
+              {% for prompt_id, title, deadline in assignments %}
+              <li class="nav-item">
+                <a href="#" class="nav-link align-middle px-0" data-assignment="{{ prompt_id }}">
+                  {{ title }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <table class="col offset-sm-1 table scores-section score-table" style="display: none;">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+              class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;" data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Disclaimer: Please be aware that the scores provided for the student answers have been graded by ChatGPT, an artificial intelligence language model. While ChatGPT is designed to assess answers based on language usage and correctness, it does not replicate the comprehensive understanding or judgment of a human instructor. The scores should be considered as indicative and used in conjunction with teacher assessments to ensure accuracy and fairness in grading.">
+              <path
+                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+            </svg>
+            AI Score
+          </th>
+          <th>Conversation History</th>
+        </tr>
+      </thead>
+      <tbody class="score-body">
+        <!-- Data rows will go here -->
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="container-fluid large-screen-layout">
     <div class="row flex-nowrap">
       <div class="col-auto col-md-3 col-xl-2 px-sm-2 offset-sm-1" style="background-color: #EAF2FF; color: #1E1E1E;">
         <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 min-vh-100">
@@ -93,14 +167,14 @@
       </div>
       <div class="col py-3">
         <div class="container-fluid">
-          <table class="col offset-sm-1 table score-table" style="display: none;">
+          <table class="col offset-sm-1 table score-table scores-section" style="display: none;">
             <thead>
               <tr>
-                <th>Student</th>
+                <th>Student Name</th>
                 <th>
                   AI Score
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
-                    class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative; left: 2px;"
+                    class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;"
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     title="Disclaimer: Please be aware that the scores provided for the student answers have been graded by ChatGPT, an artificial intelligence language model. While ChatGPT is designed to assess answers based on language usage and correctness, it does not replicate the comprehensive understanding or judgment of a human instructor. The scores should be considered as indicative and used in conjunction with teacher assessments to ensure accuracy and fairness in grading.">
                     <path
@@ -121,47 +195,55 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const scoreTable = document.querySelector('.score-table'); // Select the table
-    const menuItems = document.querySelectorAll('#menu a');
-    
-    function updateScoresDisplay(promptId) {
-      fetch(`/get-scores/${promptId}`)
-        .then(response => response.json())
-        .then(data => {
-          updateTable(data);
-          scoreTable.style.display = promptId === 'general' ? 'none' : '';
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    }
+      const menuItems = document.querySelectorAll('#menu a');
+      const scoresSection = document.querySelectorAll('.scores-section'); // Selects all matching elements
 
-    function updateTable(data) {
-      const tbody = document.getElementById('score-body');
-      tbody.innerHTML = ''; // Clear existing data
-      data.forEach(d => {
-        const row = `<tr>
-              <td>${d.name}</td>
-              <td>${d.score}</td>
-              <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
-          </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
+      // Hide all scores sections initially
+      scoresSection.forEach(section => section.style.display = 'none');
 
-    // Initially hide the score table when page loads
-    updateScoresDisplay('general');
+      function updateScoresDisplay(assignment, data) {
+        // Check if 'general' or a specific assignment is selected
+        if (assignment === 'general') {
+          scoresSection.forEach(section => section.style.display = 'none');
+        } else {
+          scoresSection.forEach((section, index) => {
+            section.style.display = '';
+            const tbody = section.querySelector('.score-body');
+            tbody.innerHTML = ''; // Clear existing data
+            data.forEach(d => {
+              const row = `<tr>
+                            <td>${d.name}</td>
+                            <td>${d.score}</td>
+                            <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
+                          </tr>`;
+              tbody.innerHTML += row;
+            });
+          });
+        }
+      }
 
-    // Add click event to each menu item
-    menuItems.forEach(item => {
-      item.addEventListener('click', function (e) {
-        e.preventDefault();
-        const promptId = this.getAttribute('data-assignment');
-        updateScoresDisplay(promptId);
+      // Initially set 'Scores Overview' as selected and hide all tables
+      const generalOverview = document.querySelector('[data-assignment="general"]');
+      if (generalOverview) {
+        generalOverview.classList.add('active'); // Optional: visually indicate it is selected
+        updateScoresDisplay('general', []);
+      }
+
+      // Attach click event handlers to each menu item
+      menuItems.forEach(item => {
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          menuItems.forEach(it => it.classList.remove('active')); // Remove active class from all items
+          this.classList.add('active'); // Add active class to the clicked item
+          const assignment = this.getAttribute('data-assignment');
+          updateScoresDisplay(assignment, []); // Assuming data needs to be fetched or passed accordingly
+        });
       });
     });
-  });
   </script>
 
-  
+
+
 </body>
 
 </html>
