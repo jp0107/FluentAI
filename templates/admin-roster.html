@@ -243,7 +243,7 @@
             function deleteAdmin(adminId) {
                 $.ajax({
                     type: 'POST',
-                    url: `/delete-admin/${adminId}`,
+                    url: `/delete-admin/${adminid}`,
                     success: function (response) {
                         alert('Admin deleted successfully.');
                         fetchAdmins(); // Refresh the admin list
