@@ -113,7 +113,7 @@
                         <div class="job-right my-4 flex-shrink-0 d-flex">
                             <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
                                 class="assignments-button me-2"
-                                onclick="confirmStartAssignment('/student-assignment-chat/{{ course_id }}/{{ prompt_id }}')"
+                                onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this)"
                                 >Start Assignment</a>
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                                 <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
                                     class="class-button w-100 d-flex align-items-center justify-content-center"
                                     role="button" id="class-button"
-                                    onclick="confirmStartAssignment('/student-assignment-chat/{{ course_id }}/{{ prompt_id }}')"
+                                    onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this)"
                                     >
                                     Start Assignment
                                 </a>
@@ -188,13 +188,15 @@
     </div>
 
     <script>
-        function confirmStartAssignment(url) {
+        function confirmStartAssignment(event, url, element) {
             event.preventDefault();
             // Show confirmation dialog
             if (confirm("Please ensure you complete this assignment in one sitting without navigating to other pages. If you leave the assignment page, you will get a score of 0 for this assignment. Press OK to start or Cancel to return.")) {
                 // If the user confirms, redirect to the assignment URL
                 window.location.href = url;
             }
+            // blur element
+            element.blur()
         }
     </script>
 </body>
