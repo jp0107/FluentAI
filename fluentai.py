@@ -20,7 +20,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
-                      get_prompt_title, get_students_for_course, get_language)
+                      get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses)
 
 #-----------------------------------------------------------------------
 
@@ -933,3 +933,11 @@ def add_student_to_course():
         session.commit()
 
     return flask.jsonify({"message": "Student added successfully to the course."})
+#-----------------------------------------------------------------------
+@app.route('/admin-courses')
+def get_professors_and_courses():
+    try:
+        data = fetch_professors_and_courses()
+        return flask.jsonify(data)
+    except Exception as e:
+        return flask.sonify({'error': str(e)}), 500
