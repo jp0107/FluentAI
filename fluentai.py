@@ -350,7 +350,7 @@ def student_practice(course_id):
 
     try:
         practice_assignments = get_practice_prompts(course_id)
-    except:
+    except Exception:
         practice_assignments = get_default_practice()
 
     return flask.render_template('student-practice.html',
