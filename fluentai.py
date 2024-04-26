@@ -7,8 +7,9 @@ import os
 import sys
 import random
 import datetime
+import re
 import string
-from openai import OpenAI, APIError
+from openai import OpenAI
 import flask
 import sqlalchemy
 import auth
@@ -64,13 +65,16 @@ def get_gpt_response(prompt_text, user_input=""):
 #-----------------------------------------------------------------------
 
 # function for storing conversation
-def store_conversation(student_id, course_id, prompt_id, conv_text):
+def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, score):
     with Session() as session:
         new_conversation = Conversation(
+            conv_id = conv_id,
+            course_id = course_id,
             student_id=student_id,
-            course_id=course_id,
             prompt_id=prompt_id,
             conv_text=conv_text,
+            score = score,
+            prof_scores = None
         )
         session.add(new_conversation)
         session.commit()
@@ -549,6 +553,8 @@ def student_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
 
     flask.session['course_id'] = course_id
+    flask.session['student_id'] = username
+    flask.session['prompt_id'] = prompt_id
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
@@ -620,20 +626,67 @@ def process_input():
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
     max_turns = flask.session.get('max_turns', 0)
+    conversation_text = flask.session.get('conversation_text', '') + f"\nUser: {user_input}"
 
     if turns_count >= max_turns:
-        return flask.jsonify({'gpt_response': "This conversation has reached its turn limit."})
-    
-    flask.session['turns_count'] = turns_count  # Update the turn count in the session
+        course_id = flask.session.get('course_id')
+        student_id = flask.session.get('student_id')
+        prompt_id = flask.session.get('prompt_id')
+        score = calculate_score(conversation_text)
+        conv_id = generate_unique_conv_id()
+        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score)
+
+        # Clean up session
+        flask.session.pop('turns_count', None)
+        flask.session.pop('conversation_text', None)
+
+        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}."})
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
         flask.session['prompt_used'] = True  # Mark the prompt as used
     else:
         prompt_text = ""
+    
+    flask.session['turns_count'] = turns_count  # Update the turn count in the session
+    flask.session['conversation_text'] = conversation_text  # Append user input to conversation history
 
     response_text = get_gpt_response(prompt_text, user_input)
     return flask.jsonify({'gpt_response': response_text})
+
+#-----------------------------------------------------------------------
+
+def generate_unique_conv_id():
+    return random.randint(10000000, 99999999)
+
+def calculate_score(conversation_text):
+    evaluation_prompt = f"""
+        Please evaluate the following conversation based on grammar, vocabulary, complexity of sentence structure, and accuracy. Provide a score out of 100. Only output a number in your response and no other words.
+
+        Conversation:
+        {conversation_text}
+
+        Evaluation Criteria:
+        - Grammar: Correct usage of language grammar.
+        - Vocabulary: Appropriateness and range of vocabulary used.
+        - Sentence Structure: Complexity and variety of sentence structures.
+        - Accuracy: Correctness of the information provided and language use.
+    """
+    try:
+        client = OpenAI(api_key=GPT_API_KEY)
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            messages=[
+                {"role": "system", "content": evaluation_prompt}
+            ]
+        )
+        # Extract the first number from the response
+        content = response.choices[0].message.content.strip()
+        score = int(re.search(r'\d+', content).group())
+        return score
+    except Exception as e:
+        print(f"An error occurred while getting evaluation score: {str(e)}")
+        return None
 
 #-----------------------------------------------------------------------
 
