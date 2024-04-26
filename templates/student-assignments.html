@@ -112,7 +112,9 @@
                     <div class="large-screen-layout">
                         <div class="job-right my-4 flex-shrink-0 d-flex">
                             <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
-                                class="assignments-button me-2">Start Assignment</a>
+                                class="assignments-button me-2"
+                                onclick="confirmStartAssignment('/student-assignment-chat/{{ course_id }}/{{ prompt_id }}')"
+                                >Start Assignment</a>
                         </div>
                     </div>
 
@@ -121,7 +123,9 @@
                             <div class="col d-flex">
                                 <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
                                     class="class-button w-100 d-flex align-items-center justify-content-center"
-                                    role="button" id="class-button">
+                                    role="button" id="class-button"
+                                    onclick="confirmStartAssignment('/student-assignment-chat/{{ course_id }}/{{ prompt_id }}')"
+                                    >
                                     Start Assignment
                                 </a>
                             </div>
@@ -182,6 +186,16 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function confirmStartAssignment(url) {
+            // Show confirmation dialog
+            if (confirm("Please ensure you complete this assignment in one sitting without navigating to other pages. If you leave the assignment page, you will get a score of 0 for this assignment. Press OK to start or Cancel to return.")) {
+                // If the user confirms, redirect to the assignment URL
+                window.location.href = url;
+            }
+        }
+    </script>
 </body>
 
 </html>
