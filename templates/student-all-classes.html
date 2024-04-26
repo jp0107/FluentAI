@@ -32,7 +32,7 @@
                             <label for="message-text" class="col-form-label">Course Code:</label>
                             <textarea class="form-control" id="course-code" rows="1" data-max-length="6"
                                 placeholder="Type course code"></textarea>
-                            <small>Characters left: <span id="char-count-course-code">6</span></small>
+                            <small>Characters left: <span id="char-count-course-code"></span></small>
                         </div>
                     </form>
                 </div>
@@ -94,7 +94,34 @@
         $(document).ready(function () {
             // Fetch the username displayed in the dropdown
             var studentId = $('#navbarDropdownMenuLink').text().trim();
+            var $charCount = $('char-count-course-code');
+            var maxLength = parseInt($('#edit-course-code').attr('data-max-length'), 10);
             
+            // initialize character count
+            function initializeCharCount() {
+                $charCount.text(maxLength);
+            }
+
+            // update character count
+            function updateCharCount() {
+                var currLength = $('#edit-course-code').val().length;
+                $charCount.text(maxLength - currLength);
+            }
+
+            // reset text area and character count when edit-code modal is closed
+            $('#editCourseCodeModal').on('hidden.bs.modal', function () {
+                clearTextArea();
+                initializeCharCount();
+            });
+
+            // update character count when user types in new code
+            $('#edit-course-code').on('input', updateCharCount);
+
+            // clear text area within edit-code modal
+            function clearTextArea() {
+                $("#edit-course-code").val('');
+            }
+
             $('.row-cols-md-3').on('click', '.check-enrollment', function() {
                 var courseId = $(this).data('course-id');
                 var courseCode = $(this).data('course-code');
