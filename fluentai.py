@@ -534,10 +534,7 @@ def conversation_history(course_id, conv_id):
 
     flask.session['course_id'] = course_id
 
-    try:
-        conversation = get_conversation(course_id, username, conv_id)
-    except:
-        conversation = get_default_conversation()
+    conversation = get_conversation(course_id, username, conv_id)
 
     return flask.render_template('conversation-history.html',
                                  username = username,
