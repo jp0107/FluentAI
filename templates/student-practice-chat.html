@@ -77,9 +77,9 @@
     <h5 class="text-center" style="margin-bottom: 20px;">Chat</h5>
     <textarea id="gptResponse" class="form-control" rows="10" readonly
       style="width: 100%; display: flex; background-color: #EAF2FF; margin-bottom: 30px;">{{ initial_data }}</textarea>
-    
-      <form id="chatForm" class="d-flex" onsubmit="return false;">
-      <input type="text" name="userInput" class="form-control me-2" placeholder="Type in {{ language }} here..."
+
+    <form id="chatForm" class="d-flex" onsubmit="return false;">
+      <input type="text" name="userInput" class="form-control me-2" placeholder="Type conversation here..."
         style="flex-grow: 1; background-color: #EFF7FF; margin-bottom: 20px;">
       <button type="submit" class="btn chat-button" style="margin-bottom: 22px;">Submit</button>
     </form>
@@ -88,6 +88,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
     $(document).ready(function () {
+      var language = "{{ language }}"; // This will be the variable passed from your server-side code
+      if (language === 'Spanish') {
+        $('input[name="userInput"]').attr('placeholder', 'Escribe conversación aquí...');
+      } else {
+        $('input[name="userInput"]').attr('placeholder', 'Type conversation here...');
+      }
+
       $('#chatForm').submit(function (event) {
         event.preventDefault();
         var userInput = $('input[name="userInput"]').val();
