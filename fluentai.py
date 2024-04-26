@@ -1121,7 +1121,7 @@ def admin_add_student_to_course():
 
         return flask.jsonify({"message": "Student added successfully to the course."}), 200
 
-
+#-----------------------------------------------------------------------
 @app.route('/admin-admins', methods=['GET'])
 def fetch_admins():
     # Call the function to get the superadmins roster
@@ -1132,7 +1132,7 @@ def fetch_admins():
         return flask.jsonify({'error': str(e)}), 500
     
 
-
+#-----------------------------------------------------------------------
 @app.route('/admin-add-admin', methods=['POST'])
 def add_admin():
     admin_id = flask.request.form.get('admin_netid')
@@ -1140,25 +1140,26 @@ def add_admin():
 
     if admin_id is None or admin_name is None:
         return flask.jsonify({'error': 'Missing data for required fields'}), 400
-    
-    first_name, last_name = (admin_name.split(maxsplit=1) + [None])[:2]
 
-    if in_superadmins(admin_id):
-        return flask.jsonify({'error': 'This user is already an admin'}), 409
-
-    # Add new admin to the database
-    new_admin = SuperAdmin(
-        admin_id=admin_id,
-        first_name=first_name,
-        last_name=last_name,
-    )
-
+    # Directly check if the admin already exists
     with Session(engine) as session:
+        existing_admin = session.query(SuperAdmin.admin_id).filter_by(admin_id=admin_id).first()
+        if existing_admin is not None:
+            return flask.jsonify({'error': 'This user is already an admin'}), 409
+
+        # If the admin does not exist, proceed to add them
+        first_name, last_name = (admin_name.split(maxsplit=1) + [None])[:2]
+        new_admin = SuperAdmin(
+            admin_id=admin_id,
+            first_name=first_name,
+            last_name=last_name
+        )
+
         session.add(new_admin)
         session.commit()
 
     return flask.jsonify({'message': 'Admin added successfully'}), 201
-
+#-----------------------------------------------------------------------
 @app.route('/delete-admin/<adminId>', methods=['POST'])
 def delete_admin(adminid):
     if not adminid:
