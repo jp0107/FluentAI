@@ -941,3 +941,15 @@ def get_professors_and_courses():
         return flask.jsonify(data)
     except Exception as e:
         return flask.sonify({'error': str(e)}), 500
+#-----------------------------------------------------------------------
+
+@app.route('/check-enrollment/<course_id>')
+def check_enrollment(course_id):
+    student_id = flask.session.get('student_id')  # Assuming the student's ID is stored in the session
+
+    with sqlalchemy.orm.Session(engine) as session:
+        enrollment = session.query(CoursesStudents).filter_by(
+            course_id=course_id,
+            student_id=student_id
+        ).first()
+        return flask.jsonify({"enrolled": bool(enrollment)})

@@ -16,6 +16,33 @@
 </head>
 
 <body>
+    <div class="modal fade" id="joinCourseModal" tabindex="-1" role="dialog" aria-labelledby="joinCourseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="joinCourseModalLabel">Join This Course</h5>
+                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Course Code:</label>
+                            <textarea class="form-control" id="course-code" rows="1" data-max-length="6"
+                                placeholder="Type course code"></textarea>
+                            <small>Characters left: <span id="char-count-course-code">6</span></small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="join-course-button">Join course</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
         <div class="container-fluid">
@@ -57,23 +84,6 @@
         </div>
         <br>
         <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
-            <!-- Each .col div acts as a container for a button, ensuring equal height -->
-            <!-- <div class="col d-flex">
-                <a href="/student-dashboard" class="class-button" role="button">
-                    <h3>SPA 101</h3>Beginner's Spanish I
-                </a>
-              </div>
-              <div class="col d-flex">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">
-                    <h3>SPA 103</h3>Intensive Beginner's and Intermediate Spanish
-                </a>
-              </div>
-              <div class="col d-flex">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">
-                    <h3>SPA 107</h3>Intermediate/Advanced Spanish
-                </a>
-              </div> -->
-            <!-- Add more .col divs with class-button for each additional course -->
         </div>
     </div>
 
@@ -91,9 +101,9 @@
                         var courseListHtml = '';
                         $.each(courses, function (index, course) {
                             courseListHtml += '<div class="col d-flex">' +
-                                '<a href="/student-dashboard/' + encodeURIComponent(course.course_id) + '" class="class-button" role="button">' +
-                                '<h3>' + course.course_id + '</h3> ' + course.course_name +
-                                '</a></div>';
+                            '<a href="#" class="class-button" role="button" onclick="checkAndDisplayModal(\'' + encodeURIComponent(course.course_id) + '\')">' +
+                            '<h3>' + course.course_id + '</h3> ' + course.course_name +
+                            '</a></div>';
                         });
                         $(".row-cols-md-3").html(courseListHtml);
                     },
@@ -102,6 +112,48 @@
                     }
                 });
             }
+            
+            // Check if the student is in the clicked course, display modal if not
+            function checkAndDisplayModal(courseId) {
+                $.ajax({
+                    url: '/check-enrollment/' + courseId,
+                    method: 'GET',
+                    success: function(response) {
+                        if (!response.enrolled) {
+                            $('#joinCourseModal').modal('show');  // Show the join course modal
+                        } else {
+                            window.location.href = '/student-dashboard/' + encodeURIComponent(courseId);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Error checking enrollment: ' + xhr.statusText);
+                    }
+                });
+            }
+
+            // Join course button click event from the modal
+            $("#join-course-button").click(function () {
+                    var courseCode = $("#course-code").val();  // Assumes input for course code is available
+
+                    if (!courseCode) {
+                        alert("Course code is required.");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '/join-course',
+                        method: 'POST',
+                        data: { course_code: courseCode },
+                        success: function (response) {
+                            alert(response.message);
+                            $('#joinCourseModal').modal('hide'); // Hide the modal
+                            fetchAllCourses(); // Re-fetch courses to update the list
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error joining course: invalid course code');
+                        }
+                    });
+                });
 
             // Initial fetch of all courses when the page loads
             fetchAllCourses();
