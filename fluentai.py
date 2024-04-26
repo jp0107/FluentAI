@@ -674,7 +674,7 @@ def process_input():
         flask.session.pop('turns_count', None)
         flask.session.pop('conversation_text', None)
 
-        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}."})
+        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100."})
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
@@ -1174,7 +1174,7 @@ def add_admin():
 
     return flask.jsonify({'message': 'Admin added successfully'}), 201
 #-----------------------------------------------------------------------
-@app.route('/delete-admin/<adminId>', methods=['POST'])
+@app.route('/delete-admin/<adminid>', methods=['POST'])
 def delete_admin(adminid):
     if not adminid:
         return flask.jsonify({'error': 'Admin ID is required'}), 400
