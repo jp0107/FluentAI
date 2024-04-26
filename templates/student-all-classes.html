@@ -105,7 +105,13 @@
             // update character count
             function updateCharCount() {
                 var currLength = $('#join-course-code').val().length;
-                $charCount.text(maxLength - currLength);
+                if (currLength > maxLength) {
+                    // If input exceeds maxLength, trim it to the maxLength
+                    $('#join-course-code').val($('#join-course-code').val().substring(0, maxLength));
+                    currLength = maxLength; // Adjust current length to max length
+                }
+                var remaining = maxLength - currLength;
+                $charCount.text(remaining);
             }
 
             // reset text area and character count when edit-code modal is closed
@@ -121,6 +127,8 @@
             function clearTextArea() {
                 $("#join-course-code").val('');
             }
+
+            initializeCharCount();
 
             $('.row-cols-md-3').on('click', '.check-enrollment', function() {
                 var courseId = $(this).data('course-id');
