@@ -1131,7 +1131,7 @@ def fetch_admins():
 
 #-----------------------------------------------------------------------
 @app.route('/admin-add-admin', methods=['POST'])
-def add_admin():
+def admin_add_admin():
     admin_id = flask.request.form.get('admin_netid')
     admin_name = flask.request.form.get('admin_name')
 
