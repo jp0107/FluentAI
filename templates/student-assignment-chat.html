@@ -108,6 +108,10 @@
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
             $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
+
+            if (response.gpt_response.includes("This conversation has reached its turn limit.")) {
+                $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
+            }
           },
           error: function (xhr, status, error) {
             alert('Please type in a response before pressing submit.');
