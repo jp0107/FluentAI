@@ -7,8 +7,9 @@ import os
 import sys
 import random
 import datetime
+import re
 import string
-from openai import OpenAI, APIError
+from openai import OpenAI
 import flask
 import sqlalchemy
 import auth
@@ -64,13 +65,16 @@ def get_gpt_response(prompt_text, user_input=""):
 #-----------------------------------------------------------------------
 
 # function for storing conversation
-def store_conversation(student_id, course_id, prompt_id, conv_text):
+def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, score):
     with Session() as session:
         new_conversation = Conversation(
+            conv_id = conv_id,
+            course_id = course_id,
             student_id=student_id,
-            course_id=course_id,
             prompt_id=prompt_id,
             conv_text=conv_text,
+            score = score,
+            prof_scores = None
         )
         session.add(new_conversation)
         session.commit()
@@ -276,9 +280,11 @@ def login():
 @app.route('/student-classes')
 def student_classes():
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
-    html_code = flask.render_template(
-        'student-classes.html', username = username)
+    html_code = flask.render_template('student-classes.html', 
+                                      username = username, 
+                                      user_type = user_type)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
@@ -286,9 +292,11 @@ def student_classes():
 @app.route('/student-all-classes')
 def student_all_classes():
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
-    html_code = flask.render_template(
-        'student-all-classes.html', username = username)
+    html_code = flask.render_template('student-all-classes.html',
+                                      username = username,
+                                      user_type = user_type)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
@@ -305,6 +313,7 @@ def student_classes_2():
 @app.route('/student-dashboard/<course_id>')
 def student_dashboard(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -320,14 +329,15 @@ def student_dashboard(course_id):
     return flask.render_template('student-dashboard.html', 
                                  username = username,
                                  first_name = first_name,
-                                 course_id = course_id
-                                )
+                                 course_id = course_id,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/student-assignments/<course_id>')
 def student_assignments(course_id):
     username = auth.authenticate()  # Assuming this retrieves the student ID
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
     try:
@@ -338,8 +348,8 @@ def student_assignments(course_id):
                                  username=username,
                                  course_id=course_id,
                                  curr_assignments=curr_assignments,
-                                 past_assignments=past_assignments
-                                 )
+                                 past_assignments=past_assignments,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -364,6 +374,7 @@ def student_practice(course_id):
 @app.route('/student-scores/<course_id>')
 def student_scores(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -372,7 +383,8 @@ def student_scores(course_id):
     return flask.render_template('student-scores.html',
                                  username = username,
                                  course_id = course_id,
-                                 scores = scores)
+                                 scores = scores,
+                                 user_type = user_type)
 
 #------------------------  PROFESSOR PAGES   ---------------------------
 #-----------------------------------------------------------------------
@@ -380,8 +392,10 @@ def student_scores(course_id):
 @app.route('/prof-classes')
 def prof_classes():
     username = auth.authenticate()
+    user_type = check_user_type(username)
     return flask.render_template('prof-classes.html',
-                                 username = username)
+                                 username = username,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -409,19 +423,22 @@ def prof_dashboard(course_id):
                                  username = username,
                                  first_name = first_name,
                                  course_id = course_id,
-                                 course_code = course_code)
+                                 course_code = course_code,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/prof-assignments/<course_id>')
 def prof_assignments(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
     return flask.render_template('prof-assignments.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 user_type = user_type)
     
 #-----------------------------------------------------------------------
 @app.route('/delete-assignment/<int:prompt_id>', methods=['POST'])
@@ -441,18 +458,21 @@ def delete_assignment_click(prompt_id):
 @app.route('/prof-roster/<course_id>')
 def prof_roster(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
     return flask.render_template('prof-roster.html',
                                  username = username,
-                                 course_id = course_id)
+                                 course_id = course_id,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/prof-scores/<course_id>')
 def prof_scores(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -464,8 +484,8 @@ def prof_scores(course_id):
     return flask.render_template('prof-scores.html',
                                  username = username,
                                  course_id = course_id,
-                                 scores = scores
-                                 )
+                                 scores = scores,
+                                 user_type = user_type)
                                 
 #----------------------      ADMIN PAGES    ----------------------------
 #-----------------------------------------------------------------------
@@ -527,6 +547,7 @@ def admin_roster():
 @app.route('/conversation-history/<course_id>/<int:conv_id>')
 def conversation_history(course_id, conv_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -538,15 +559,19 @@ def conversation_history(course_id, conv_id):
     return flask.render_template('conversation-history.html',
                                  username = username,
                                  course_id = course_id,
-                                 conversation = conversation)
+                                 conversation = conversation,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/student-assignment-chat/<course_id>/<int:prompt_id>')
 def student_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
+    flask.session['student_id'] = username
+    flask.session['prompt_id'] = prompt_id
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
@@ -573,13 +598,15 @@ def student_assignment_chat(course_id, prompt_id):
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username,
-                                language = language)
+                                language = language,
+                                user_type = user_type)
 
 #-----------------------------------------------------------------------
 
 @app.route('/prof-assignment-chat/<course_id>/<int:prompt_id>')
 def prof_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
 
     flask.session['course_id'] = course_id
 
@@ -605,7 +632,8 @@ def prof_assignment_chat(course_id, prompt_id):
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username,
-                                language = language)
+                                language = language,
+                                user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -618,26 +646,74 @@ def process_input():
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
     max_turns = flask.session.get('max_turns', 0)
+    conversation_text = flask.session.get('conversation_text', '') + f"\nUser: {user_input}"
 
     if turns_count >= max_turns:
-        return flask.jsonify({'gpt_response': "This conversation has reached its turn limit."})
-    
-    flask.session['turns_count'] = turns_count  # Update the turn count in the session
+        course_id = flask.session.get('course_id')
+        student_id = flask.session.get('student_id')
+        prompt_id = flask.session.get('prompt_id')
+        score = calculate_score(conversation_text)
+        conv_id = generate_unique_conv_id()
+        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score)
+
+        # Clean up session
+        flask.session.pop('turns_count', None)
+        flask.session.pop('conversation_text', None)
+
+        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}."})
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
         flask.session['prompt_used'] = True  # Mark the prompt as used
     else:
         prompt_text = ""
+    
+    flask.session['turns_count'] = turns_count  # Update the turn count in the session
+    flask.session['conversation_text'] = conversation_text  # Append user input to conversation history
 
     response_text = get_gpt_response(prompt_text, user_input)
     return flask.jsonify({'gpt_response': response_text})
 
 #-----------------------------------------------------------------------
 
+def generate_unique_conv_id():
+    return random.randint(10000000, 99999999)
+
+def calculate_score(conversation_text):
+    evaluation_prompt = f"""
+        Please evaluate the following conversation based on grammar, vocabulary, complexity of sentence structure, and accuracy. Provide a score out of 100. Only output a number in your response and no other words.
+
+        Conversation:
+        {conversation_text}
+
+        Evaluation Criteria:
+        - Grammar: Correct usage of language grammar.
+        - Vocabulary: Appropriateness and range of vocabulary used.
+        - Sentence Structure: Complexity and variety of sentence structures.
+        - Accuracy: Correctness of the information provided and language use.
+    """
+    try:
+        client = OpenAI(api_key=GPT_API_KEY)
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            messages=[
+                {"role": "system", "content": evaluation_prompt}
+            ]
+        )
+        # Extract the first number from the response
+        content = response.choices[0].message.content.strip()
+        score = int(re.search(r'\d+', content).group())
+        return score
+    except Exception as e:
+        print(f"An error occurred while getting evaluation score: {str(e)}")
+        return None
+
+#-----------------------------------------------------------------------
+
 @app.route('/student-practice-chat/<course_id>')
 def student_practice_chat(course_id):
     username = auth.authenticate()
+    user_type = check_user_type(username)
     flask.session['course_id'] = course_id
 
     # get the course language
@@ -655,7 +731,8 @@ def student_practice_chat(course_id):
                                  initial_data = initial_response,
                                  prompt = practice_prompt,
                                  username = username,
-                                 language = language)
+                                 language = language,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 # @app.route('/fetch-conversation')
