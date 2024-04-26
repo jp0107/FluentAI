@@ -70,8 +70,11 @@
       <br>
       <div class="subcontainer">
         <p>
-          {{ (conversation[0][1] if conversation[0][1] else 'No conversation history found. Please complete assignment
-          first.') }}
+          {% if conversation[0][1] %}
+          {{ conversation[0][1].replace("User:", "<br>User:") | safe }}
+          {% else %}
+          No conversation history found. Please complete an assignment first.
+          {% endif %}
         </p>
       </div>
     </div>
