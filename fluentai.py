@@ -8,7 +8,7 @@ import sys
 import random
 import datetime
 import string
-from openai import OpenAI
+from openai import OpenAI, APIError
 import flask
 import sqlalchemy
 import auth
@@ -30,7 +30,7 @@ Base.metadata.create_all(engine)
 
 Session = sqlalchemy.orm.sessionmaker(bind = engine)
 
-GPT_API_KEY = "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"
+GPT_API_KEY = os.environ['GPT_API_KEY']
 app.secret_key = '1234567'  # hardcoded
 
 #-----------------------------------------------------------------------
@@ -57,9 +57,10 @@ def get_gpt_response(prompt_text, user_input=""):
         )
         return response.choices[0].message.content
 
+    except APIError as api_error:
+        return f"API Error: {api_error.error.message}"
     except Exception as ex:
-        print("An error occurred: ", ex, file=sys.stderr)
-        return "Error: An issue occurred while processing your request."
+        return f"Error: An unexpected error occurred. {str(ex)}"
 #-----------------------------------------------------------------------
 
 def store_conversation(student_id, course_id, prompt_id, conv_text):
