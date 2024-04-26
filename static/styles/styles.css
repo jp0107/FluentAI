@@ -53,6 +53,10 @@ body {
   color: #EAF2FF !important; /* Text color for active state */
 }
 
+.dropdown-item:active {
+  background-color: #1E1E1E;
+}
+
 h1 {
   font-size: 64px;
 }

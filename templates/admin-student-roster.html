@@ -28,13 +28,13 @@
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
           <li class="nav-item">
+            <a class="nav-link" href="/admin-roster">Admin Roster</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="/admin-prof-roster">Professor Roster</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" id="underlined">Student Roster</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin-roster">Admin Roster</a>
           </li>
         </ul>
         <ul class="navbar-nav d-flex flex-row ms-auto">
@@ -44,7 +44,7 @@
               {{username}}
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="#">Admin View</a></li>
+              <li><a class="dropdown-item" href="#" id="underlined">Admin View</a></li>
               <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
               <li><a class="dropdown-item" href="/student-classes">Student View</a></li>
               <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
@@ -212,7 +212,7 @@
         function prepareDeleteStudentModal(element) {
           const studentName = element.getAttribute('data-studname');
           const studentId = element.getAttribute('data-studid');
-          const courseId = element.getAttribute('data-courseid'); // Ensure the courseId is provided correctly in the data attributes
+          const courseId = element.getAttribute('data-courseid'); 
           const modalBody = document.querySelector('#deleteStudentModal .modal-body p');
           const deleteButton = document.querySelector('#deleteStudentModal .btn-primary');
 
@@ -235,6 +235,31 @@
             }
           });
         }
+
+        $('#add-student-button').click(function () {
+        var professorName = $('#professor-name').val().trim(); // Fetching value from textarea
+        var professorNetID = $('#professor-netid').val().trim(); // Fetching value from textarea
+        var courseID = $('#course-id').val().trim(); // Fetching value from textarea
+
+
+        $.ajax({
+          type: 'POST',
+          url: '/admin-add-student-to-course',
+          data: {
+            'prof_name': professorName,
+            'prof_netid': professorNetID,
+            'course_id': courseID
+          },
+          success: function (response) {
+            $('#addProfessorModal').modal('hide');
+            alert(response.message);
+            fetchProfessorsAndAdmins(); // Assuming there is a function to refresh the list
+          },
+          error: function (xhr) {
+            alert('Failed to add professor: ' + xhr.responseText);
+          }
+        });
+      });
     </script>
 
 </body>

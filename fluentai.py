@@ -1009,3 +1009,39 @@ def admin_add_professor_to_course():
         session.commit()
 
         return flask.jsonify({"message": "Professor added successfully to the course."}), 200
+
+#-----------------------------------------------------------------------
+@app.route('/admin-add-student-to-course', methods=['POST'])
+def admin_add_student_to_course():
+    course_id = flask.request.form.get('course_id')
+    student_name = flask.request.form.get('student_name')
+    student_id = flask.request.form.get('student_id')
+
+    if not course_id or not student_name or not student_id:
+        return flask.jsonify({"message": "All fields (course ID, student name, and student ID) are required."}), 400
+
+    with Session() as session:
+        # Check if the course exists
+        course = session.query(Course).filter_by(course_id=course_id).first()
+        if not course:
+            return flask.jsonify({"message": "Course does not exist."}), 404
+
+        # Check if the student already exists
+        student = session.query(Student).filter_by(student_id=student_id).first()
+        if not student:
+            # Assuming splitting name into first and last
+            first_name, last_name = (student_name.split(maxsplit=1) + [None])[:2]
+            student = Student(student_id=student_id, first_name=first_name, last_name=last_name)
+            session.add(student)
+
+        # Check if the student is already linked to the course
+        existing_link = session.query(CoursesStudents).filter_by(course_id=course_id, student_id=student_id).first()
+        if existing_link:
+            return flask.jsonify({"message": "Student already added to this course."}), 409
+
+        # Create a new link between the student and the course
+        new_course_student = CoursesStudents(course_id=course_id, student_id=student_id)
+        session.add(new_course_student)
+        session.commit()
+
+        return flask.jsonify({"message": "Student added successfully to the course."}), 200
