@@ -63,6 +63,7 @@ def get_gpt_response(prompt_text, user_input=""):
         return "Error: An issue occurred while processing your request."
 #-----------------------------------------------------------------------
 
+# function for storing conversation
 def store_conversation(student_id, course_id, prompt_id, conv_text):
     with Session() as session:
         new_conversation = Conversation(
@@ -564,6 +565,8 @@ def student_assignment_chat(course_id, prompt_id):
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
+    flask.session['turns_count'] = 0  # Initialize turn count
+    flask.session['max_turns'] = prompt.num_turns   # store max turns from database
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('student-assignment-chat.html',
@@ -613,6 +616,15 @@ def process_input():
     user_input = flask.request.form.get('userInput', '')
     if not user_input:
         return flask.jsonify({'error': 'No input provided'}), 400
+    
+    # Increment and check the turn count
+    turns_count = flask.session.get('turns_count', 0) + 1
+    max_turns = flask.session.get('max_turns', 0)
+
+    if turns_count >= max_turns:
+        return flask.jsonify({'gpt_response': "This conversation has reached its turn limit."})
+    
+    flask.session['turns_count'] = turns_count  # Update the turn count in the session
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
