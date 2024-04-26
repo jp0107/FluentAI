@@ -21,7 +21,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
-                      check_student_in_course)
+                      check_student_in_course, get_superadmins_roster)
 
 #-----------------------------------------------------------------------
 
@@ -490,15 +490,6 @@ def admin_dashboard():
 
 #-----------------------------------------------------------------------
 
-@app.route('/admin-courses')
-def admin_courses():
-    username = auth.authenticate()
-
-    return flask.render_template('admin-courses.html',
-                                 username = username)
-
-#-----------------------------------------------------------------------
-
 @app.route('/admin-prof-roster')
 def admin_prof_roster():
     username = auth.authenticate()
@@ -518,6 +509,18 @@ def admin_student_roster():
     return flask.render_template('admin-student-roster.html',
                                  username = username,
                                  student_list = student_list)
+
+#-----------------------------------------------------------------------
+
+@app.route('/admin-roster')
+def admin_roster():
+    username = auth.authenticate()
+
+    admin_list = get_superadmins_roster()
+
+    return flask.render_template('admin-roster.html',
+                                 username = username,
+                                 admin_list = admin_list)
 
 #------------------------   OTHER PAGES   ------------------------------
 #-----------------------------------------------------------------------
