@@ -209,7 +209,7 @@
         function prepareDeleteStudentModal(element) {
           const studentName = element.getAttribute('data-studname');
           const studentId = element.getAttribute('data-studid');
-          const courseId = element.getAttribute('data-courseid'); // Ensure the courseId is provided correctly in the data attributes
+          const courseId = element.getAttribute('data-courseid'); 
           const modalBody = document.querySelector('#deleteStudentModal .modal-body p');
           const deleteButton = document.querySelector('#deleteStudentModal .btn-primary');
 
@@ -232,6 +232,31 @@
             }
           });
         }
+
+        $('#add-student-button').click(function () {
+        var professorName = $('#professor-name').val().trim(); // Fetching value from textarea
+        var professorNetID = $('#professor-netid').val().trim(); // Fetching value from textarea
+        var courseID = $('#course-id').val().trim(); // Fetching value from textarea
+
+
+        $.ajax({
+          type: 'POST',
+          url: '/admin-add-student-to-course',
+          data: {
+            'prof_name': professorName,
+            'prof_netid': professorNetID,
+            'course_id': courseID
+          },
+          success: function (response) {
+            $('#addProfessorModal').modal('hide');
+            alert(response.message);
+            fetchProfessorsAndAdmins(); // Assuming there is a function to refresh the list
+          },
+          error: function (xhr) {
+            alert('Failed to add professor: ' + xhr.responseText);
+          }
+        });
+      });
     </script>
 
 </body>
