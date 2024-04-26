@@ -170,7 +170,7 @@
       function fetchProfessorsAndAdmins() {
         $.ajax({
           type: 'GET',
-          url: '/api/professors-and-admins',
+          url: '/admin-profs',
           success: function (response) {
             updateProfessorsTable(response);
           },
