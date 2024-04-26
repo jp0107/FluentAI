@@ -21,7 +21,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
-                      check_student_in_course, get_superadmins_roster)
+                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses)
 
 #-----------------------------------------------------------------------
 
@@ -944,6 +944,14 @@ def get_professors_and_courses():
         return flask.jsonify(data)
     except Exception as e:
         return flask.sonify({'error': str(e)}), 500
+#-----------------------------------------------------------------------
+@app.route('/admin-students')
+def get_students_and_courses():
+    try:
+        data = fetch_students_and_courses()
+        return flask.jsonify(data)
+    except Exception as e:
+        return flask.jsonify({'error': str(e)}), 500
 #-----------------------------------------------------------------------
 
 @app.route('/check-enrollment/<course_id>')
