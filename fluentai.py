@@ -727,7 +727,8 @@ def all_courses():
     for course in courses:
         course_info = {
             "course_id": course.course_id,
-            "course_name": course.course_name
+            "course_name": course.course_name,
+            "course_code": course.course_code
         }
         course_data.append(course_info)
     return flask.jsonify(course_data)
@@ -949,7 +950,5 @@ def check_enrollment(course_id):
     student_id = flask.request.args.get('student_id')
 
     enrolled = check_student_in_course(course_id, student_id)
-
-    print(f"Checking enrollment for student {student_id} in course {course_id}: {'Enrolled' if enrolled else 'Not enrolled'}")
 
     return flask.jsonify({'enrolled': enrolled})
