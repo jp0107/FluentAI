@@ -12,6 +12,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/minified/introjs.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -28,6 +29,7 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav d-flex flex-row ms-auto">
+                    <button type="button" class="btn btn-primary" id="startTutorial" >Start Tour</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,7 +51,7 @@
                 <div class="dropdown">
                     <button class="btn btn-course-dropdown dropdown-toggle" type="button" id="dropdownMenuCourse"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <h1 id="course-id-display">{{ course_id }}<i class="fa fa-caret-down"></i></h1>
+                        <h1 id="course-id-display" data-intro="Welcome to your course's dashboard!" data-step="1">{{ course_id }}<i class="fa fa-caret-down"></i></h1>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuCourse">
                         <li>
@@ -226,6 +228,11 @@
             function clearTextArea() {
                 $("#edit-course-code").val('');
             }
+
+            // start the tutorial
+            $("#startTutorial").click(function () {
+                    introJs().start();
+            });
 
             // update character count when user types in new code
             $('#edit-course-code').on('input', updateCharCount);
