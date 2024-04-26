@@ -94,6 +94,11 @@
         $(document).ready(function () {
             // Fetch the username displayed in the dropdown
             var studentId = $('#navbarDropdownMenuLink').text().trim();
+            
+            $('.row-cols-md-3').on('click', '.check-enrollment', function() {
+                var courseId = $(this).data('course-id');
+                checkAndDisplayModal(courseId);
+            });
 
             function fetchAllCourses() {
                 $.ajax({
@@ -104,7 +109,7 @@
                         var courseListHtml = '';
                         $.each(courses, function (index, course) {
                             courseListHtml += '<div class="col d-flex">' +
-                            '<a data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button" onclick="checkAndDisplayModal(\'' + encodeURIComponent(course.course_id) + '\')">' +
+                            '<a class="class-button check-enrollment" data-course-id="' + course.course_id + '" role="button">' +
                             '<h3>' + course.course_id + '</h3> ' + course.course_name +
                             '</a></div>';
                         });

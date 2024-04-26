@@ -950,4 +950,6 @@ def check_enrollment(course_id):
 
     enrolled = check_student_in_course(course_id, student_id)
 
+    print(f"Checking enrollment for student {student_id} in course {course_id}: {'Enrolled' if enrolled else 'Not enrolled'}")
+
     return flask.jsonify({'enrolled': enrolled})
