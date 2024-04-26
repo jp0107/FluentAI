@@ -97,7 +97,8 @@
             
             $('.row-cols-md-3').on('click', '.check-enrollment', function() {
                 var courseId = $(this).data('course-id');
-                checkAndDisplayModal(courseId);
+                var courseCode = $(this).data('course-code');
+                checkAndDisplayModal(courseId, courseCode);
             });
 
             function fetchAllCourses() {
@@ -109,7 +110,8 @@
                         var courseListHtml = '';
                         $.each(courses, function (index, course) {
                             courseListHtml += '<div class="col d-flex">' +
-                            '<a class="class-button check-enrollment" data-course-id="' + course.course_id + '" role="button">' +
+                            '<a class="class-button check-enrollment" data-course-id="' + course.course_id + '" data-course-code="' + 
+                            course.course_code + '" role="button">' +
                             '<h3>' + course.course_id + '</h3> ' + course.course_name +
                             '</a></div>';
                         });
@@ -122,7 +124,7 @@
             }
             
             // Check if the student is in the clicked course, display modal if not
-            function checkAndDisplayModal(courseId) {
+            function checkAndDisplayModal(courseId, courseCode) {
                 $.ajax({
                     url: '/check-enrollment/' + courseId,
                     method: 'GET',
@@ -130,6 +132,8 @@
                     success: function(response) {
                         if (!response.enrolled) {
                             $('#joinCourseModal').modal('show');  // Show the join course modal
+                            $('#joinCourseModal').data('course-id', courseId); // Store courseId in modal
+                            $('#joinCourseModal').data('course-code', courseCode); // Store courseCode in modal
                         } else {
                             window.location.href = '/student-dashboard/' + encodeURIComponent(courseId);
                         }
@@ -143,9 +147,15 @@
             // Join course button click event from the modal
             $("#join-course-button").click(function () {
                     var courseCode = $("#course-code").val();  // Assumes input for course code is available
+                    var actualCourseCode = $('#joinCourseModal').data('course-code');
 
                     if (!courseCode) {
                         alert("Course code is required.");
+                        return;
+                    }
+
+                    if (courseCode !== actualCourseCode) {
+                        alert("The course code does not match. Please try again.");
                         return;
                     }
 
