@@ -812,7 +812,7 @@ def fetch_students_and_courses():
             # Convert results into a list of dictionaries
             merged_results = [
                 {
-                    "net_id": result.id,
+                    "id": result.id,
                     "name": f"{result.first_name} {result.last_name}",
                     "courses": [result.course_id]
                 }
