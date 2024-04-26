@@ -244,24 +244,6 @@ class CoursesProfs(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
 
-# get default courses and profs
-def get_default_courses_and_profs():
-    return [
-        ('SPA100', 'Irene', 'Kim'),
-        ('SPA100', 'Tinney', 'Mak'),
-        ('SPA200', 'Jonathan', 'Peixoto'),
-        ('SPA300', 'Jessie', 'Wang')
-    ]
-
-# get default profs
-def get_default_profs():
-    return [
-        ('SPA100', 'ik1234', 'Irene', 'Kim'),
-        ('SPA200', 'ik1234', 'Irene', 'Kim'),
-        ('SPA200', 'jp2024', 'Jonathan', 'Peixoto'),
-        ('SPA300', 'jw2003', 'Jessie', 'Wang')
-    ]
-
 # get courses and professors for each one (FOR ADMIN COURSES PAGE)
 def get_courses_and_profs():
     with sqlalchemy.orm.Session(engine) as session:
