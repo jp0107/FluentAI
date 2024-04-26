@@ -101,7 +101,7 @@
                         var courseListHtml = '';
                         $.each(courses, function (index, course) {
                             courseListHtml += '<div class="col d-flex">' +
-                            '<a href="#joinCourseModal" class="class-button" role="button" onclick="checkAndDisplayModal(\'' + encodeURIComponent(course.course_id) + '\')">' +
+                            '<a data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button" onclick="checkAndDisplayModal(\'' + encodeURIComponent(course.course_id) + '\')">' +
                             '<h3>' + course.course_id + '</h3> ' + course.course_name +
                             '</a></div>';
                         });
