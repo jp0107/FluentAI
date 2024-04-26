@@ -235,6 +235,31 @@
         });
       }
 
+      $('addProfessorModal .btn-primary').click(function () {
+        var professorName = $('#professor-name').val().trim(); // Fetching value from textarea
+        var professorNetID = $('#professor-netid').val().trim(); // Fetching value from textarea
+        var courseID = $('#course-id').val().trim(); // Fetching value from textarea
+
+
+        $.ajax({
+          type: 'POST',
+          url: '/admin-add-professor-to-course',
+          data: {
+            'prof_name': professorName,
+            'prof_netid': professorNetID,
+            'course_id': courseID
+          },
+          success: function (response) {
+            $('#addProfessorModal').modal('hide');
+            alert(response.message);
+            fetchProfessorsAndAdmins(); // Assuming there is a function to refresh the list
+          },
+          error: function (xhr) {
+            alert('Failed to add professor: ' + xhr.responseText);
+          }
+        });
+      });
+
 
     </script>
 </body>

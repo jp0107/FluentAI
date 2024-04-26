@@ -843,7 +843,7 @@ def add_assignment():
         prof_id=prof_id,
         prompt_text=assignment_prompt,
         num_turns=int(num_turns),
-        deadline=deadline,  
+        deadline=deadline,
         assignment_description = assignment_description
     )
 
@@ -953,3 +953,39 @@ def check_enrollment(course_id):
     enrolled = check_student_in_course(course_id, student_id)
 
     return flask.jsonify({'enrolled': enrolled})
+
+#-----------------------------------------------------------------------
+@app.route('/admin-add-professor-to-course', methods=['POST'])
+def admin_add_professor_to_course():
+    course_id = flask.request.form.get('course_id')
+    prof_name = flask.request.form.get('prof_name')
+    prof_netid = flask.request.form.get('prof_netid')
+
+    if not course_id or not prof_name or not prof_netid:
+        return flask.jsonify({"message": "All fields (course ID, professor name, and NetID) are required."}), 400
+
+    with Session() as session:
+        # Check if the course exists
+        course = session.query(Course).filter_by(course_id=course_id).first()
+        if not course:
+            return flask.jsonify({"message": "Course does not exist."}), 404
+
+        # Check if the professor already exists
+        professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
+        if not professor:
+            # Assuming splitting name into first and last
+            first_name, last_name = (prof_name.split(maxsplit=1) + [None])[:2]
+            professor = Professor(prof_id=prof_netid, first_name=first_name, last_name=last_name)
+            session.add(professor)
+
+        # Check if the professor is already linked to the course
+        existing_link = session.query(CoursesProfs).filter_by(course_id=course_id, prof_id=prof_netid).first()
+        if existing_link:
+            return flask.jsonify({"message": "Professor already added to this course."}), 409
+
+        # Create a new link between the professor and the course
+        new_course_prof = CoursesProfs(course_id=course_id, prof_id=prof_netid)
+        session.add(new_course_prof)
+        session.commit()
+
+        return flask.jsonify({"message": "Professor added successfully to the course."}), 200
