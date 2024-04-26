@@ -92,6 +92,9 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            // Fetch the username displayed in the dropdown
+            var studentId = $('#navbarDropdownMenuLink').text().trim();
+
             function fetchAllCourses() {
                 $.ajax({
                     url: '/all-courses',
@@ -118,6 +121,7 @@
                 $.ajax({
                     url: '/check-enrollment/' + courseId,
                     method: 'GET',
+                    data: { 'student_id': studentId },
                     success: function(response) {
                         if (!response.enrolled) {
                             $('#joinCourseModal').modal('show');  // Show the join course modal

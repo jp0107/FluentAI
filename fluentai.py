@@ -20,7 +20,8 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
-                      get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses)
+                      get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
+                      check_student_in_course)
 
 #-----------------------------------------------------------------------
 
@@ -945,11 +946,8 @@ def get_professors_and_courses():
 
 @app.route('/check-enrollment/<course_id>')
 def check_enrollment(course_id):
-    student_id = flask.session.get('student_id')  # Assuming the student's ID is stored in the session
+    student_id = flask.request.args.get('student_id')
 
-    with sqlalchemy.orm.Session(engine) as session:
-        enrollment = session.query(CoursesStudents).filter_by(
-            course_id=course_id,
-            student_id=student_id
-        ).first()
-        return flask.jsonify({"enrolled": bool(enrollment)})
+    enrolled = check_student_in_course(course_id, student_id)
+
+    return flask.jsonify({'enrolled': enrolled})

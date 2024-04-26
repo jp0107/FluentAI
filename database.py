@@ -541,6 +541,19 @@ def get_student_courses(student_id):
                 })
 
         return course_data
+
+# check student enrollment in a course
+def check_student_in_course(course_id, student_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # Directly check for an existing enrollment record
+        enrollment = session.query(CoursesStudents).filter(
+            CoursesStudents.course_id == course_id,
+            CoursesStudents.student_id == student_id
+        ).first()
+
+        # Return True if the enrollment exists, False otherwise
+        return enrollment is not None
+
 #-----------------------------------------------------------------------
 
 # Function to enroll a student in a course using the course code
