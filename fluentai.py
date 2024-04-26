@@ -502,7 +502,6 @@ def admin_dashboard():
     if(user_type == "SuperAdmin"):
         first_name = get_admin_firstname(username)
         
-    Session().expire_all()
     return flask.render_template('admin-dashboard.html',
                                  username = username,
                                  first_name = first_name)
