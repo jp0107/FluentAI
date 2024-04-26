@@ -501,6 +501,8 @@ def admin_dashboard():
         return flask.redirect(flask.url_for('prof_classes'))  # Redirecting to the home page or a suitable route
     if(user_type == "SuperAdmin"):
         first_name = get_admin_firstname(username)
+        
+    Session().expire_all()
     return flask.render_template('admin-dashboard.html',
                                  username = username,
                                  first_name = first_name)
