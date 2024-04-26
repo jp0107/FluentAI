@@ -40,8 +40,18 @@ def get_superadmins_roster():
         # Query to select admin_id, first_name, and last_name from SuperAdmin table
         query = session.query(SuperAdmin.admin_id, SuperAdmin.first_name, SuperAdmin.last_name)
         # Execute the query and return a list of results
-        result = query.all()
-        return result
+        results = query.all()
+
+        if not results:
+            return None
+
+        # format query results
+        admins = {}
+
+        for admin_id, first_name, last_name in results:
+            admins[admin_id] = {'admin_id': admin_id, 'admin_name': f"{first_name} {last_name}"}
+
+        return admins
 
 # gets admin first name given their netid
 def get_admin_firstname(admin_id):
