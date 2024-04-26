@@ -118,7 +118,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" id="add-course-button">Add professor</button>
+            <button type="button" class="btn btn-primary" id="add-prof-button">Add professor</button>
           </div>
         </div>
       </div>
@@ -234,6 +234,31 @@
           }
         });
       }
+
+      $('add-course-button').click(function () {
+        var professorName = $('#professor-name').val().trim(); // Fetching value from textarea
+        var professorNetID = $('#professor-netid').val().trim(); // Fetching value from textarea
+        var courseID = $('#course-id').val().trim(); // Fetching value from textarea
+
+
+        $.ajax({
+          type: 'POST',
+          url: '/admin-add-professor-to-course',
+          data: {
+            'prof_name': professorName,
+            'prof_netid': professorNetID,
+            'course_id': courseID
+          },
+          success: function (response) {
+            $('#addProfessorModal').modal('hide');
+            alert(response.message);
+            fetchProfessorsAndAdmins(); // Assuming there is a function to refresh the list
+          },
+          error: function (xhr) {
+            alert('Failed to add professor: ' + xhr.responseText);
+          }
+        });
+      });
 
 
     </script>
