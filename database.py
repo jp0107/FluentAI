@@ -27,7 +27,6 @@ class SuperAdmin(Base):
     admin_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_superadmins() -> List[SuperAdmin]:
@@ -491,7 +490,7 @@ def in_profs(user_id):
     with sqlalchemy.orm.Session(engine) as session:
         return session.query(Professor.prof_id).filter_by(prof_id=user_id).first() is not None
 
-def in_superadmins(user_id: str):
+def in_superadmins(user_id):
     with sqlalchemy.orm.Session(engine) as session:
         return session.query(SuperAdmin.admin_id).filter_by(admin_id=user_id).first() is not None
     

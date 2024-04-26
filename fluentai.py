@@ -544,8 +544,8 @@ def admin_roster():
 #------------------------   OTHER PAGES   ------------------------------
 #-----------------------------------------------------------------------
 
-@app.route('/conversation-history/<course_id>/<int:conv_id>')
-def conversation_history(course_id, conv_id):
+@app.route('/student-conversation-history/<course_id>/<int:conv_id>')
+def student_conversation_history(course_id, conv_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
 
@@ -553,7 +553,7 @@ def conversation_history(course_id, conv_id):
 
     conversation = get_conversation(course_id, conv_id)
 
-    return flask.render_template('conversation-history.html',
+    return flask.render_template('student-conversation-history.html',
                                  username = username,
                                  course_id = course_id,
                                  conversation = conversation,
@@ -597,6 +597,26 @@ def student_assignment_chat(course_id, prompt_id):
                                 username=username,
                                 language = language,
                                 user_type = user_type)
+
+#-----------------------------------------------------------------------
+
+@app.route('/prof-conversation-history/<course_id>/<int:conv_id>')
+def conversation_history(course_id, conv_id):
+    username = auth.authenticate()
+    user_type = check_user_type(username)
+
+    flask.session['course_id'] = course_id
+
+    try:
+        conversation = get_conversation(course_id, username, conv_id)
+    except:
+        conversation = get_default_conversation()
+
+    return flask.render_template('prof-conversation-history.html',
+                                 username = username,
+                                 course_id = course_id,
+                                 conversation = conversation,
+                                 user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -1118,7 +1138,7 @@ def admin_add_student_to_course():
 
         return flask.jsonify({"message": "Student added successfully to the course."}), 200
 
-
+#-----------------------------------------------------------------------
 @app.route('/admin-admins', methods=['GET'])
 def fetch_admins():
     # Call the function to get the superadmins roster
@@ -1129,33 +1149,34 @@ def fetch_admins():
         return flask.jsonify({'error': str(e)}), 500
     
 
-
+#-----------------------------------------------------------------------
 @app.route('/admin-add-admin', methods=['POST'])
-def add_admin():
+def admin_add_admin():
     admin_id = flask.request.form.get('admin_netid')
     admin_name = flask.request.form.get('admin_name')
 
     if admin_id is None or admin_name is None:
         return flask.jsonify({'error': 'Missing data for required fields'}), 400
-    
-    first_name, last_name = (admin_name.split(maxsplit=1) + [None])[:2]
 
-    if in_superadmins(admin_id):
-        return flask.jsonify({'error': 'This user is already an admin'}), 409
-
-    # Add new admin to the database
-    new_admin = SuperAdmin(
-        admin_id=admin_id,
-        first_name=first_name,
-        last_name=last_name,
-    )
-
+    # Directly check if the admin already exists
     with Session(engine) as session:
+        existing_admin = session.query(SuperAdmin.admin_id).filter_by(admin_id=admin_id).first()
+        if existing_admin is not None:
+            return flask.jsonify({'error': 'This user is already an admin'}), 409
+
+        # If the admin does not exist, proceed to add them
+        first_name, last_name = (admin_name.split(maxsplit=1) + [None])[:2]
+        new_admin = SuperAdmin(
+            admin_id=admin_id,
+            first_name=first_name,
+            last_name=last_name
+        )
+
         session.add(new_admin)
         session.commit()
 
     return flask.jsonify({'message': 'Admin added successfully'}), 201
-
+#-----------------------------------------------------------------------
 @app.route('/delete-admin/<adminId>', methods=['POST'])
 def delete_admin(adminid):
     if not adminid:
