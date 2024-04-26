@@ -57,10 +57,9 @@ def get_gpt_response(prompt_text, user_input=""):
         )
         return response.choices[0].message.content
 
-    except APIError as api_error:
-        return f"API Error: {api_error.error.message}"
     except Exception as ex:
-        return f"Error: An unexpected error occurred. {str(ex)}"
+        print("An error occurred: ", ex, file=sys.stderr)
+        return "Error: An issue occurred while processing your request."
 #-----------------------------------------------------------------------
 
 def store_conversation(student_id, course_id, prompt_id, conv_text):
