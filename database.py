@@ -467,12 +467,8 @@ def get_all_scores(prompt_id):
         return results if results else get_default_scores_for_assignment()
 
 # get conversation history given a conv_id
-def get_conversation(course_id, student_id, conv_id):
+def get_conversation(course_id, conv_id):
     with sqlalchemy.orm.Session(engine) as session:
-        # check if the student exists in the database
-        student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
-        if not student_exists:
-            return get_default_conversation()
 
         query = (session.query(Prompt.prompt_title, Conversation.conv_text)
                  .outerjoin(Conversation, sqlalchemy.and_(
@@ -482,7 +478,7 @@ def get_conversation(course_id, student_id, conv_id):
                  .filter(Prompt.course_id == course_id))
 
         results = query.one_or_none()
-        return results if results else get_default_conversation()
+        return results
 
 #-----------------------------------------------------------------------
 
@@ -495,7 +491,7 @@ def in_profs(user_id):
     with sqlalchemy.orm.Session(engine) as session:
         return session.query(Professor.prof_id).filter_by(prof_id=user_id).first() is not None
 
-def in_superadmins(user_id: str):
+def in_superadmins(user_id):
     with sqlalchemy.orm.Session(engine) as session:
         return session.query(SuperAdmin.admin_id).filter_by(admin_id=user_id).first() is not None
     

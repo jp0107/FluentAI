@@ -169,26 +169,26 @@
     <!-- End Modals -->
 
     <script type="text/javascript">
-        fetchStudentsAndCourses();
+      fetchStudentsAndCourses();
 
-        function fetchStudentsAndCourses() {
-          $.ajax({
-            type: 'GET',
-            url: '/admin-students',
-            success: function (response) {
-              updateStudentsTable(response);
-            },
-            error: function (xhr) {
-              console.error('Error fetching data:', xhr.responseText);
-            }
-          });
-        }
+      function fetchStudentsAndCourses() {
+        $.ajax({
+          type: 'GET',
+          url: '/admin-students',
+          success: function (response) {
+            updateStudentsTable(response);
+          },
+          error: function (xhr) {
+            console.error('Error fetching data:', xhr.responseText);
+          }
+        });
+      }
 
-        function updateStudentsTable(students) {
-          let tableHtml = '';
-          if (students && students.length > 0) {
-            students.forEach(function (student) {
-              tableHtml += `<tr>
+      function updateStudentsTable(students) {
+        let tableHtml = '';
+        if (students && students.length > 0) {
+          students.forEach(function (student) {
+            tableHtml += `<tr>
                           <td>${student.name}</td>
                           <td>${student.id}</td>
                           <td>${student.courses}</td>
@@ -202,41 +202,41 @@
                               </a>
                           </td>
                       </tr>`;
-            });
-          } else {
-            tableHtml = '<tr><td colspan="4" style="text-align:center;">No data to display.</td></tr>';
-          }
-          $('#stu-course-tbody').html(tableHtml); // Ensure the table body has the ID 'person-tbody'
-        }
-
-        function prepareDeleteStudentModal(element) {
-          const studentName = element.getAttribute('data-studname');
-          const studentId = element.getAttribute('data-stuid');
-          const courseId = element.getAttribute('data-courseid'); 
-          const modalBody = document.querySelector('#deleteStudentModal .modal-body p');
-          const deleteButton = document.querySelector('#deleteStudentModal .btn-primary');
-
-          modalBody.textContent = `Are you sure you want to delete ${studentName}?`;
-          deleteButton.onclick = function () {
-            deleteStudent(courseId, studentId);
-          };
-        }
-
-        function deleteStudent(courseId, studentId) {
-          $.ajax({
-            type: 'POST',
-            url: `/delete-student/${courseId}/${studentId}`,
-            success: function (response) {
-              alert('Student deleted successfully.');
-              fetchStudentsAndCourses(); // Refresh the student list
-            },
-            error: function (xhr) {
-              alert('Error deleting student: ' + xhr.responseText);
-            }
           });
+        } else {
+          tableHtml = '<tr><td colspan="4" style="text-align:center;">No data to display.</td></tr>';
         }
+        $('#stu-course-tbody').html(tableHtml); // Ensure the table body has the ID 'person-tbody'
+      }
 
-        $('#add-student-button').click(function () {
+      function prepareDeleteStudentModal(element) {
+        const studentName = element.getAttribute('data-studname');
+        const studentId = element.getAttribute('data-stuid');
+        const courseId = element.getAttribute('data-courseid');
+        const modalBody = document.querySelector('#deleteStudentModal .modal-body p');
+        const deleteButton = document.querySelector('#deleteStudentModal .btn-primary');
+
+        modalBody.textContent = `Are you sure you want to delete ${studentName}?`;
+        deleteButton.onclick = function () {
+          deleteStudent(courseId, studentId);
+        };
+      }
+
+      function deleteStudent(courseId, studentId) {
+        $.ajax({
+          type: 'POST',
+          url: `/delete-student/${courseId}/${studentId}`,
+          success: function (response) {
+            alert('Student deleted successfully.');
+            fetchStudentsAndCourses(); // Refresh the student list
+          },
+          error: function (xhr) {
+            alert('Error deleting student: ' + xhr.responseText);
+          }
+        });
+      }
+
+      $('#add-student-button').click(function () {
         var studentName = $('#student-name').val().trim(); // Fetching value from textarea
         var studentNetID = $('#student-netid').val().trim(); // Fetching value from textarea
         var courseID = $('#course-id').val().trim(); // Fetching value from textarea
@@ -253,7 +253,7 @@
           success: function (response) {
             $('#addStudentModal').modal('hide');
             alert(response.message);
-            fetchStudentsAndCourses(); 
+            fetchStudentsAndCourses();
           },
           error: function (xhr) {
             alert('Failed to add student: ' + xhr.responseText);

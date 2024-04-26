@@ -164,50 +164,50 @@
         <!-- End Modals -->
 
         <script type="text/javascript">
-            $(document).ready(function() {
-              fetchAdmins();
-          
-              $('#add-admin-button').click(function() {
+
+            fetchAdmins();
+
+            $('#add-admin-button').click(function () {
                 var adminName = $('#admin-name').val().trim();
                 var adminNetID = $('#admin-netid').val().trim();
-          
+
                 $.ajax({
-                  type: 'POST',
-                  url: '/admin-add-admin',
-                  data: {
-                    'admin_name': adminName,
-                    'admin_netid': adminNetID
-                  },
-                  success: function(response) {
-                    $('#addAdminModal').modal('hide');
-                    alert(response.message);
-                    fetchAdmins(); // Refresh the admin list
-                  },
-                  error: function(xhr) {
-                    alert('Failed to add admin: ' + xhr.responseText);
-                  }
+                    type: 'POST',
+                    url: '/admin-add-admin',
+                    data: {
+                        'admin_name': adminName,
+                        'admin_netid': adminNetID
+                    },
+                    success: function (response) {
+                        $('#addAdminModal').modal('hide');
+                        alert(response.message);
+                        fetchAdmins(); // Refresh the admin list
+                    },
+                    error: function (xhr) {
+                        alert('Failed to add admin: ' + xhr.responseText);
+                    }
                 });
-              });
             });
-          
+
+
             function fetchAdmins() {
-              $.ajax({
-                type: 'GET',
-                url: '/admin-admins',
-                success: function(response) {
-                  updateAdminsTable(response);
-                },
-                error: function(xhr) {
-                  console.error('Error fetching admins:', xhr.responseText);
-                }
-              });
+                $.ajax({
+                    type: 'GET',
+                    url: '/admin-admins',
+                    success: function (response) {
+                        updateAdminsTable(response);
+                    },
+                    error: function (xhr) {
+                        console.error('Error fetching admins:', xhr.responseText);
+                    }
+                });
             }
-          
+
             function updateAdminsTable(admins) {
-              let tableHtml = '';
-              if (admins && admins.length > 0) {
-                admins.forEach(function(admin) {
-                  tableHtml += `<tr>
+                let tableHtml = '';
+                if (admins && admins.length > 0) {
+                    admins.forEach(function (admin) {
+                        tableHtml += `<tr>
                     <td>${admin.name}</td>
                     <td>${admin.net_id}</td>
                     <td>
@@ -221,40 +221,40 @@
                       </a>
                     </td>
                   </tr>`;
-                });
-              } else {
-                tableHtml = '<tr><td colspan="3" style="text-align:center;">No administrators to display.</td></tr>';
-              }
-              $('#admin-tbody').html(tableHtml);
-            }
-          
-            function prepareDeleteAdminModal(element) {
-              const adminName = element.getAttribute('data-adminname');
-              const adminId = element.getAttribute('data-adminid');
-              const modalBody = document.querySelector('#deleteAdminModal .modal-body p');
-              const deleteButton = document.querySelector('#deleteAdminModal .btn-primary');
-          
-              modalBody.textContent = `Are you sure you want to delete ${adminName}?`;
-              deleteButton.onclick = function() {
-                deleteAdmin(adminId);
-              };
-            }
-          
-            function deleteAdmin(adminId) {
-              $.ajax({
-                type: 'POST',
-                url: `/delete-admin/${adminId}`,
-                success: function(response) {
-                  alert('Admin deleted successfully.');
-                  fetchAdmins(); // Refresh the admin list
-                },
-                error: function(xhr) {
-                  alert('Error deleting admin: ' + xhr.responseText);
+                    });
+                } else {
+                    tableHtml = '<tr><td colspan="3" style="text-align:center;">No administrators to display.</td></tr>';
                 }
-              });
+                $('#admin-tbody').html(tableHtml);
             }
-          </script>
-          
+
+            function prepareDeleteAdminModal(element) {
+                const adminName = element.getAttribute('data-adminname');
+                const adminId = element.getAttribute('data-adminid');
+                const modalBody = document.querySelector('#deleteAdminModal .modal-body p');
+                const deleteButton = document.querySelector('#deleteAdminModal .btn-primary');
+
+                modalBody.textContent = `Are you sure you want to delete ${adminName}?`;
+                deleteButton.onclick = function () {
+                    deleteAdmin(adminId);
+                };
+            }
+
+            function deleteAdmin(adminId) {
+                $.ajax({
+                    type: 'POST',
+                    url: `/delete-admin/${adminId}`,
+                    success: function (response) {
+                        alert('Admin deleted successfully.');
+                        fetchAdmins(); // Refresh the admin list
+                    },
+                    error: function (xhr) {
+                        alert('Error deleting admin: ' + xhr.responseText);
+                    }
+                });
+            }
+        </script>
+
 
 </body>
 
