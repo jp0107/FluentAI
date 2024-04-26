@@ -30,7 +30,7 @@ Base.metadata.create_all(engine)
 
 Session = sqlalchemy.orm.sessionmaker(bind = engine)
 
-GPT_API_KEY = os.environ['GPT_API_KEY']
+GPT_API_KEY = "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"
 app.secret_key = '1234567'  # hardcoded
 
 #-----------------------------------------------------------------------
