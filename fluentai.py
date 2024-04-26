@@ -82,14 +82,13 @@ def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, sco
 #-----------------------------------------------------------------------
 
 # function for storing student and prof info in the database
-def store_userinfo(user_id, first_name, last_name, pustatus, email):
+def store_userinfo(user_id, first_name, last_name, pustatus):
     with Session() as session:
         if (pustatus in ("undergraduate", "graduate")):
             new_student = Student(
                 student_id=user_id,
                 first_name=first_name,
-                last_name=last_name,
-                email=email
+                last_name=last_name
             )
             session.add(new_student)
             session.commit()
@@ -97,8 +96,7 @@ def store_userinfo(user_id, first_name, last_name, pustatus, email):
             new_prof = Professor(
                 prof_id=user_id,
                 first_name=first_name,
-                last_name=last_name,
-                email=email
+                last_name=last_name
             )
             session.add(new_prof)
             session.commit()
@@ -106,13 +104,12 @@ def store_userinfo(user_id, first_name, last_name, pustatus, email):
 #-----------------------------------------------------------------------
 
 # function for storing admin info in the database
-def store_admininfo(user_id, first_name, last_name, email):
+def store_admininfo(user_id, first_name, last_name):
     with Session() as session:
         new_admin = SuperAdmin(
             admin_id=user_id,
             first_name = first_name,
             last_name = last_name,
-            email = email
         )
         session.add(new_admin)
         session.commit()
@@ -261,7 +258,7 @@ def login():
         email = user_info.get("mail")
 
         # store user info in corresponding table
-        store_userinfo(username, first_name, last_name, pustatus, email)
+        store_userinfo(username, first_name, last_name, pustatus)
 
     user_type = check_user_type(username)
 
@@ -551,7 +548,7 @@ def student_conversation_history(course_id, conv_id):
 
     flask.session['course_id'] = course_id
 
-    conversation = get_conversation(course_id, username, conv_id)
+    conversation = get_conversation(course_id, conv_id)
 
     return flask.render_template('student-conversation-history.html',
                                  username = username,
@@ -1159,7 +1156,7 @@ def add_admin():
         return flask.jsonify({'error': 'Missing data for required fields'}), 400
 
     # Directly check if the admin already exists
-    with Session(engine) as session:
+    with Session() as session:
         existing_admin = session.query(SuperAdmin.admin_id).filter_by(admin_id=admin_id).first()
         if existing_admin is not None:
             return flask.jsonify({'error': 'This user is already an admin'}), 409
@@ -1182,7 +1179,7 @@ def delete_admin(adminid):
     if not adminid:
         return flask.jsonify({'error': 'Admin ID is required'}), 400
 
-    with Session(engine) as session:
+    with Session() as session:
         admin = session.query(SuperAdmin).filter_by(admin_id=adminid).first()
         if not admin:
             return flask.jsonify({'error': 'Admin not found'}), 404

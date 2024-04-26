@@ -27,7 +27,6 @@ class SuperAdmin(Base):
     admin_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     first_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     last_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    email = sqlalchemy.Column(sqlalchemy.VARCHAR)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
 def get_superadmins() -> List[SuperAdmin]:
