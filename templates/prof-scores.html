@@ -223,21 +223,15 @@
         }
       }
 
-      // Initially set 'Scores Overview' as selected and hide all tables
-      const generalOverview = document.querySelector('[data-assignment="general"]');
-      if (generalOverview) {
-        generalOverview.classList.add('active'); // Optional: visually indicate it is selected
-        updateScoresDisplay('general', []);
-      }
+      // Initialize with 'Scores Overview' selected and no table displayed
+      updateScoresDisplay('general', []);
 
-      // Attach click event handlers to each menu item
       menuItems.forEach(item => {
         item.addEventListener('click', function (e) {
           e.preventDefault();
-          menuItems.forEach(it => it.classList.remove('active')); // Remove active class from all items
-          this.classList.add('active'); // Add active class to the clicked item
           const assignment = this.getAttribute('data-assignment');
-          updateScoresDisplay(assignment, []); // Assuming data needs to be fetched or passed accordingly
+          const data = scores[assignment] || [];
+          updateScoresDisplay(assignment, data);
         });
       });
     });
