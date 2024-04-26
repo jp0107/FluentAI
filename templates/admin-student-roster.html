@@ -247,13 +247,13 @@
           url: '/admin-add-student-to-course',
           data: {
             'student_name': studentName,
-            'student_netid': studentNetID,
+            'student_id': studentNetID,
             'course_id': courseID
           },
           success: function (response) {
             $('#addStudentModal').modal('hide');
             alert(response.message);
-            fetchStudentsAndCourses(); // Assuming there is a function to refresh the list
+            fetchStudentsAndCourses(); 
           },
           error: function (xhr) {
             alert('Failed to add student: ' + xhr.responseText);

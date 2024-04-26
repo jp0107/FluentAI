@@ -39,17 +39,21 @@ def get_superadmins_roster():
     with sqlalchemy.orm.Session(engine) as session:
         # Query to select admin_id, first_name, and last_name from SuperAdmin table
         query = session.query(SuperAdmin.admin_id, SuperAdmin.first_name, SuperAdmin.last_name)
-        # Execute the query and return a list of results
         results = query.all()
 
         if not results:
             return None
 
-        # format query results
-        admins = {}
+        # Format query results to match front-end expectations
+        admins = []
 
         for admin_id, first_name, last_name in results:
-            admins[admin_id] = {'admin_id': admin_id, 'admin_name': f"{first_name} {last_name}"}
+            # Concatenate first and last name into a single 'name'
+            full_name = f"{first_name} {last_name}"
+            admins.append({
+                'net_id': admin_id,  # Changed key to 'net_id'
+                'name': full_name    # Changed key to 'name'
+            })
 
         return admins
 
