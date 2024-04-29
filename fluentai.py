@@ -1218,7 +1218,6 @@ def score_zero():
         prompt_id = data['prompt_id']
         conversation_text = data['conversation_text']
 
-        # Assume force_zero is always true if this endpoint is called
         score = 0
         conv_id = generate_unique_conv_id()
 
