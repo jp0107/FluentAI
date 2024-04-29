@@ -202,11 +202,10 @@
         function confirmStartAssignment(event, url, element, isCompleted) {
             event.preventDefault();
 
-            // Convert string to boolean
-            isCompleted = (isCompleted === 'true');
+            console.log("Is completed:", isCompleted); // Ensure this is logging 'true' or 'false' correctly
 
             // Check if assignment is already completed
-            if (isCompleted) {
+            if (isCompleted == 'True') {
                 alert("This assignment has already been completed and cannot be done again.");
                 element.blur()
                 return;
