@@ -472,7 +472,7 @@ def get_conversation(conv_id):
                      Conversation.prompt_id == Prompt.prompt_id, 
                      Conversation.conv_id == conv_id 
                  ))
-                 .filter(Prompt.conv_id == conv_id))
+                 .filter(Conversation.conv_id == conv_id))
 
         results = query.all()
         return results
