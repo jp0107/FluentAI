@@ -659,7 +659,7 @@ def process_input():
     
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
-    max_turns = flask.session.get('max_turns', 0)
+    max_turns = flask.session.get('max_turns', sys.maxsize)
     conversation_text = flask.session.get('conversation_text', '') + f"\nUser: {user_input}"
 
     if turns_count >= max_turns:
