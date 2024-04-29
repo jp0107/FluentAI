@@ -1175,6 +1175,7 @@ def add_admin():
 
     return flask.jsonify({'message': 'Admin added successfully'}), 201
 #-----------------------------------------------------------------------
+
 @app.route('/delete-admin/<adminid>', methods=['POST'])
 def delete_admin(adminid):
     if not adminid:
@@ -1189,3 +1190,27 @@ def delete_admin(adminid):
         session.commit()
 
     return flask.jsonify({'message': 'Admin deleted successfully'}), 200
+
+ #-----------------------------------------------------------------------
+@app.route('/score-zero', methods=['POST'])
+def score_zero():
+    if flask.request.method == 'POST':
+        data = flask.request.get_json()
+        student_id = data['student_id']
+        course_id = data['course_id']
+        prompt_id = data['prompt_id']
+        conversation_text = data['conversation_text']
+
+        # Assume force_zero is always true if this endpoint is called
+        score = 0
+        conv_id = generate_unique_conv_id()
+
+        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score)
+
+        # Clean up session
+        flask.session.pop('turns_count', None)
+        flask.session.pop('max_turns', None)
+        flask.session.pop('conversation_text', None)
+
+        return flask.jsonify({'message': 'Conversation recorded with a score of 0.'}), 200
+
