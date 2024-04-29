@@ -128,9 +128,8 @@
           }
         });
       });
-    });
 
-    window.addEventListener('beforeunload', function (e) {
+      window.addEventListener('beforeunload', function (e) {
       var message = "Are you sure you want to leave? Leaving this page will result in a score of 0 for this assignment.";
       e.preventDefault();
       e.returnValue = message;
@@ -146,6 +145,7 @@
       })
       // Send the data to the server
       navigator.sendBeacon('/score-zero', data);
+    });
     });
   </script>
 
