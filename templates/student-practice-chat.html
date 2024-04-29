@@ -112,7 +112,7 @@
         currentContent += "\n\nYou: " + userInput;  // Append user input to the chat
 
         $.ajax({
-          url: '/process-input',
+          url: '/process-input-ungraded',
           type: 'POST',
           data: { userInput: userInput },
           success: function (response) {

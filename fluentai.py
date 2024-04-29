@@ -690,6 +690,23 @@ def process_input():
     return flask.jsonify({'gpt_response': response_text})
 
 #-----------------------------------------------------------------------
+# FOR STUDENT PRACTICE CHAT AND PROF CHAT
+@app.route('/process-input-ungraded', methods=['POST'])
+def process_input_ungraded():
+    user_input = flask.request.form.get('userInput', '')
+    if not user_input:
+        return flask.jsonify({'error': 'No input provided'}), 400
+
+    if not flask.session.get('prompt_used', False):
+        prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
+        flask.session['prompt_used'] = True  # Mark the prompt as used
+    else:
+        prompt_text = ""
+
+    response_text = get_gpt_response(prompt_text, user_input)
+    return flask.jsonify({'gpt_response': response_text})
+
+#-----------------------------------------------------------------------
 
 def generate_unique_conv_id():
     return random.randint(10000000, 99999999)
