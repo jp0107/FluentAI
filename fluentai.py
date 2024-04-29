@@ -672,6 +672,7 @@ def process_input():
 
         # Clean up session
         flask.session.pop('turns_count', None)
+        flask.session.pop('max_turns', None)
         flask.session.pop('conversation_text', None)
 
         return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100."})
