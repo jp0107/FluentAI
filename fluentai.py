@@ -571,9 +571,6 @@ def student_assignment_chat(course_id, prompt_id):
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
 
-    # Get conversation
-    conversation_text = flask.session.get('conversation_text')
-
     # get the course language
     language = get_language(course_id)[0][0]
 
@@ -591,17 +588,16 @@ def student_assignment_chat(course_id, prompt_id):
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('student-assignment-chat.html',
-                                course_id = course_id,
                                 prompt_title = title,
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username,
                                 language = language,
                                 user_type = user_type,
-                                student_id = username,
-                                course_id = course_id,
-                                prompt_id = prompt_id,
-                                conversation_text = conversation_text)
+                                student_id = flask.session.get('student_id'),
+                                course_id = flask.session.get('course_id'),
+                                prompt_id = flask.session.get('prompt_id'),
+                                conversation_text = flask.session.get('conversation_text'))
 
 #-----------------------------------------------------------------------
 
