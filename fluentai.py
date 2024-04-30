@@ -264,7 +264,7 @@ def login():
     if user_type == "Student":
         return flask.redirect(flask.url_for('student_classes'))
     if user_type == "Professor":
-        return flask.redirect(flask.url_for('prof_classes'))
+        return flask.redirect(flask.url_for('prof_dashboard'))
     if user_type == "SuperAdmin":
         return flask.redirect(flask.url_for('admin_dashboard'))
 
@@ -385,18 +385,18 @@ def student_scores(course_id):
 #------------------------  PROFESSOR PAGES   ---------------------------
 #-----------------------------------------------------------------------
 
-@app.route('/prof-classes')
-def prof_classes():
+@app.route('/prof-dashboard')
+def prof_dashboard():
     username = auth.authenticate()
     user_type = check_user_type(username)
-    return flask.render_template('prof-classes.html',
+    return flask.render_template('prof-dashboard.html',
                                  username = username,
                                  user_type = user_type)
 
 #-----------------------------------------------------------------------
 
-@app.route('/prof-dashboard/<course_id>')
-def prof_dashboard(course_id):
+@app.route('/prof-course/<course_id>')
+def prof_course(course_id):
     username = auth.authenticate()
     # get user's type to make sure they can access page and display name if correct
     user_type = check_user_type(username)
@@ -415,7 +415,7 @@ def prof_dashboard(course_id):
     # get course code for this course
     course_code = get_course_code(course_id)[0][0]
 
-    return flask.render_template('prof-dashboard.html',
+    return flask.render_template('prof-course.html',
                                  username = username,
                                  first_name = first_name,
                                  course_id = course_id,
@@ -498,7 +498,7 @@ def admin_dashboard():
         return flask.redirect(flask.url_for('student_classes'))  # Redirecting to the home page or a suitable route
     if(user_type == "Professor"):
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('prof_classes'))  # Redirecting to the home page or a suitable route
+        return flask.redirect(flask.url_for('prof_dashboard'))  # Redirecting to the home page or a suitable route
     if(user_type == "SuperAdmin"):
         first_name = get_admin_firstname(username)
         
