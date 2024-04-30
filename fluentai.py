@@ -22,6 +22,8 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
+                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
+                      get_assignments_for_prof, get_all_scores)
                       check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins)
 
 #-----------------------------------------------------------------------
@@ -470,6 +472,7 @@ def prof_scores(course_id):
 
     flask.session['course_id'] = course_id
 
+    assignments = get_assignments_for_prof(course_id)
     try:
         scores = get_assignments_and_scores_for_student(course_id, username)
     except:

@@ -430,8 +430,8 @@ def get_default_scores_for_assignment():
 def get_default_conversation():
     return [('Assignment 0: Default', 'Mi nueva casa está en una calle ancha que tiene muchos árboles. El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña terraza con piscina donde puedo tomar el sol en verano.')]
 
-# get assignments for course (FOR PROF SCORES PAGE)
-def get_assignments(course_id):
+# get assignments for prof (FOR PROF SCORES PAGE)
+def get_assignments_for_prof(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         assignments = session.query(
             Prompt.prompt_id,
