@@ -118,7 +118,7 @@
           type: 'POST',
           data: { userInput: userInput },
           success: function (response) {
-            currentContent += "\n\nGPT: " + response.gpt_response;  // Append GPT response
+            currentContent += "\n\nChatbot: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
             $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea

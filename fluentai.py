@@ -78,7 +78,6 @@ def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, sco
         )
         session.add(new_conversation)
         session.commit()
-        print("Conversation stored successfully")
 
 #-----------------------------------------------------------------------
 
@@ -652,17 +651,18 @@ def prof_assignment_chat(course_id, prompt_id):
 @app.route('/process-input', methods=['POST'])
 def process_input():
     user_input = flask.request.form.get('userInput', '')
+    student_id = flask.session.get('student_id')
+    
     if not user_input:
         return flask.jsonify({'error': 'No input provided'}), 400
     
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
     max_turns = flask.session.get('max_turns', sys.maxsize)
-    conversation_text = flask.session.get('conversation_text', '') + f"\nUser: {user_input}"
+    conversation_text = flask.session.get('conversation_text', '') + f"\n{student_id}: {user_input}"
 
     if turns_count >= max_turns:
         course_id = flask.session.get('course_id')
-        student_id = flask.session.get('student_id')
         prompt_id = flask.session.get('prompt_id')
         score = calculate_score(conversation_text)
         conv_id = generate_unique_conv_id()
@@ -1211,7 +1211,6 @@ def delete_admin(adminid):
 def score_zero():
     if flask.request.method == 'POST':
         data = flask.request.get_json()
-        print(f"Received data: {data}")
 
         student_id = data.get('student_id')
         course_id = data.get('course_id')
