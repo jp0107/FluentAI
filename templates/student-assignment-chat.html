@@ -95,9 +95,10 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
+    // Immediately mark the session as dirty
+    window.isDirty = true;
+    
     $(document).ready(function () {
-      // Immediately mark the session as dirty
-      window.isDirty = true;
 
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
