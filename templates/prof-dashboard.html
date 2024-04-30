@@ -7,15 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
-    <title>FluentAI - {{ course_id }} Professor Dashboard</title>
+    <title>FluentAI - Professor Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/minified/introjs.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 
 <body>
@@ -25,9 +23,53 @@
     </div>
     {% endif %}
 
+    <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCourseModalLabel">Create a New Course</h5>
+                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Course ID (Department + Number):</label>
+                            <textarea class="form-control" id="course-id" rows="1" data-max-length="6"
+                                placeholder="Type course ID (e.g. SPA101)"></textarea>
+                            <small>Characters left: <span id="char-count-course-id">6</span></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Course Name:</label>
+                            <textarea class="form-control" id="course-name" rows="1" data-max-length="100"
+                                placeholder="Type course name (e.g. Beginner's Spanish I)"></textarea>
+                            <small>Characters left: <span id="char-count-course-name">100</span></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="department-select" class="col-form-label">Language:</label>
+                            <select class="form-control" id="department-select">
+                                <option disabled selected value="">Choose language...</option>
+                                <option value="Spanish">Spanish</option>
+                                <!-- <option value="Chinese">Chinese</option>
+                                <option value="Korean">Korean</option> -->
+                                <!-- Add more options here -->
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="add-course-button">Add new course</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/prof-classes">
+            <a class="navbar-brand" href="/prof-dashboard">
                 <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -35,10 +77,9 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary" id="startTutorial" >Tutorial</button>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             {{username}}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
@@ -55,262 +96,94 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="row mt-4">
-            <div class="col offset-sm-1">
-                <div class="dropdown">
-                    <button class="btn btn-course-dropdown dropdown-toggle" type="button" id="dropdownMenuCourse"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <h1 id="course-id-display" data-intro="Welcome to your course's dashboard!" data-step="1">{{ course_id }}<i class="fa fa-caret-down"></i></h1>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuCourse">
-                        <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#courseCodeModal"
-                            data-intro="Get the course code to share with your students!" data-step="2">
-                                Get Course Code</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                data-bs-target="#editCourseCodeModal" data-intro="Or edit the course code" data-step="3">
-                                Edit Course Code</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal"
-                                data-course-id="{{ course_id }}" data-intro="You can also permanently delete the course" data-step="4">
-                                Delete Course</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modals -->
-    <div class="modal fade" id="courseCodeModal" tabindex="-1" role="dialog" aria-labelledby="courseCodeModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="courseCodeModalLabel">Course Code</h5>
-                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    The course code is: {{ course_code }} <!-- insert course code from backend-->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editCourseCodeModal" tabindex="-1" role="dialog"
-        aria-labelledby="editCourseCodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editCourseCodeModalLabel">Edit Course Code</h5>
-                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="edit-course-code" class="col-form-label">Edit Course Code:</label>
-                            <textarea class="form-control" id="edit-course-code" rows="1" data-max-length="6"
-                                placeholder="Type New Course Code"></textarea>
-                            <small>Characters left: <span id="char-count-edit-course-code"></span></small>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="edit-course-code-button">Edit course code</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="deleteCourseModal" tabindex="-1" role="dialog" aria-labelledby="deleteCourseModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteCourseModalLabel">Delete Course</h5>
-                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete <strong>{{ course_id }}</strong> forever?
-                    <p>Warning: By deleting this course, you will not be able to access nor recover any data for it upon
-                        deletion.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirmDelete" data-bs-dismiss="modal"> Yes,
-                        delete course</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- End Modals -->
-
     <br>
 
     <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-auto mt-5">
-                <h2 id="dashboard-welcome">Hi {{first_name}}, what would you like to do?</h2>
+        <div class="row mt-4">
+            <div class="row mt-4 align-items-center">
+                <h1>My Courses</h1>
             </div>
-        </div>
-        <br>
-        <div class="large-screen-layout">
-            <div class="row justify-content-center">
-                <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
-                <div class="col-auto">
-                    <a href="/prof-assignments/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="View and create assignments here!" data-step="5">Assignments</div>
-                    </a>
-                </div>
-                <div class="col-auto">
-                    <a href="/prof-scores/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="Look at scores from past assignments" data-step="6">Scores</div>
-                    </a>
-                </div>
-                <div class="col-auto">
-                    <a href="/prof-roster/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="Edit the course roster here!">Roster</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="small-screen-layout">
+            <br>
             <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
-                <div class="col d-flex">
-                    <a href="/prof-assignments/{{ course_id }}"
-                        class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
-                        id="class-button">
-                        Assignments
-                    </a>
-                </div>
-                <div class="col d-flex">
-                    <a href="/prof-scores/{{ course_id }}"
-                        class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
-                        id="class-button">
-                        Scores
-                    </a>
-                </div>
-                <div class="col d-flex">
-                    <a href="/prof-roster/{{ course_id }}"
-                        class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
-                        id="class-button">
-                        Roster
-                    </a>
-                </div>
             </div>
         </div>
-    </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
-    <script type="text/javascript">
-        
-
-        $(document).ready(function () {
-            var $charCount = $('#char-count-edit-course-code');
-            var maxLength = parseInt($('#edit-course-code').attr('data-max-length'), 10);
-
-            // initialize character count
-            function initializeCharCount() {
-                $charCount.text(maxLength);
-            }
-
-            // update character count
-            function updateCharCount() {
-                var currLength = $('#edit-course-code').val().length;
-                $charCount.text(maxLength - currLength);
-            }
-
-            // clear text area within edit-code modal
-            function clearTextArea() {
-                $("#edit-course-code").val('');
-            }
-
-            // start the tutorial
-            $("#startTutorial").click(function () {
-                introJs().start();
-            });
-
-            // update character count when user types in new code
-            $('#edit-course-code').on('input', updateCharCount);
-
-            // reset text area and character count when edit-code modal is closed
-            $('#editCourseCodeModal').on('hidden.bs.modal', function () {
-                clearTextArea();
-                initializeCharCount();
-            });
-
-            // edit course code click event
-            $("#edit-course-code-button").click(function () {
-                var newCourseCode = $("#edit-course-code").val().trim();
-                var courseId = $("#course-id-display").text();
-
-                if (!newCourseCode) {
-                    alert("Course code cannot be empty");
-                    return;
+        <script type="text/javascript">
+            $(document).ready(function () {
+                // Function to fetch updated course list
+                function fetchCourses() {
+                    var nocache = new Date().getTime();
+                    $.ajax({
+                        url: '/get-prof-courses',
+                        method: 'GET',
+                        cache: false,
+                        success: function (response) {
+                            displayCourses(response); // Update the course list on the page
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error fetching courses: ' + xhr.statusText);
+                        }
+                    });
                 }
 
-                $.ajax({
-                    url: '/edit-course-code',
-                    type: 'POST',
-                    data: {
-                        course_id: courseId,
-                        new_course_code: newCourseCode
-                    },
-                    success: function (response) {
-                        alert(response.message);
-                        $('#editCourseCodeModal').modal('hide');
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        alert('Error updating course code: ' + xhr.responseText);
+                // Function to display courses
+                function displayCourses(courses) {
+                    var courseListHtml = '<div class="col d-flex">' +
+                        '<a data-bs-toggle="modal" data-bs-target="#addCourseModal" class="class-button" role="button">' +
+                        '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Create New Course' +
+                        '</a></div>';
+                    $.each(courses, function (index, course) {
+                        courseListHtml += '<div class="col d-flex">' +
+                            '<a href="/prof-course/' + encodeURIComponent(course.course_id) +
+                            '" class="class-button" role="button">' + // Using URL parameters
+                            '<h3>' + course.course_id + '</h3>' + course.course_name +
+                            '</a></div>';
+                    });
+                    $(".row-cols-md-3").html(courseListHtml);
+                }
+
+                // Add course button click event
+                $("#add-course-button").click(function () {
+                    var courseOwner = $('#navbarDropdownMenuLink').text().trim();
+                    var courseId = $("#course-id").val();
+                    var courseName = $("#course-name").val();
+                    var language = $("#department-select").find(":selected").val();
+
+                    if (!courseId || !courseName) {
+                        alert("Course ID and name are required.");
+                        return;
                     }
-                });
-            });
 
-            $('#deleteCourseModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);  // Button that triggered the modal
-                var courseId = button.data('course-id');  // Retrieve the course ID from the button
-                console.log("Course ID to delete:", courseId);  // Log course ID for debugging
-                $(this).find('#confirmDelete').data('course-id', courseId);  // Set the course ID on the confirm button
-            });
-
-            // Handle the confirmation button click
-            $('#confirmDelete').click(function () {
-                var courseId = $(this).data('course-id');  // Get the course ID set earlier
-                console.log("Deleting course with ID:", courseId);  // Log deletion attempt
-                $.ajax({
-                    url: '/delete-course/' + courseId,
-                    type: 'POST',
-                    success: function (response) {
-                        alert(response.message); // Notify user of success
-                        window.location.href = 'https://fluentai.onrender.com/prof-classes'; // Redirect
-                    },
-                    error: function (error) {
-                        alert('Error deleting course: ' + error.responseText);  // Provide more detailed error information
-                        console.log('AJAX error:', error);  // Log detailed error
+                    if (language === "") {
+                        alert("Please select a language before adding the course.");
+                        return;
                     }
-                });
-            });
-        });
 
-    </script>
+                    $.ajax({
+                        url: '/add-course',
+                        method: 'POST',
+                        data: {
+                            course_owner: courseOwner,
+                            course_id: courseId,
+                            course_name: courseName,
+                            language: language
+                        },
+                        success: function (response) {
+                            alert(response.message);
+                            $('#addCourseModal').modal('hide');
+                            $('#addCourseModal').find('form').trigger('reset');
+                            fetchCourses();
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Error adding course: ' + xhr.statusText);
+                        }
+                    });
+                });
+
+                // Initial fetch of courses when the page loads
+                fetchCourses();
+            });
+        </script>
 
 </body>
 
