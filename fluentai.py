@@ -679,7 +679,7 @@ def process_input():
         flask.session.pop('max_turns', None)
         flask.session.pop('conversation_text', None)
 
-        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100."})
+        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100.", 'score': score})
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text

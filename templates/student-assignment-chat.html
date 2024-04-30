@@ -97,7 +97,7 @@
   <script>
     // Immediately mark the session as dirty
     window.isDirty = true;
-    
+
     $(document).ready(function () {
 
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
@@ -125,6 +125,9 @@
 
             if (response.gpt_response.includes("This conversation has reached its turn limit.")) {
               $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
+              if (confirm("You have reached the end of this conversation. Your score is " + response.score + "/100. Click OK to go back to the Assignments page.")) {
+                window.location.href = '/student-assignments/{{ course_id }}'; // Redirect to assignments page
+              }
             }
           },
           error: function (xhr, status, error) {
