@@ -433,32 +433,15 @@ def get_default_conversation():
 # gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
     with sqlalchemy.orm.Session(engine) as session:
-        # Get the highest score (or latest entry by creation date if scores are tied or missing)
-        subquery = (
-            session.query(
-                Conversation.prompt_id,
-                sqlalchemy.func.max(Conversation.score).label('max_score'),
-                sqlalchemy.func.max(Conversation.created_at).label('max_created_at')
-            )
-            .filter(Conversation.student_id == student_id)
-            .group_by(Conversation.prompt_id)
-            .subquery()
-        )
+        # check if the student exists in the database
+        # student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
+        # if not student_exists:
+        #     return None
 
-        # Join this subquery with Conversations to get the details of the conversations with max score or latest
-        query = (
-            session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
-            .join(Prompt, Prompt.prompt_id == Conversation.prompt_id)
-            .join(subquery, sqlalchemy.and_(
-                Conversation.prompt_id == subquery.c.prompt_id,
-                sqlalchemy.or_(
-                    Conversation.score == subquery.c.max_score,
-                    Conversation.created_at == subquery.c.max_created_at
-                )
-            ))
-            .filter(Prompt.course_id == course_id)
-            .order_by(Prompt.created_at)
-        )
+        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
+                 .outerjoin(Conversation, sqlalchemy.and_(Conversation.prompt_id == Prompt.prompt_id, Conversation.student_id == student_id))
+                 .filter(Prompt.course_id == course_id)
+                 .order_by(sqlalchemy.asc(Prompt.created_at)))
 
         results = query.all()
         return results if results else None
