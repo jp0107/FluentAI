@@ -483,13 +483,12 @@ def get_all_scores(prompt_id):
                     CoursesStudents.student_id,
                     Conversation.conv_id, 
                     Conversation.score)
-                 .join(Student, CoursesStudents.student_id == Student.student_id)
                  .join(Prompt, CoursesStudents.course_id == Prompt.course_id)
                  .outerjoin(Conversation, sqlalchemy.and_(
                      Conversation.student_id == CoursesStudents.student_id,
                      Conversation.prompt_id == prompt_id))
                  .filter(Prompt.prompt_id == prompt_id))
-                 
+
         results = query.all()
         return results
 

@@ -218,38 +218,56 @@
       const menuItems = document.querySelectorAll('#menu a');
       const scoresSection = document.querySelectorAll('.scores-section'); // Selects all matching elements
       const scoresTable = document.querySelector('.score-table');
-      const scoreBody = scoresTable.querySelector('.score-body');
+      const scoreBody = scoresTable.querySelector('.score-body'); // This should point to your <tbody> within the score table
 
       // Function to hide all score sections
       function hideScores() {
+        console.log('Hiding all scores sections');
         scoresSection.forEach(section => {
           section.style.display = 'none'; // Hide all score tables
         });
       }
 
+      // Fetch data
       function fetchAndDisplayScores(promptId) {
+        console.log(`Fetching scores for promptId: ${promptId}`);
         fetch(`/get-scores/${promptId}`)
           .then(response => response.json())
           .then(data => {
-            scoresTable.style.display = ''; // Show the table
-            scoreBody.innerHTML = ''; // Clear previous scores
-            data.forEach(score => {
-              const displayScore = score.score !== null ? `${score.score}/100` : '-/100'; // Check if score is null and use "-" as placeholder
-              let conversationLink;
-              if (score.conv_id) {
-                    conversationLink = `<a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a>`;
-                } else {
-                    conversationLink = `<button onclick="alert('No conversation history available.')" class="small-button">See Conversation History</button>`;
-                }
-              const row = `<tr>
-                            <td>${score.student_id}</td>
-                            <td>${displayScore}</td>
-                            <td>${conversationLink}</td>
-                          </tr>`;
-              scoreBody.innerHTML += row;
-            });
+            updateScoresDisplay(promptId, data);
           })
-          .catch(error => console.error('Failed to fetch scores:', error));
+          .catch(error => {
+            console.error('Failed to fetch scores:', error);
+            updateScoresDisplay(promptId, []); // Handle errors by clearing the display
+          });
+      }
+
+      // Update display
+      function updateScoresDisplay(promptId, data) {
+        if (promptId === 'general') {
+          console.log('Displaying general overview, hiding all specific scores');
+          hideScores();
+        } else {
+          console.log(`Updating display for promptId: ${promptId} with data:`, data);
+          scoresTable.style.display = ''; // Show the table
+          scoreBody.innerHTML = ''; // Clear previous scores
+          data.forEach(score => {
+            const displayScore = score.score !== null ? `${score.score}/100` : '-/100'; // Check if score is null and use "-" as placeholder
+            let conversationLink;
+            if (score.conv_id) {
+              conversationLink = `<a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a>`;
+            } else {
+              conversationLink = `<button onclick="alert('No conversation history available.')" class="small-button">See Conversation History</button>`;
+            }
+            const row = `<tr>
+                          <td>${score.student_id}</td>
+                          <td>${displayScore}</td>
+                          <td>${conversationLink}</td>
+                        </tr>`;
+            scoreBody.innerHTML += row;
+          });
+          console.log('Display updated successfully');
+        }
       }
 
       // Initially hide scores
@@ -257,14 +275,15 @@
 
       // Event listeners for menu items
       menuItems.forEach(item => {
-          item.addEventListener('click', function (e) {
-            e.preventDefault();
-            const promptId = this.getAttribute('data-assignment');
-            if (promptId !== 'general') {
-              fetchAndDisplayScores(promptId);
-            } else {
-              hideScores(); // Hide all scores if 'Scores Overview' is selected
-            }
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          const promptId = this.getAttribute('data-assignment');
+          console.log(`Menu item clicked for promptId: ${promptId}`);
+          if (promptId !== 'general') {
+            fetchAndDisplayScores(promptId);
+          } else {
+            hideScores(); // Hide all scores if 'Scores Overview' is selected
+          }
         });
       });
     });
