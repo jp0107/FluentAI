@@ -54,7 +54,7 @@
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/student-classes">
+            <a class="navbar-brand" href="/student-dashboard">
                 <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -63,7 +63,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/student-classes">My Courses</a>
+                        <a class="nav-link" href="/student-dashboard">My Courses</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="underlined">All Courses</a>
@@ -183,7 +183,7 @@
                             $('#joinCourseModal').data('course-id', courseId); // Store courseId in modal
                             $('#joinCourseModal').data('course-code', courseCode); // Store courseCode in modal
                         } else {
-                            window.location.href = '/student-dashboard/' + encodeURIComponent(courseId);
+                            window.location.href = '/student-course/' + encodeURIComponent(courseId);
                         }
                     },
                     error: function(xhr) {
