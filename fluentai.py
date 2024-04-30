@@ -237,14 +237,14 @@ def login():
     username = auth.authenticate()
 
     # if new user, store user info in database
-    user_type = check_user_type('username')
+    user_type = check_user_type(username)
 
     if user_type is None:
         req_lib = ReqLib()
 
         req = req_lib.getJSON(
             req_lib.configs.USERS,
-            uid='username'
+            uid=username
         )
 
         # get user first/last name, and pustatus from netid
