@@ -244,7 +244,7 @@ def login():
 
         req = req_lib.getJSON(
             req_lib.configs.USERS,
-            uid=username
+            uid='benj'
         )
 
         # get user first/last name, and pustatus from netid
