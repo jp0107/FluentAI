@@ -588,7 +588,6 @@ def student_assignment_chat(course_id, prompt_id):
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('student-assignment-chat.html',
-                                course_id = course_id,
                                 prompt_title = title,
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
