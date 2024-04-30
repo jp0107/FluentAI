@@ -31,6 +31,8 @@
                             {{username}}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <li class="dropdown-item disabled" aria-disabled="true"
+                                style="pointer-events: none; cursor: default;">User Role: Admin</li>
                             <li><a class="dropdown-item" href="#" id="underlined">Admin View</a></li>
                             <li><a class="dropdown-item" href="/prof-dashboard">Professor View</a></li>
                             <li><a class="dropdown-item" href="/student-dashboard">Student View</a></li>
@@ -57,8 +59,10 @@
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-auto mt-5">
-                <h2 class="large-screen-layout" id="dashboard-welcome" style="font-size: 30px;">Hi {{ first_name }}, what would you like to manage?</h2>
-                <h2 class="small-screen-layout" id="dashboard-welcome" style="font-size: 20px;">Hi {{ first_name }}, <br> what would you like to manage?</h2>
+                <h2 class="large-screen-layout" id="dashboard-welcome" style="font-size: 30px;">Hi {{ first_name }},
+                    what would you like to manage?</h2>
+                <h2 class="small-screen-layout" id="dashboard-welcome" style="font-size: 20px;">Hi {{ first_name }},
+                    <br> what would you like to manage?</h2>
             </div>
         </div>
         <br>
@@ -86,9 +90,8 @@
         <div class="small-screen-layout">
             <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
                 <div class="col d-flex">
-                    <a href="/admin-roster"
-                        class="class-button w-100 d-flex align-items-center justify-content-center" role="button"
-                        id="class-button">
+                    <a href="/admin-roster" class="class-button w-100 d-flex align-items-center justify-content-center"
+                        role="button" id="class-button">
                         Admin Roster
                     </a>
                 </div>

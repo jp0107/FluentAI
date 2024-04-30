@@ -30,7 +30,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="joinCourseModalLabel">Join a Course</h5>
-                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close" data-intro="You can join a course here!" data-step="2">
+                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close"
+                        data-intro="You can join a course here!" data-step="2">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -66,11 +67,12 @@
                         <a class="nav-link" href="#" id="underlined">My Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/student-all-courses" data-intro="View all active courses here!" data-setp="3">All Courses</a>
+                        <a class="nav-link" href="/student-all-courses" data-intro="View all active courses here!"
+                            data-setp="3">All Courses</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary" id="startTutorial" >Start Tour</button>
+                    <button type="button" class="btn btn-primary" id="startTutorial">Start Tour</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -78,9 +80,14 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             {% if user_type == 'SuperAdmin' %}
+                            <li class="dropdown-item disabled" aria-disabled="true"
+                                style="pointer-events: none; cursor: default;">User Role: Admin</li>
                             <li><a class="dropdown-item" href="/admin-dashboard">Admin View</a></li>
-                            <li><a class="dropdown-item" href="/prof-dashboard">Professor View</a></li>
+                            <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
                             <li><a class="dropdown-item" href="#" id="underlined">Student View</a></li>
+                            {% else %}
+                            <li class="dropdown-item disabled" aria-disabled="true"
+                                style="pointer-events: none; cursor: default;">User Role: {{ user_type }}</li>
                             {% endif %}
                             <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
                         </ul>
@@ -94,7 +101,8 @@
 
     <div class="container">
         <div class="row mt-4">
-            <div class="row mt-4 align-items-center" data-intro="You can see all of your courses on this page!" data-step="1">
+            <div class="row mt-4 align-items-center" data-intro="You can see all of your courses on this page!"
+                data-step="1">
                 <h1>My Courses</h1>
             </div>
             <br>

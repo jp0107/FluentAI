@@ -22,7 +22,7 @@
         You are currently in Student View.
     </div>
     {% endif %}
-    
+
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="/student-dashboard">
@@ -33,7 +33,7 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary" id="startTutorial" >Tutorial</button>
+                    <button type="button" class="btn btn-primary" id="startTutorial">Tutorial</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -41,9 +41,14 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             {% if user_type == 'SuperAdmin' %}
+                            <li class="dropdown-item disabled" aria-disabled="true"
+                                style="pointer-events: none; cursor: default;">User Role: Admin</li>
                             <li><a class="dropdown-item" href="/admin-dashboard">Admin View</a></li>
-                            <li><a class="dropdown-item" href="/prof-dashboard">Professor View</a></li>
+                            <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
                             <li><a class="dropdown-item" href="#" id="underlined">Student View</a></li>
+                            {% else %}
+                            <li class="dropdown-item disabled" aria-disabled="true"
+                                style="pointer-events: none; cursor: default;">User Role: {{ user_type }}</li>
                             {% endif %}
                             <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
                         </ul>
@@ -72,17 +77,20 @@
             <div class="row justify-content-center">
                 <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
                 <div class="col-auto">
-                    <a href="/student-assignments/{{ course_id }}" id="dashboard-btn" class="text-decoration-none" data-intro="You can complete your assigned assignments here!" data-step="2">
+                    <a href="/student-assignments/{{ course_id }}" id="dashboard-btn" class="text-decoration-none"
+                        data-intro="You can complete your assigned assignments here!" data-step="2">
                         <div id="dashboard-box">Assignments</div>
                     </a>
                 </div>
                 <div class="col-auto">
-                    <a href="/student-practice-chat/{{ course_id }}" id="dashboard-btn" class="text-decoration-none" data-intro="Or start by practicing!" data-step="3">
+                    <a href="/student-practice-chat/{{ course_id }}" id="dashboard-btn" class="text-decoration-none"
+                        data-intro="Or start by practicing!" data-step="3">
                         <div id="dashboard-box">Practice</div>
                     </a>
                 </div>
                 <div class="col-auto">
-                    <a href="/student-scores/{{ course_id }}" id="dashboard-btn" class="text-decoration-none" data-intro="Look at your past assignments and scores here!" data-step="4">
+                    <a href="/student-scores/{{ course_id }}" id="dashboard-btn" class="text-decoration-none"
+                        data-intro="Look at your past assignments and scores here!" data-step="4">
                         <div id="dashboard-box">Scores</div>
                     </a>
                 </div>
@@ -120,9 +128,10 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#startTutorial").click(function () {
-                    introJs().start();
+                introJs().start();
             });
         });
     </script>
 </body>
+
 </html>
