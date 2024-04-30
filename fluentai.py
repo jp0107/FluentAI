@@ -633,6 +633,8 @@ def prof_assignment_chat(course_id, prompt_id):
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
+    flask.session['turns_count'] = 0  # Initialize turn count
+    flask.session['max_turns'] = prompt.num_turns   # store max turns from database
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('prof-assignment-chat.html',
