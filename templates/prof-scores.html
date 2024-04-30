@@ -258,8 +258,11 @@
                           <td>${displayScore}</td>
                           <td>${conversationLink}</td>
                         </tr>`;
+            console.log('Appending row:', row);
             scoreBody.innerHTML += row;
           });
+          // Log the innerHTML of scoreBody to see what's been appended
+          console.log('Current innerHTML of scoreBody:', scoreBody.innerHTML);
           console.log('Scores displayed successfully');
         } else {
           hideScores();
