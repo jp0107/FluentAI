@@ -285,12 +285,12 @@ def student_classes():
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-all-classes')
-def student_all_classes():
+@app.route('/student-all-courses')
+def student_all_courses():
     username = auth.authenticate()
     user_type = check_user_type(username)
 
-    html_code = flask.render_template('student-all-classes.html',
+    html_code = flask.render_template('student-all-courses.html',
                                       username = username,
                                       user_type = user_type)
     return flask.make_response(html_code)
