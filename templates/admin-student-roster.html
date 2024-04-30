@@ -102,16 +102,10 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="message-text" class="col-form-label">Student First Name:</label>
-                <textarea class="form-control" id="student-first-name" rows="1" data-max-length="15"
-                  placeholder="Type first name of student"></textarea>
-                <small>Characters left: <span id="char-count-student-first-name">15</span></small>
-              </div>
-              <div class="form-group">
-                <label for="message-text" class="col-form-label">Student Last Name:</label>
-                <textarea class="form-control" id="student-last-name" rows="1" data-max-length="15"
-                  placeholder="Type last name of student"></textarea>
-                <small>Characters left: <span id="char-count-student-last-name">15</span></small>
+                <label for="message-text" class="col-form-label">Student Name:</label>
+                <textarea class="form-control" id="student-name" rows="1" data-max-length="30"
+                  placeholder="Type full name of student"></textarea>
+                <small>Characters left: <span id="char-count-student-name">30</span></small>
               </div>
               <div class="form-group">
                 <label for="message-text" class="col-form-label">Student NetID:</label>
@@ -247,8 +241,7 @@
       }
 
       $('#add-student-button').click(function () {
-        var studentFirstName = $('#student-first-name').val().trim(); // Fetching value from textarea
-        var studentLastName = $('#student-last-name').val().trim(); // Fetching value from textarea
+        var studentName = $('#student-name').val().trim(); // Fetching value from textarea
         var studentNetID = $('#student-netid').val().trim(); // Fetching value from textarea
         var courseID = $('#course-id').val().trim(); // Fetching value from textarea
 
@@ -257,8 +250,7 @@
           type: 'POST',
           url: '/admin-add-student-to-course',
           data: {
-            'student_first_name': studentFirstName,
-            'student_last_name': studentLastName,
+            'student_name': studentName,
             'student_id': studentNetID,
             'course_id': courseID
           },

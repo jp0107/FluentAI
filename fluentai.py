@@ -1115,11 +1115,10 @@ def admin_add_professor_to_course():
 @app.route('/admin-add-student-to-course', methods=['POST'])
 def admin_add_student_to_course():
     course_id = flask.request.form.get('course_id')
-    student_first_name = flask.request.form.get('student_first_name')
-    student_last_name = flask.request.form.get('student_last_name')
+    student_name = flask.request.form.get('student_name')
     student_id = flask.request.form.get('student_id')
 
-    if not course_id or not student_first_name or not student_last_name or not student_id:
+    if not course_id or not student_name or not student_id:
         return flask.jsonify({"message": "All fields (student first name, last name, netID, and course ID) are required."}), 400
 
     with Session() as session:
@@ -1131,7 +1130,9 @@ def admin_add_student_to_course():
         # Check if the student already exists
         student = session.query(Student).filter_by(student_id=student_id).first()
         if not student:
-            student = Student(student_id=student_id, first_name=student_first_name, last_name=student_last_name)
+            # Assuming splitting name into first and last
+            first_name, last_name = (student_name.split(maxsplit=1) + [""])[:2]
+            student = Student(student_id=student_id, first_name=first_name, last_name=last_name)
             session.add(student)
 
         # Check if the student is already linked to the course
@@ -1173,7 +1174,7 @@ def add_admin():
             return flask.jsonify({'error': 'This user is already an admin'}), 409
 
         # If the admin does not exist, proceed to add them
-        first_name, last_name = (admin_name.split(maxsplit=1) + [None])[:2]
+        first_name, last_name = (admin_name.split(maxsplit=1) + [""])[:2]
         new_admin = SuperAdmin(
             admin_id=admin_id,
             first_name=first_name,
