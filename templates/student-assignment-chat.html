@@ -147,15 +147,16 @@
     });
 
     $(window).on('unload', function() {
-        var data = JSON.stringify({
-          student_id: "{{ student_id }}",
-          course_id: "{{ course_id }}",
-          prompt_id: "{{ prompt_id }}",
-          conversation_text: "{{ conversation_text }}"
-        });
-        var blob = new Blob([data], {type : 'application/json'});
-
-        navigator.sendBeacon('/score-zero', blob);
+      if (window.isDirty && !isFinished) {  // Only send if the conversation was started and not properly finished
+          var data = JSON.stringify({
+            student_id: "{{ student_id }}",
+            course_id: "{{ course_id }}",
+            prompt_id: "{{ prompt_id }}",
+            conversation_text: $('#gptResponse').val()
+          });
+          var blob = new Blob([data], {type : 'application/json'});
+          navigator.sendBeacon('/score-zero', blob);
+        }
       });
     });
   </script>
