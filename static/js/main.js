@@ -50,4 +50,24 @@ document.addEventListener('DOMContentLoaded', function () {
             charCountAreas.forEach(updateCharCount);
         });
     });
+
+    // Function to simulate button click
+    function triggerButtonClick(button) {
+        button.click();
+    }
+
+    // Adding keydown event listeners to handle the Enter key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            // Check if the target is inside a modal
+            let modal = event.target.closest('.modal');
+            if (modal) {
+                let primaryButton = modal.querySelector('.btn-primary');
+                if (primaryButton) {
+                    event.preventDefault(); // Prevent the default Enter key action
+                    triggerButtonClick(primaryButton);
+                }
+            }
+        }
+    });
 });

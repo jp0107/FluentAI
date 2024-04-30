@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
-    <title>FluentAI - {{ course_id }} Student Assignment List</title>
+    <title>FluentAI - Student {{ course_id }} Assignment List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -25,7 +25,7 @@
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/student-classes">
+            <a class="navbar-brand" href="/student-dashboard">
                 <img src="/static/img/logo_dark.png" alt="FluentAI Logo" width="130" />
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -51,9 +51,16 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             {% if user_type == 'SuperAdmin' %}
+                            <li class="dropdown-item disabled" aria-disabled="true"
+                                style="pointer-events: none; cursor: default;">
+                                User Role: Admin</li>
                             <li><a class="dropdown-item" href="/admin-dashboard">Admin View</a></li>
                             <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
                             <li><a class="dropdown-item" href="#" id="underlined">Student View</a></li>
+                            {% else %}
+                            <li class="dropdown-item disabled" aria-disabled="true"
+                                style="pointer-events: none; cursor: default;">
+                                User Role: {{ user_type }}</li>
                             {% endif %}
                             <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
                         </ul>
@@ -123,9 +130,9 @@
                     <div class="large-screen-layout">
                         <div class="job-right my-4 flex-shrink-0 d-flex">
                             <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
-                                class="assignments-button me-2"
-                                onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this)"
-                                >Start Assignment</a>
+                                class="assignments-button me-2 {{ 'disabled' if completed }}"
+                                onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this, '{{ completed }}')">Start
+                                Assignment</a>
                         </div>
                     </div>
 
@@ -133,10 +140,9 @@
                         <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
                             <div class="col d-flex">
                                 <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
-                                    class="class-button w-100 d-flex align-items-center justify-content-center"
+                                    class="class-button w-100 d-flex align-items-center justify-content-center {{ 'disabled' if completed }}"
                                     role="button" id="class-button"
-                                    onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this)"
-                                    >
+                                    onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this, '{{ completed }}')">
                                     Start Assignment
                                 </a>
                             </div>
@@ -199,9 +205,27 @@
     </div>
 
     <script>
-        function confirmStartAssignment(event, url, element) {
+        $(document).ready(function () {
+            // Check if the reload flag is set in localStorage
+            if (localStorage.getItem('reloadAssignments') === 'true') {
+                localStorage.removeItem('reloadAssignments'); // Clear the flag
+                window.location.reload(true); // Force reload from the server
+            }
+        });
+
+        function confirmStartAssignment(event, url, element, isCompleted) {
             event.preventDefault();
-            // Show confirmation dialog
+
+            console.log("Is completed:", isCompleted); // Ensure this is logging 'true' or 'false' correctly
+
+            // Check if assignment is already completed
+            if (isCompleted == 'True') {
+                alert("This assignment has already been completed and cannot be done again.");
+                element.blur()
+                return;
+            }
+
+            // Show confirmation dialog otherwise
             if (confirm("Please ensure you complete this assignment in one sitting without navigating to other pages. If you leave the assignment page, you will get a score of 0 for this assignment. Press OK to start or Cancel to return.")) {
                 // If the user confirms, redirect to the assignment URL
                 window.location.href = url;

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">
-  <title>FluentAI - {{ course_id }} Student Assignment Chat</title>
+  <title>FluentAI - Student {{ course_id }} Assignment Chat</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -25,7 +25,7 @@
 
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/student-classes">
+      <a class="navbar-brand" href="/student-dashboard">
         <img src="/static/img/logo_light.png" alt="FluentAI Logo" width="130" />
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -51,9 +51,14 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
               {% if user_type == 'SuperAdmin' %}
+              <li class="dropdown-item disabled" aria-disabled="true" style="pointer-events: none; cursor: default;">
+                User Role: Admin</li>
               <li><a class="dropdown-item" href="/admin-dashboard">Admin View</a></li>
               <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
               <li><a class="dropdown-item" href="#" id="underlined">Student View</a></li>
+              {% else %}
+              <li class="dropdown-item disabled" aria-disabled="true" style="pointer-events: none; cursor: default;">
+                User Role: {{ user_type }}</li>
               {% endif %}
               <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
             </ul>
@@ -93,9 +98,13 @@
     </form>
   </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
+    // Immediately mark the session as dirty
+    window.isDirty = true;
+    isFinished = false;
+
     $(document).ready(function () {
+
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
         $('input[name="userInput"]').attr('placeholder', 'Escribe conversación aquí...');
@@ -114,13 +123,17 @@
           type: 'POST',
           data: { userInput: userInput },
           success: function (response) {
-            currentContent += "\n\nGPT: " + response.gpt_response;  // Append GPT response
+            currentContent += "\n\nChatbot: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
             $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
 
             if (response.gpt_response.includes("This conversation has reached its turn limit.")) {
               $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
+              isFinished = true;
+              if (confirm("You have reached the end of this conversation. Your score is " + response.score + "/100. Click OK to go back to the Assignments page.")) {
+                window.location.href = '/student-assignments/{{ course_id }}'; // Redirect to assignments page
+              }
             }
           },
           error: function (xhr, status, error) {
@@ -128,9 +141,33 @@
           }
         });
       });
+
+      $(window).on('beforeunload', function (e) {
+        if (window.isDirty && !isFinished) {
+          var message = "Are you sure you want to leave? Leaving this page will result in a score of 0 for this assignment.";
+          e.preventDefault();
+          e.returnValue = message;
+          return message;
+        }
+      });
+
+      $(window).on('unload', function () {
+        if (window.isDirty && !isFinished) {  // Only send if the conversation was started and not properly finished
+          var data = JSON.stringify({
+            student_id: "{{ student_id }}",
+            course_id: "{{ course_id }}",
+            prompt_id: "{{ prompt_id }}",
+            conversation_text: $('#gptResponse').val()
+          });
+          var blob = new Blob([data], { type: 'application/json' });
+          navigator.sendBeacon('/score-zero', blob);
+
+          // Set a flag in localStorage
+          localStorage.setItem('reloadAssignments', 'true');
+        }
+      });
     });
   </script>
-
 
 </body>
 

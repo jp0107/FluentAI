@@ -44,9 +44,11 @@
               {{username}}
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+              <li class="dropdown-item disabled" aria-disabled="true" style="pointer-events: none; cursor: default;">
+                User Role: Admin</li>
               <li><a class="dropdown-item" href="#" id="underlined">Admin View</a></li>
-              <li><a class="dropdown-item" href="/prof-classes">Professor View</a></li>
-              <li><a class="dropdown-item" href="/student-classes">Student View</a></li>
+              <li><a class="dropdown-item" href="/prof-dashboard">Professor View</a></li>
+              <li><a class="dropdown-item" href="/student-dashboard">Student View</a></li>
               <li><a class="dropdown-item" href="/logoutcas">Log out</a></li>
             </ul>
           </li>
@@ -59,7 +61,12 @@
     <div class="row mt-4">
       <div class="col-lg-10 col-md-10 mx-auto">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h1>Professors</h1>
+          <div class="large-screen-layout">
+            <h1>Professors</h1>
+          </div>
+          <div class="small-screen-layout">
+            <h1 style="font-size: 58px;">Professors</h1>
+          </div>
 
           <div class="large-screen-layout">
             <button type="button" class="btn chat-button d-flex align-items-center" data-bs-toggle="modal"
@@ -107,9 +114,9 @@
               </div>
               <div class="form-group">
                 <label for="message-text" class="col-form-label">Professor NetID:</label>
-                <textarea class="form-control" id="professor-netid" rows="1" data-max-length="10"
+                <textarea class="form-control" id="professor-netid" rows="1" data-max-length="15"
                   placeholder="Type netID of professor"></textarea>
-                <small>Characters left: <span id="char-count-professor-netid">10</span></small>
+                <small>Characters left: <span id="char-count-professor-netid">15</span></small>
               </div>
               <div class="form-group">
                 <label for="message-text" class="col-form-label">Course ID (Department + Number):</label>

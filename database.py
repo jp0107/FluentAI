@@ -464,7 +464,7 @@ def get_all_scores(prompt_id):
         return results if results else get_default_scores_for_assignment()
 
 # get conversation history given a conv_id
-def get_conversation(course_id, conv_id):
+def get_conversation(conv_id):
     with sqlalchemy.orm.Session(engine) as session:
 
         query = (session.query(Prompt.prompt_title, Conversation.conv_text)
@@ -472,7 +472,7 @@ def get_conversation(course_id, conv_id):
                      Conversation.prompt_id == Prompt.prompt_id, 
                      Conversation.conv_id == conv_id 
                  ))
-                 .filter(Prompt.course_id == course_id))
+                 .filter(Conversation.conv_id == conv_id))
 
         results = query.all()
         return results
