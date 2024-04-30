@@ -1232,7 +1232,7 @@ def get_scores(prompt_id):
     try:
         scores = get_all_scores(prompt_id)
         return flask.jsonify([{
-            'name': score.name,
+            'student_id': score.student_id,
             'score': score.score,
             'conv_id': score.conv_id
         } for score in scores]), 200

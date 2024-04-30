@@ -234,11 +234,17 @@
             scoresTable.style.display = ''; // Show the table
             scoreBody.innerHTML = ''; // Clear previous scores
             data.forEach(score => {
-              const displayScore = score.score !== null ? '${score.score}/100' : '-/100'; // Check if score is null and use "-" as placeholder
+              const displayScore = score.score !== null ? `${score.score}/100` : '-/100'; // Check if score is null and use "-" as placeholder
+              let conversationLink;
+              if (score.conv_id) {
+                    conversationLink = `<a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a>`;
+                } else {
+                    conversationLink = `<button onclick="alert('No conversation history available.')" class="small-button">See Conversation History</button>`;
+                }
               const row = `<tr>
-                            <td>${score.name}</td>
-                            <td>${displayScore}/td>
-                            <td><a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a></td>
+                            <td>${score.student_id}</td>
+                            <td>${displayScore}</td>
+                            <td>${conversationLink}</td>
                           </tr>`;
               scoreBody.innerHTML += row;
             });
