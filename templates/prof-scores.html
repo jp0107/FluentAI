@@ -170,6 +170,7 @@
                 <span class="ms-1 d-inline d-sm-none">Overview</span>
               </a>
             </li>
+            {% if assignments %}
             {% for prompt_id, title, deadline in assignments %}
             <li class="nav-item">
               <a href="#" class="nav-link align-middle px-0" data-assignment="{{ prompt_id }}">
@@ -178,6 +179,9 @@
               </a>
             </li>
             {% endfor %}
+            {% else %}
+                <li>No assignments found.</li>
+            {% endif %}
           </ul>
         </div>
       </div>
@@ -218,7 +222,7 @@
 
       // Function to hide all score sections
       function hideScores() {
-        scoresSections.forEach(section => {
+        scoresSection.forEach(section => {
           section.style.display = 'none'; // Hide all score tables
         });
       }
