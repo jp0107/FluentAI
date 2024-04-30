@@ -95,7 +95,7 @@
         {% for prompt_id, title, conv_id, score in scores %}
         <tr>
           <td>{{ title }}</td>
-          <td>{{ (score if score else '-') }}/100</td>
+          <td>{{ (score if score is not None else '-') }}/100</td>
           <td>
             {% if conv_id %}
             <a href="/student-conversation-history/{{ course_id }}/{{ conv_id }}" class="small-button">See Conversation

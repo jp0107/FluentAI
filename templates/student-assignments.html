@@ -199,6 +199,14 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            // Check if the reload flag is set in localStorage
+            if (localStorage.getItem('reloadAssignments') === 'true') {
+                localStorage.removeItem('reloadAssignments'); // Clear the flag
+                window.location.reload(true); // Force reload from the server
+            }
+        });
+
         function confirmStartAssignment(event, url, element, isCompleted) {
             event.preventDefault();
 

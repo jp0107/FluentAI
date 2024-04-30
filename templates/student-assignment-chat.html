@@ -156,6 +156,9 @@
           });
           var blob = new Blob([data], {type : 'application/json'});
           navigator.sendBeacon('/score-zero', blob);
+
+          // Set a flag in localStorage
+          localStorage.setItem('reloadAssignments', 'true');
         }
       });
     });
