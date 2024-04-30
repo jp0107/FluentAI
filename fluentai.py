@@ -1208,10 +1208,11 @@ def delete_admin(adminid):
 def score_zero():
     if flask.request.method == 'POST':
         data = flask.request.get_json()
-        student_id = data['student_id']
-        course_id = data['course_id']
-        prompt_id = data['prompt_id']
-        conversation_text = data['conversation_text']
+
+        student_id = data.get('student_id')
+        course_id = data.get('course_id')
+        prompt_id = data.get('prompt_id')
+        conversation_text = data.get('conversation_text')
 
         score = 0
         conv_id = generate_unique_conv_id()
