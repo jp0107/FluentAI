@@ -78,6 +78,7 @@ def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, sco
         )
         session.add(new_conversation)
         session.commit()
+        print("Conversation stored successfully")
 
 #-----------------------------------------------------------------------
 
@@ -1210,6 +1211,7 @@ def delete_admin(adminid):
 def score_zero():
     if flask.request.method == 'POST':
         data = flask.request.get_json()
+        print(f"Received data: {data}")
 
         student_id = data.get('student_id')
         course_id = data.get('course_id')
