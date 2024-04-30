@@ -123,8 +123,8 @@
                     <div class="large-screen-layout">
                         <div class="job-right my-4 flex-shrink-0 d-flex">
                             <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
-                                class="assignments-button me-2"
-                                onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this)"
+                                class="assignments-button me-2 {{ 'disabled' if completed }}"
+                                onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this, '{{ completed }}')"
                                 >Start Assignment</a>
                         </div>
                     </div>
@@ -133,9 +133,9 @@
                         <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
                             <div class="col d-flex">
                                 <a href="/student-assignment-chat/{{ course_id }}/{{ prompt_id }}"
-                                    class="class-button w-100 d-flex align-items-center justify-content-center"
+                                    class="class-button w-100 d-flex align-items-center justify-content-center {{ 'disabled' if completed }}"
                                     role="button" id="class-button"
-                                    onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this)"
+                                    onclick="confirmStartAssignment(event, '/student-assignment-chat/{{ course_id }}/{{ prompt_id }}', this, '{{ completed }}')"
                                     >
                                     Start Assignment
                                 </a>
@@ -199,9 +199,19 @@
     </div>
 
     <script>
-        function confirmStartAssignment(event, url, element) {
+        function confirmStartAssignment(event, url, element, isCompleted) {
             event.preventDefault();
-            // Show confirmation dialog
+
+            console.log("Is completed:", isCompleted); // Ensure this is logging 'true' or 'false' correctly
+
+            // Check if assignment is already completed
+            if (isCompleted == 'True') {
+                alert("This assignment has already been completed and cannot be done again.");
+                element.blur()
+                return;
+            }
+
+            // Show confirmation dialog otherwise
             if (confirm("Please ensure you complete this assignment in one sitting without navigating to other pages. If you leave the assignment page, you will get a score of 0 for this assignment. Press OK to start or Cancel to return.")) {
                 // If the user confirms, redirect to the assignment URL
                 window.location.href = url;

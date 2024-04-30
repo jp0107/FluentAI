@@ -96,6 +96,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
     $(document).ready(function () {
+      // Immediately mark the session as dirty
+      window.isDirty = true;
+
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
         $('input[name="userInput"]').attr('placeholder', 'Escribe conversación aquí...');
@@ -128,9 +131,40 @@
           }
         });
       });
+
+    $(window).on('beforeunload', function (e) {
+      if (window.isDirty) {
+          var message = "Are you sure you want to leave? Leaving this page will result in a score of 0 for this assignment.";
+          e.preventDefault();
+          e.returnValue = message;
+          return message;
+        }
+    });
+
+    $(window).on('unload', function() {
+      var data = {
+        student_id: "{{ student_id }}",
+        course_id: "{{ course_id }}",
+        prompt_id: "{{ prompt_id }}",
+        conversation_text: "{{ conversation_text }}"
+      };
+
+      $.ajax({
+          url: '/score-zero',
+          type: 'POST',
+          data: JSON.stringify(data),
+          contentType: 'application/json',
+          async: false, 
+          success: function(response) {
+              console.log('Success:', response);
+          },
+          error: function(xhr, status, error) {
+              console.error('Error:', status, error);
+            }
+        });
+      });
     });
   </script>
-
 
 </body>
 

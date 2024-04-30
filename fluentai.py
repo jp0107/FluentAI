@@ -501,6 +501,7 @@ def admin_dashboard():
         return flask.redirect(flask.url_for('prof_classes'))  # Redirecting to the home page or a suitable route
     if(user_type == "SuperAdmin"):
         first_name = get_admin_firstname(username)
+        
     return flask.render_template('admin-dashboard.html',
                                  username = username,
                                  first_name = first_name)
@@ -547,7 +548,7 @@ def student_conversation_history(course_id, conv_id):
 
     flask.session['course_id'] = course_id
 
-    conversation = get_conversation(course_id, conv_id)
+    conversation = get_conversation(conv_id)
 
     return flask.render_template('student-conversation-history.html',
                                  username = username,
@@ -604,7 +605,7 @@ def conversation_history(course_id, conv_id):
     flask.session['course_id'] = course_id
 
     try:
-        conversation = get_conversation(course_id, username, conv_id)
+        conversation = get_conversation(conv_id)
     except:
         conversation = get_default_conversation()
 
@@ -658,7 +659,7 @@ def process_input():
     
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
-    max_turns = flask.session.get('max_turns', 0)
+    max_turns = flask.session.get('max_turns', sys.maxsize)
     conversation_text = flask.session.get('conversation_text', '') + f"\nUser: {user_input}"
 
     if turns_count >= max_turns:
@@ -671,6 +672,7 @@ def process_input():
 
         # Clean up session
         flask.session.pop('turns_count', None)
+        flask.session.pop('max_turns', None)
         flask.session.pop('conversation_text', None)
 
         return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100."})
@@ -683,6 +685,23 @@ def process_input():
     
     flask.session['turns_count'] = turns_count  # Update the turn count in the session
     flask.session['conversation_text'] = conversation_text  # Append user input to conversation history
+
+    response_text = get_gpt_response(prompt_text, user_input)
+    return flask.jsonify({'gpt_response': response_text})
+
+#-----------------------------------------------------------------------
+# FOR STUDENT PRACTICE CHAT AND PROF CHAT
+@app.route('/process-input-ungraded', methods=['POST'])
+def process_input_ungraded():
+    user_input = flask.request.form.get('userInput', '')
+    if not user_input:
+        return flask.jsonify({'error': 'No input provided'}), 400
+
+    if not flask.session.get('prompt_used', False):
+        prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
+        flask.session['prompt_used'] = True  # Mark the prompt as used
+    else:
+        prompt_text = ""
 
     response_text = get_gpt_response(prompt_text, user_input)
     return flask.jsonify({'gpt_response': response_text})
@@ -1173,6 +1192,7 @@ def add_admin():
 
     return flask.jsonify({'message': 'Admin added successfully'}), 201
 #-----------------------------------------------------------------------
+
 @app.route('/delete-admin/<adminid>', methods=['POST'])
 def delete_admin(adminid):
     if not adminid:
@@ -1187,3 +1207,26 @@ def delete_admin(adminid):
         session.commit()
 
     return flask.jsonify({'message': 'Admin deleted successfully'}), 200
+
+ #-----------------------------------------------------------------------
+@app.route('/score-zero', methods=['POST'])
+def score_zero():
+    if flask.request.method == 'POST':
+        data = flask.request.get_json()
+        student_id = data['student_id']
+        course_id = data['course_id']
+        prompt_id = data['prompt_id']
+        conversation_text = data['conversation_text']
+
+        score = 0
+        conv_id = generate_unique_conv_id()
+
+        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score)
+
+        # Clean up session
+        flask.session.pop('turns_count', None)
+        flask.session.pop('max_turns', None)
+        flask.session.pop('conversation_text', None)
+
+        return flask.jsonify({'message': 'Conversation recorded with a score of 0.'}), 200
+
