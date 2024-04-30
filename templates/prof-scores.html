@@ -231,12 +231,13 @@
         fetch(`/get-scores/${promptId}`)
           .then(response => response.json())
           .then(data => {
+            scoresTable.style.display = ''; // Show the table
             scoreBody.innerHTML = ''; // Clear previous scores
-            const displayScore = score.score !== null ? score.score : '-'; // Check if score is null and use "-" as placeholder
+            const displayScore = score.score !== null ? '${score.score}/100' : '-/100'; // Check if score is null and use "-" as placeholder
             data.forEach(score => {
               const row = `<tr>
                             <td>${score.name}</td>
-                            <td>${displayScore}/100</td>
+                            <td>${displayScore}/td>
                             <td><a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a></td>
                           </tr>`;
               scoreBody.innerHTML += row;
@@ -245,35 +246,10 @@
           .catch(error => console.error('Failed to fetch scores:', error));
       }
 
-
-      // function updateScoresDisplay(assignment, data) {
-      //   // Check if 'general' or a specific assignment is selected
-      //   if (assignment === 'general') {
-      //     scoresSection.forEach(section => section.style.display = 'none');
-      //   } else {
-      //     scoresSection.forEach((section, index) => {
-      //       section.style.display = '';
-      //       const tbody = section.querySelector('.score-body');
-      //       tbody.innerHTML = ''; // Clear existing data
-      //       data.forEach(d => {
-      //         const row = `<tr>
-      //                       <td>${d.name}</td>
-      //                       <td>${d.score}</td>
-      //                       <td><a href="${d.link}" class="small-button">See Conversation History</a></td>
-      //                     </tr>`;
-      //         tbody.innerHTML += row;
-      //       });
-      //     });
-      //   }
-      // }
-
-      // // Initialize with 'Scores Overview' selected and no table displayed
-      // updateScoresDisplay('general', []);
-
       // Initially hide scores
       hideScores();
 
-        // Event listeners for menu items
+      // Event listeners for menu items
       menuItems.forEach(item => {
           item.addEventListener('click', function (e) {
             e.preventDefault();
