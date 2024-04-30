@@ -633,6 +633,8 @@ def prof_assignment_chat(course_id, prompt_id):
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
+    flask.session['turns_count'] = 0  # Initialize turn count
+    flask.session['max_turns'] = prompt.num_turns   # store max turns from database
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('prof-assignment-chat.html',
@@ -649,17 +651,18 @@ def prof_assignment_chat(course_id, prompt_id):
 @app.route('/process-input', methods=['POST'])
 def process_input():
     user_input = flask.request.form.get('userInput', '')
+    student_id = flask.session.get('student_id')
+    
     if not user_input:
         return flask.jsonify({'error': 'No input provided'}), 400
     
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
     max_turns = flask.session.get('max_turns', sys.maxsize)
-    conversation_text = flask.session.get('conversation_text', '') + f"\nUser: {user_input}"
+    conversation_text = flask.session.get('conversation_text', '') + f"\n{student_id}: {user_input}"
 
     if turns_count >= max_turns:
         course_id = flask.session.get('course_id')
-        student_id = flask.session.get('student_id')
         prompt_id = flask.session.get('prompt_id')
         score = calculate_score(conversation_text)
         conv_id = generate_unique_conv_id()
@@ -670,7 +673,7 @@ def process_input():
         flask.session.pop('max_turns', None)
         flask.session.pop('conversation_text', None)
 
-        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100."})
+        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100.", 'score': score})
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
@@ -1208,10 +1211,11 @@ def delete_admin(adminid):
 def score_zero():
     if flask.request.method == 'POST':
         data = flask.request.get_json()
-        student_id = data['student_id']
-        course_id = data['course_id']
-        prompt_id = data['prompt_id']
-        conversation_text = data['conversation_text']
+
+        student_id = data.get('student_id')
+        course_id = data.get('course_id')
+        prompt_id = data.get('prompt_id')
+        conversation_text = data.get('conversation_text')
 
         score = 0
         conv_id = generate_unique_conv_id()

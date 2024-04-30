@@ -111,14 +111,22 @@
         currentContent += "\n\nYou: " + userInput;  // Append user input to the chat
 
         $.ajax({
-          url: '/process-input-ungraded',
+          url: '/process-input',
           type: 'POST',
           data: { userInput: userInput },
           success: function (response) {
-            currentContent += "\n\nGPT: " + response.gpt_response;  // Append GPT response
+            currentContent += "\n\nChatbot: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
             $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
+
+            if (response.gpt_response.includes("This conversation has reached its turn limit.")) {
+              $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
+              isFinished = true;
+              if (confirm("You have reached the end of this conversation. Your score is " + response.score + "/100. Click OK to go back to the Assignments page.")) {
+                window.location.href = '/prof-assignments/{{ course_id }}'; // Redirect to assignments page
+              }
+            }
           },
           error: function (xhr, status, error) {
             alert('Please type in a response before pressing submit.');

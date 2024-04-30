@@ -93,11 +93,11 @@
     </form>
   </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
     // Immediately mark the session as dirty
     window.isDirty = true;
-    
+    isFinished = false;
+
     $(document).ready(function () {
 
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
@@ -118,13 +118,17 @@
           type: 'POST',
           data: { userInput: userInput },
           success: function (response) {
-            currentContent += "\n\nGPT: " + response.gpt_response;  // Append GPT response
+            currentContent += "\n\nChatbot: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
             $('input[name="userInput"]').val('');  // Clear input field
             $('#gptResponse').scrollTop($('#gptResponse')[0].scrollHeight);  // Scroll to the bottom of the textarea
 
             if (response.gpt_response.includes("This conversation has reached its turn limit.")) {
               $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
+              isFinished = true;
+              if (confirm("You have reached the end of this conversation. Your score is " + response.score + "/100. Click OK to go back to the Assignments page.")) {
+                window.location.href = '/student-assignments/{{ course_id }}'; // Redirect to assignments page
+              }
             }
           },
           error: function (xhr, status, error) {
@@ -134,7 +138,7 @@
       });
 
     $(window).on('beforeunload', function (e) {
-      if (window.isDirty) {
+      if (window.isDirty && !isFinished) {
           var message = "Are you sure you want to leave? Leaving this page will result in a score of 0 for this assignment.";
           e.preventDefault();
           e.returnValue = message;
@@ -143,26 +147,19 @@
     });
 
     $(window).on('unload', function() {
-      var data = {
-        student_id: "{{ student_id }}",
-        course_id: "{{ course_id }}",
-        prompt_id: "{{ prompt_id }}",
-        conversation_text: "{{ conversation_text }}"
-      };
+      if (window.isDirty && !isFinished) {  // Only send if the conversation was started and not properly finished
+          var data = JSON.stringify({
+            student_id: "{{ student_id }}",
+            course_id: "{{ course_id }}",
+            prompt_id: "{{ prompt_id }}",
+            conversation_text: $('#gptResponse').val()
+          });
+          var blob = new Blob([data], {type : 'application/json'});
+          navigator.sendBeacon('/score-zero', blob);
 
-      $.ajax({
-          url: '/score-zero',
-          type: 'POST',
-          data: JSON.stringify(data),
-          contentType: 'application/json',
-          async: false, 
-          success: function(response) {
-              console.log('Success:', response);
-          },
-          error: function(xhr, status, error) {
-              console.error('Error:', status, error);
-            }
-        });
+          // Set a flag in localStorage
+          localStorage.setItem('reloadAssignments', 'true');
+        }
       });
     });
   </script>
