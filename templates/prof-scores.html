@@ -218,9 +218,10 @@
       const menuItems = document.querySelectorAll('#menu a');
       const scoresTable = document.querySelector('.score-table');
       const scoreBody = scoresTable.querySelector('.score-body'); // This should point to your <tbody> within the score table
+      scoresTable.style.display = 'table'; // Force table display
       
-      // Initially hide the scores table
-      scoresTable.style.display = 'none';
+      // // Initially hide the scores table
+      // scoresTable.style.display = 'none';
 
       // Function to hide the scores table
       function hideScores() {
@@ -246,7 +247,7 @@
       // Update display with fetched data
       function updateScoresDisplay(data) {
         if (data.length > 0) {
-          scoresTable.style.display = ''; // Show the table if there are scores
+          scoresTable.style.display = 'table'; // Show the table if there are scores
           scoreBody.innerHTML = ''; // Clear previous scores
           data.forEach(score => {
             const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
