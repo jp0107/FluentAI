@@ -22,8 +22,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
-                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
-                      get_assignments, get_all_scores)
+                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins)
 
 #-----------------------------------------------------------------------
 
@@ -93,7 +92,7 @@ def store_userinfo(user_id, first_name, last_name, pustatus):
             )
             session.add(new_student)
             session.commit()
-        elif pustatus == "staff":
+        elif pustatus == "stf":
             new_prof = Professor(
                 prof_id=user_id,
                 first_name=first_name,
@@ -237,14 +236,14 @@ def login():
     username = auth.authenticate()
 
     # if new user, store user info in database
-    user_type = check_user_type('benj')
+    user_type = check_user_type(username)
 
     if user_type is None:
         req_lib = ReqLib()
 
         req = req_lib.getJSON(
             req_lib.configs.USERS,
-            uid='benj'
+            uid=username
         )
 
         # get user first/last name, and pustatus from netid
@@ -256,8 +255,6 @@ def login():
         last_name = temp[-1]
 
         pustatus = user_info.get("pustatus")
-        
-        print(pustatus, flush=True)
 
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus)
@@ -265,9 +262,9 @@ def login():
     user_type = check_user_type(username)
 
     if user_type == "Student":
-        return flask.redirect(flask.url_for('student_dashboard'))
+        return flask.redirect(flask.url_for('student_classes'))
     if user_type == "Professor":
-        return flask.redirect(flask.url_for('prof_dashboard'))
+        return flask.redirect(flask.url_for('prof_classes'))
     if user_type == "SuperAdmin":
         return flask.redirect(flask.url_for('admin_dashboard'))
 
@@ -276,32 +273,41 @@ def login():
 #----------------------   STUDENT PAGES   ------------------------------
 #-----------------------------------------------------------------------
 
-@app.route('/student-dashboard')
-def student_dashboard():
+@app.route('/student-classes')
+def student_classes():
     username = auth.authenticate()
     user_type = check_user_type(username)
 
-    html_code = flask.render_template('student-dashboard.html', 
+    html_code = flask.render_template('student-classes.html', 
                                       username = username, 
                                       user_type = user_type)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-all-courses')
-def student_all_courses():
+@app.route('/student-all-classes')
+def student_all_classes():
     username = auth.authenticate()
     user_type = check_user_type(username)
 
-    html_code = flask.render_template('student-all-courses.html',
+    html_code = flask.render_template('student-all-classes.html',
                                       username = username,
                                       user_type = user_type)
     return flask.make_response(html_code)
 
 #-----------------------------------------------------------------------
 
-@app.route('/student-course/<course_id>')
-def student_course(course_id):
+@app.route('/student-prototype')
+def student_classes_2():
+    username = auth.authenticate()
+    html_code = flask.render_template(
+        'student-prototype.html', username = username)
+    return flask.make_response(html_code)
+
+#-----------------------------------------------------------------------
+
+@app.route('/student-dashboard/<course_id>')
+def student_dashboard(course_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
 
@@ -316,7 +322,7 @@ def student_course(course_id):
     elif(user_type == "SuperAdmin"):
         first_name = get_admin_firstname(username)
 
-    return flask.render_template('student-course.html', 
+    return flask.render_template('student-dashboard.html', 
                                  username = username,
                                  first_name = first_name,
                                  course_id = course_id,
@@ -379,25 +385,25 @@ def student_scores(course_id):
 #------------------------  PROFESSOR PAGES   ---------------------------
 #-----------------------------------------------------------------------
 
-@app.route('/prof-dashboard')
-def prof_dashboard():
+@app.route('/prof-classes')
+def prof_classes():
     username = auth.authenticate()
     user_type = check_user_type(username)
-    return flask.render_template('prof-dashboard.html',
+    return flask.render_template('prof-classes.html',
                                  username = username,
                                  user_type = user_type)
 
 #-----------------------------------------------------------------------
 
-@app.route('/prof-course/<course_id>')
-def prof_course(course_id):
+@app.route('/prof-dashboard/<course_id>')
+def prof_dashboard(course_id):
     username = auth.authenticate()
     # get user's type to make sure they can access page and display name if correct
     user_type = check_user_type(username)
 
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('student_dashboard'))  # Redirecting to the home page or a suitable route
+        return flask.redirect(flask.url_for('student_classes'))  # Redirecting to the home page or a suitable route
     if(user_type == "Professor"):
         first_name = get_prof_firstname(username)
     elif(user_type == "SuperAdmin"):
@@ -409,7 +415,7 @@ def prof_course(course_id):
     # get course code for this course
     course_code = get_course_code(course_id)[0][0]
 
-    return flask.render_template('prof-course.html',
+    return flask.render_template('prof-dashboard.html',
                                  username = username,
                                  first_name = first_name,
                                  course_id = course_id,
@@ -464,12 +470,15 @@ def prof_scores(course_id):
 
     flask.session['course_id'] = course_id
 
-    assignments = get_assignments(course_id)
+    try:
+        scores = get_assignments_and_scores_for_student(course_id, username)
+    except:
+        scores = get_default_student_scores()
 
     return flask.render_template('prof-scores.html',
                                  username = username,
                                  course_id = course_id,
-                                 assignments = assignments,
+                                 scores = scores,
                                  user_type = user_type)
                                 
 #----------------------      ADMIN PAGES    ----------------------------
@@ -484,10 +493,10 @@ def admin_dashboard():
     
     if (user_type == "Student"):
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('student_dashboard'))  # Redirecting to the home page or a suitable route
+        return flask.redirect(flask.url_for('student_classes'))  # Redirecting to the home page or a suitable route
     if(user_type == "Professor"):
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('prof_dashboard'))  # Redirecting to the home page or a suitable route
+        return flask.redirect(flask.url_for('prof_classes'))  # Redirecting to the home page or a suitable route
     if(user_type == "SuperAdmin"):
         first_name = get_admin_firstname(username)
         
@@ -537,7 +546,7 @@ def student_conversation_history(course_id, conv_id):
 
     flask.session['course_id'] = course_id
 
-    conversation = get_conversation(conv_id)
+    conversation = get_conversation(course_id, conv_id)
 
     return flask.render_template('student-conversation-history.html',
                                  username = username,
@@ -555,7 +564,6 @@ def student_assignment_chat(course_id, prompt_id):
     flask.session['course_id'] = course_id
     flask.session['student_id'] = username
     flask.session['prompt_id'] = prompt_id
-    flask.session['conversation_text'] = ''
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
@@ -577,16 +585,13 @@ def student_assignment_chat(course_id, prompt_id):
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('student-assignment-chat.html',
+                                course_id = course_id,
                                 prompt_title = title,
                                 initial_data=initial_response,
                                 prompt=prompt.prompt_text,
                                 username=username,
                                 language = language,
-                                user_type = user_type,
-                                student_id = flask.session.get('student_id'),
-                                course_id = flask.session.get('course_id'),
-                                prompt_id = flask.session.get('prompt_id'),
-                                conversation_text = flask.session.get('conversation_text'))
+                                user_type = user_type)
 
 #-----------------------------------------------------------------------
 
@@ -598,7 +603,7 @@ def conversation_history(course_id, conv_id):
     flask.session['course_id'] = course_id
 
     try:
-        conversation = get_conversation(conv_id)
+        conversation = get_conversation(course_id, username, conv_id)
     except:
         conversation = get_default_conversation()
 
@@ -631,8 +636,6 @@ def prof_assignment_chat(course_id, prompt_id):
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
-    flask.session['turns_count'] = 0  # Initialize turn count
-    flask.session['max_turns'] = prompt.num_turns   # store max turns from database
     initial_response = get_gpt_response(prompt.prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('prof-assignment-chat.html',
@@ -649,18 +652,17 @@ def prof_assignment_chat(course_id, prompt_id):
 @app.route('/process-input', methods=['POST'])
 def process_input():
     user_input = flask.request.form.get('userInput', '')
-    student_id = flask.session.get('student_id')
-    
     if not user_input:
         return flask.jsonify({'error': 'No input provided'}), 400
     
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
-    max_turns = flask.session.get('max_turns', sys.maxsize)
-    conversation_text = flask.session.get('conversation_text', '') + f"\n{student_id}: {user_input}"
+    max_turns = flask.session.get('max_turns', 0)
+    conversation_text = flask.session.get('conversation_text', '') + f"\nUser: {user_input}"
 
     if turns_count >= max_turns:
         course_id = flask.session.get('course_id')
+        student_id = flask.session.get('student_id')
         prompt_id = flask.session.get('prompt_id')
         score = calculate_score(conversation_text)
         conv_id = generate_unique_conv_id()
@@ -668,10 +670,9 @@ def process_input():
 
         # Clean up session
         flask.session.pop('turns_count', None)
-        flask.session.pop('max_turns', None)
         flask.session.pop('conversation_text', None)
 
-        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100.", 'score': score})
+        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100."})
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
@@ -681,23 +682,6 @@ def process_input():
     
     flask.session['turns_count'] = turns_count  # Update the turn count in the session
     flask.session['conversation_text'] = conversation_text  # Append user input to conversation history
-
-    response_text = get_gpt_response(prompt_text, user_input)
-    return flask.jsonify({'gpt_response': response_text})
-
-#-----------------------------------------------------------------------
-# FOR STUDENT PRACTICE CHAT AND PROF CHAT
-@app.route('/process-input-ungraded', methods=['POST'])
-def process_input_ungraded():
-    user_input = flask.request.form.get('userInput', '')
-    if not user_input:
-        return flask.jsonify({'error': 'No input provided'}), 400
-
-    if not flask.session.get('prompt_used', False):
-        prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
-        flask.session['prompt_used'] = True  # Mark the prompt as used
-    else:
-        prompt_text = ""
 
     response_text = get_gpt_response(prompt_text, user_input)
     return flask.jsonify({'gpt_response': response_text})
@@ -1188,7 +1172,6 @@ def add_admin():
 
     return flask.jsonify({'message': 'Admin added successfully'}), 201
 #-----------------------------------------------------------------------
-
 @app.route('/delete-admin/<adminid>', methods=['POST'])
 def delete_admin(adminid):
     if not adminid:
@@ -1203,40 +1186,3 @@ def delete_admin(adminid):
         session.commit()
 
     return flask.jsonify({'message': 'Admin deleted successfully'}), 200
-
- #-----------------------------------------------------------------------
-@app.route('/score-zero', methods=['POST'])
-def score_zero():
-    if flask.request.method == 'POST':
-        data = flask.request.get_json()
-
-        student_id = data.get('student_id')
-        course_id = data.get('course_id')
-        prompt_id = data.get('prompt_id')
-        conversation_text = data.get('conversation_text')
-
-        score = 0
-        conv_id = generate_unique_conv_id()
-
-        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score)
-
-        # Clean up session
-        flask.session.pop('turns_count', None)
-        flask.session.pop('max_turns', None)
-        flask.session.pop('conversation_text', None)
-
-        return flask.jsonify({'message': 'Conversation recorded with a score of 0.'}), 200
-
-#-----------------------------------------------------------------------
-
-@app.route('/get-scores/<prompt_id>')
-def get_scores(prompt_id):
-    try:
-        scores = get_all_scores(prompt_id)
-        return flask.jsonify([{
-            'name': score.name,
-            'score': score.score,
-            'conv_id': score.conv_id
-        } for score in scores]), 200
-    except Exception as e:
-        return flask.jsonify({'error': str(e)}), 500
