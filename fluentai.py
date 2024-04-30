@@ -236,7 +236,7 @@ def login():
     username = auth.authenticate()
 
     # if new user, store user info in database
-    user_type = check_user_type(username)
+    user_type = check_user_type('benj')
 
     if user_type is None:
         req_lib = ReqLib()
@@ -255,6 +255,8 @@ def login():
         last_name = temp[-1]
 
         pustatus = user_info.get("pustatus")
+        
+        print(pustatus, flush=True)
 
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus)
