@@ -430,6 +430,17 @@ def get_default_scores_for_assignment():
 def get_default_conversation():
     return [('Assignment 0: Default', 'Mi nueva casa está en una calle ancha que tiene muchos árboles. El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña terraza con piscina donde puedo tomar el sol en verano.')]
 
+# get assignments for course (FOR PROF SCORES PAGE)
+def get_assignments(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        assignments = session.query(
+            Prompt.prompt_id,
+            Prompt.prompt_title,
+            Prompt.deadline
+        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
+
+        return assignments
+
 # gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
     with sqlalchemy.orm.Session(engine) as session:
@@ -450,18 +461,15 @@ def get_assignments_and_scores_for_student(course_id, student_id):
 def get_all_scores(prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
 
-        # check if the prompt exists in the database
-        prompt_exists = session.query(sqlalchemy.exists().where(Prompt.prompt_id == prompt_id)).scalar()
-        if not prompt_exists:
-            return get_default_scores_for_assignment()
-
-        query = (session.query(Student.first_name, Student.last_name, Conversation.id, Conversation.score)
+        query = (session.query(sqlalchemy.func.concat(Student.first_name, ' ', Student.last_name).label('name'), 
+                                Conversation.conv_id, 
+                                Conversation.score)
                 .outerjoin(Conversation, sqlalchemy.and_(Conversation.student_id == Student.student_id, Conversation.prompt_id == prompt_id))
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
 
         results = query.all()
 
-        return results if results else get_default_scores_for_assignment()
+        return results 
 
 # get conversation history given a conv_id
 def get_conversation(conv_id):
