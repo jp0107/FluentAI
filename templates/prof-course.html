@@ -35,7 +35,7 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary" id="startTutorial" >Tutorial</button>
+                    <button type="button" class="btn btn-primary" id="startTutorial">Tutorial</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,22 +61,25 @@
                 <div class="dropdown">
                     <button class="btn btn-course-dropdown dropdown-toggle" type="button" id="dropdownMenuCourse"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <h1 id="course-id-display" data-intro="Welcome to your course's dashboard!" data-step="1">{{ course_id }}<i class="fa fa-caret-down"></i></h1>
+                        <h1 id="course-id-display" data-intro="Welcome to your course's dashboard!" data-step="1">{{
+                            course_id }}<i class="fa fa-caret-down"></i></h1>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuCourse">
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#courseCodeModal"
-                            data-intro="Get the course code to share with your students!" data-step="2">
+                                data-intro="Get the course code to share with your students!" data-step="2">
                                 Get Course Code</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                data-bs-target="#editCourseCodeModal" data-intro="Or edit the course code" data-step="3">
+                                data-bs-target="#editCourseCodeModal" data-intro="Or edit the course code"
+                                data-step="3">
                                 Edit Course Code</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal"
-                                data-course-id="{{ course_id }}" data-intro="You can also permanently delete the course" data-step="4">
+                                data-course-id="{{ course_id }}" data-intro="You can also permanently delete the course"
+                                data-step="4">
                                 Delete Course</a>
                         </li>
                     </ul>
@@ -97,10 +100,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    The course code is: {{ course_code }} <!-- insert course code from backend-->
+                    The course code is: <span id="course-code">{{ course_code }}</span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="copy-course-code-button">Copy to
+                        clipboard</button>
                 </div>
             </div>
         </div>
@@ -174,12 +179,14 @@
                 <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
                 <div class="col-auto">
                     <a href="/prof-assignments/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="View and create assignments here!" data-step="5">Assignments</div>
+                        <div id="dashboard-box" data-intro="View and create assignments here!" data-step="5">Assignments
+                        </div>
                     </a>
                 </div>
                 <div class="col-auto">
                     <a href="/prof-scores/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="Look at scores from past assignments" data-step="6">Scores</div>
+                        <div id="dashboard-box" data-intro="Look at scores from past assignments" data-step="6">Scores
+                        </div>
                     </a>
                 </div>
                 <div class="col-auto">
@@ -220,7 +227,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
     <script type="text/javascript">
-        
+
 
         $(document).ready(function () {
             var $charCount = $('#char-count-edit-course-code');
@@ -262,7 +269,7 @@
                 var courseId = $("#course-id-display").text();
 
                 if (!newCourseCode) {
-                    alert("Course code cannot be empty");
+                    alert("Course code cannot be empty.");
                     return;
                 }
 
@@ -281,6 +288,18 @@
                     error: function (xhr) {
                         alert('Error updating course code: ' + xhr.responseText);
                     }
+                });
+            });
+
+            // Handle the copy course code button click
+            $('#copy-course-code-button').click(function () {
+                const courseCode = $('#course-code').text();  // Get the course code from the element
+                navigator.clipboard.writeText(courseCode).then(() => {
+                    // Success message
+                    alert('Course code copied to clipboard.');
+                }).catch(err => {
+                    // Error message in case the clipboard operation fails
+                    alert('Failed to copy text: ' + err);
                 });
             });
 
