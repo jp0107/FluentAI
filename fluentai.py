@@ -93,7 +93,7 @@ def store_userinfo(user_id, first_name, last_name, pustatus):
             )
             session.add(new_student)
             session.commit()
-        elif pustatus == "faculty":
+        elif pustatus == "staff":
             new_prof = Professor(
                 prof_id=user_id,
                 first_name=first_name,
@@ -237,7 +237,7 @@ def login():
     username = auth.authenticate()
 
     # if new user, store user info in database
-    user_type = check_user_type(username)
+    user_type = check_user_type('benj')
 
     if user_type is None:
         req_lib = ReqLib()
@@ -256,6 +256,8 @@ def login():
         last_name = temp[-1]
 
         pustatus = user_info.get("pustatus")
+        
+        print(pustatus, flush=True)
 
         # store user info in corresponding table
         store_userinfo(username, first_name, last_name, pustatus)
@@ -440,8 +442,6 @@ def delete_assignment_click(prompt_id):
         return flask.jsonify({'message': str(e)}), 500
 
 #-----------------------------------------------------------------------
-
-
 
 @app.route('/prof-roster/<course_id>')
 def prof_roster(course_id):
