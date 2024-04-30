@@ -23,8 +23,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
                       check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
-                      get_assignments_for_prof, get_all_scores,
-                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins)
+                      get_assignments_for_prof, get_all_scores, check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins)
 
 #-----------------------------------------------------------------------
 
@@ -473,15 +472,11 @@ def prof_scores(course_id):
     flask.session['course_id'] = course_id
 
     assignments = get_assignments_for_prof(course_id)
-    try:
-        scores = get_assignments_and_scores_for_student(course_id, username)
-    except:
-        scores = get_default_student_scores()
 
     return flask.render_template('prof-scores.html',
                                  username = username,
                                  course_id = course_id,
-                                 scores = scores,
+                                 assignments = assignments,
                                  user_type = user_type)
                                 
 #----------------------      ADMIN PAGES    ----------------------------
@@ -1189,3 +1184,17 @@ def delete_admin(adminid):
         session.commit()
 
     return flask.jsonify({'message': 'Admin deleted successfully'}), 200
+
+#-----------------------------------------------------------------------
+
+@app.route('/get-scores/<prompt_id>')
+def get_scores(prompt_id):
+    try:
+        scores = get_all_scores(prompt_id)
+        return flask.jsonify([{
+            'name': score.name,
+            'score': score.score,
+            'conv_id': score.conv_id
+        } for score in scores]), 200
+    except Exception as e:
+        return flask.jsonify({'error': str(e)}), 500
