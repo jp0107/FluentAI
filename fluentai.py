@@ -23,7 +23,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
                       check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
-                      get_assignments_for_prof, get_all_scores)
+                      get_assignments_for_prof, get_all_scores,
                       check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins)
 
 #-----------------------------------------------------------------------
