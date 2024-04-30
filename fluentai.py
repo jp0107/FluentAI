@@ -1095,7 +1095,7 @@ def admin_add_professor_to_course():
         professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
         if not professor:
             # Assuming splitting name into first and last
-            first_name, last_name = (prof_name.split(maxsplit=1) + [None])[:2]
+            first_name, last_name = (prof_name.split(maxsplit=1) + [""])[:2]
             professor = Professor(prof_id=prof_netid, first_name=first_name, last_name=last_name)
             session.add(professor)
 

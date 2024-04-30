@@ -187,7 +187,8 @@
             updateStudentsTable(response);
           },
           error: function (xhr) {
-            console.error('Error fetching data:', xhr.responseText);
+            var response = JSON.parse(xhr.responseText); // Parse the JSON response into an object
+            console.error('Error fetching data:', response.message); // Display only the message part
           }
         });
       }
@@ -239,7 +240,8 @@
             fetchStudentsAndCourses(); // Refresh the student list
           },
           error: function (xhr) {
-            alert('Error deleting student: ' + xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            alert('Error deleting student: ' + response.message);
           }
         });
       }
@@ -266,7 +268,8 @@
             fetchStudentsAndCourses();
           },
           error: function (xhr) {
-            alert('Failed to add student: ' + xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            alert('Failed to add student: ' + response.message);
           }
         });
       });
