@@ -68,25 +68,22 @@
                 <div class="dropdown">
                     <button class="btn btn-course-dropdown dropdown-toggle" type="button" id="dropdownMenuCourse"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <h1 id="course-id-display" data-intro="Welcome to your course's dashboard!" data-step="1">{{
+                        <h1 id="course-id-display" data-intro="Welcome to your course! Click on it for course settings!" data-step="1">{{
                             course_id }}<i class="fa fa-caret-down"></i></h1>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuCourse">
                         <li>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#courseCodeModal"
-                                data-intro="Get the course code to share with your students!" data-step="2">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#courseCodeModal">
                                 Get Course Code</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                data-bs-target="#editCourseCodeModal" data-intro="Or edit the course code"
-                                data-step="3">
+                                data-bs-target="#editCourseCodeModal">
                                 Edit Course Code</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteCourseModal"
-                                data-course-id="{{ course_id }}" data-intro="You can also permanently delete the course"
-                                data-step="4">
+                                data-course-id="{{ course_id }}">
                                 Delete Course</a>
                         </li>
                     </ul>
@@ -186,19 +183,19 @@
                 <!-- Each .col div acts as a container for a button, using col-auto to size to content -->
                 <div class="col-auto">
                     <a href="/prof-assignments/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="View and create assignments here!" data-step="5">Assignments
+                        <div id="dashboard-box" data-intro="View and create assignments here!" data-step="2">Assignments
                         </div>
                     </a>
                 </div>
                 <div class="col-auto">
                     <a href="/prof-scores/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="Look at scores from past assignments" data-step="6">Scores
+                        <div id="dashboard-box" data-intro="Look at scores from past assignments" data-step="3">Scores
                         </div>
                     </a>
                 </div>
                 <div class="col-auto">
                     <a href="/prof-roster/{{ course_id }}" id="dashboard-btn" class="text-decoration-none">
-                        <div id="dashboard-box" data-intro="Edit the course roster here!">Roster</div>
+                        <div id="dashboard-box" data-intro="View and manage your course roster here!" data-step="4">Roster</div>
                     </a>
                 </div>
             </div>
