@@ -92,7 +92,7 @@ def store_userinfo(user_id, first_name, last_name, pustatus):
             )
             session.add(new_student)
             session.commit()
-        elif pustatus == "faculty":
+        elif pustatus == "staff":
             new_prof = Professor(
                 prof_id=user_id,
                 first_name=first_name,
@@ -448,8 +448,6 @@ def delete_assignment_click(prompt_id):
         return flask.jsonify({'message': str(e)}), 500
 
 #-----------------------------------------------------------------------
-
-
 
 @app.route('/prof-roster/<course_id>')
 def prof_roster(course_id):
