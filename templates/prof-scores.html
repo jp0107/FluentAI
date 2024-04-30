@@ -233,8 +233,8 @@
           .then(data => {
             scoresTable.style.display = ''; // Show the table
             scoreBody.innerHTML = ''; // Clear previous scores
-            const displayScore = score.score !== null ? '${score.score}/100' : '-/100'; // Check if score is null and use "-" as placeholder
             data.forEach(score => {
+              const displayScore = score.score !== null ? '${score.score}/100' : '-/100'; // Check if score is null and use "-" as placeholder
               const row = `<tr>
                             <td>${score.name}</td>
                             <td>${displayScore}/td>
