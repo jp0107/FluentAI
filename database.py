@@ -695,8 +695,8 @@ def categorize_assignments(assignments, now):
         assignment_tuple = (
             a.prompt_id,
             a.prompt_title,
-            local_deadline.strftime('%m/%d/%Y %I:%M%p') if local_deadline else 'No deadline set',
-            a.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            local_deadline,  # Keep as datetime object
+            a.created_at,
             a.assignment_description,
             a.completed
         )
