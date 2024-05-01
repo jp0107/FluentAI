@@ -38,7 +38,7 @@
             <a class="nav-link" href="/student-assignments/{{ course_id }}">Assignments</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/student-practice/{{ course_id }}">Practice</a>
+            <a class="nav-link" href="/student-practice-chat/{{ course_id }}">Practice</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/student-scores/{{ course_id }}">Scores</a>
@@ -86,7 +86,7 @@
       <div class="subcontainer">
         <p>
           {% if conversation[0][1] %}
-          {{ conversation[0][1].replace("{{ username }}:", "</div><div class='convo'>{{ username }}:") | safe }}
+          <div>{{ conversation[0][1].replace("{{ username }}:", "</div><div class='convo'>{{ username }}:") | safe }}
           {% else %}
           No conversation history found. Please complete an assignment first.
           {% endif %}

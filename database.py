@@ -657,6 +657,7 @@ def get_assignments_for_student(student_id, course_id):
             Prompt.prompt_title,
             Prompt.deadline,
             Prompt.created_at,
+            Prompt.assignment_description,
             completed_subquery  # This already behaves as a scalar subquery
         ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
         return categorize_assignments(assignments, now)
@@ -667,7 +668,7 @@ def categorize_assignments(assignments, now):
     past_assignments = []
     for a in assignments:
         # Tuple construction
-        assignment_tuple = (a.prompt_id, a.prompt_title, a.deadline, a.created_at, a.completed)
+        assignment_tuple = (a.prompt_id, a.prompt_title, a.deadline, a.created_at, a.assignment_description, a.completed)
 
         if a.deadline is None or a.deadline > now:
             current_assignments.append(assignment_tuple)
