@@ -772,7 +772,8 @@ def process_input():
         prompt_id = flask.session.get('prompt_id')
         score = calculate_score(conversation_text)
         conv_id = generate_unique_conv_id()
-        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score)
+        prof_score = None
+        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
 
         # Clean up session
         flask.session.pop('turns_count', None)
@@ -1336,9 +1337,10 @@ def score_zero():
         conversation_text = data.get('conversation_text')
 
         score = 0
+        prof_score = None
         conv_id = generate_unique_conv_id()
 
-        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score)
+        store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
 
         # Clean up session
         flask.session.pop('turns_count', None)

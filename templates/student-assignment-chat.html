@@ -145,9 +145,7 @@
             }
           },
           error: function (xhr, status, error) {
-            console.error(`AJAX Error - Status: ${status}, Error: ${error}`);
-            alert(`Failed to process input. Server responded with status: ${xhr.status}, error: ${xhr.responseText}`);
-            // alert('Please type in a response before pressing submit.');
+            alert('Please type in a response before pressing submit.');
           }
         });
       });
