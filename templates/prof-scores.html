@@ -135,7 +135,7 @@
 
     <br>
 
-    <table class="col offset-sm-1 table scores-section score-table">
+    <table class="col offset-sm-1 table scores-section score-table" style="display: none;">
       <thead>
         <tr>
           <th>Student Name</th>
@@ -187,7 +187,7 @@
       </div>
       <div class="col py-3">
         <div class="container-fluid">
-          <table class="col offset-sm-1 table score-table scores-section">
+          <table class="col offset-sm-1 table score-table scores-section" style="display: none;">
             <thead>
               <tr>
                 <th>Student Name</th>
@@ -218,6 +218,7 @@
       const menuItems = document.querySelectorAll('#menu a');
       const scoreTables = document.querySelectorAll('.score-table');
       const scoreBodies = document.querySelectorAll('.score-body');
+      const courseID = document.querySelector('.container-fluid').getAttribute('data-course-id');
 
       // Function to hide the scores tables
       function hideScores() {
@@ -252,7 +253,7 @@
             data.forEach(score => {
               const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
               const conversationLink = score.conv_id ?
-                `<a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a>` :
+                `<a href="/prof-conversation-history/${courseID}/${score.conv_id}" class="small-button">See Conversation History</a>` :
                 `<button onclick="alert('No conversation history available.')" class="small-button">See Conversation History</button>`;
               const row = `<tr>
                         <td>${score.student_id}</td>

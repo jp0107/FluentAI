@@ -647,6 +647,7 @@ def prof_assignment_chat(course_id, prompt_id):
 @app.route('/process-input', methods=['POST'])
 def process_input():
     user_input = flask.request.form.get('userInput', '')
+    current_content = flask.request.form.get('currentContent', '')
     student_id = flask.session.get('student_id')
     
     if not user_input:
@@ -655,7 +656,7 @@ def process_input():
     # Increment and check the turn count
     turns_count = flask.session.get('turns_count', 0) + 1
     max_turns = flask.session.get('max_turns', sys.maxsize)
-    conversation_text = flask.session.get('conversation_text', '') + f"\n{student_id}: {user_input}"
+    conversation_text = current_content
 
     if turns_count >= max_turns:
         course_id = flask.session.get('course_id')
@@ -678,7 +679,7 @@ def process_input():
         prompt_text = ""
     
     flask.session['turns_count'] = turns_count  # Update the turn count in the session
-    flask.session['conversation_text'] = conversation_text  # Append user input to conversation history
+    flask.session['conversation_text'] = current_content  # update current content
 
     response_text = get_gpt_response(prompt_text, user_input)
     return flask.jsonify({'gpt_response': response_text})
