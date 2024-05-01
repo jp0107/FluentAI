@@ -254,7 +254,7 @@
               const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
               const conversationLink = score.conv_id ?
                 `<a href="/prof-conversation-history/${courseID}/${score.conv_id}" class="small-button">See Conversation History</a>` :
-                `<button onclick="alert('No conversation history available.')" class="small-button">See Conversation History</button>`;
+                `<button onclick="alert('This student has not completed the assignment yet.')" class="small-button">See Conversation History</button>`;
               const row = `<tr>
                         <td>${score.student_id}</td>
                         <td>${displayScore}</td>
