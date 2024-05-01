@@ -475,6 +475,7 @@ def get_all_scores(prompt_id):
                     sqlalchemy.func.concat(Student.first_name, ' ', Student.last_name).label('student_id'),
                     Conversation.conv_id,
                     Conversation.score)
+                 .join(CoursesStudents, CoursesStudents.student_id == Student.student_id)
                  .join(Prompt, Prompt.course_id == CoursesStudents.course_id)
                  .outerjoin(Conversation, sqlalchemy.and_(
                      Conversation.student_id == Student.student_id,
@@ -623,7 +624,7 @@ def get_assignments_for_course(course_id):
     est = pytz.timezone('America/New_York')
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            now_utc = datetime.now(datetime.timezone.utc)  # Use timezone-aware datetime directly
+            now_utc = datetime.now(pytz.timezone.utc)  # Use timezone-aware datetime directly
             now_est = now_utc.astimezone(est)
 
             assignments = session.query(
