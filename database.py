@@ -332,7 +332,6 @@ class Prompt(Base):
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
     prof_id = sqlalchemy.Column(sqlalchemy.VARCHAR)
     deadline = sqlalchemy.Column(sqlalchemy.TIMESTAMP)
-    past_deadline = sqlalchemy.Column(sqlalchemy.Boolean)
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
