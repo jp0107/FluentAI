@@ -157,6 +157,16 @@ class Course(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
+# check if a professor is the course owner
+def check_if_owner(course_id, prof_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # Check if there is a course record with the given course_id that is owned by the specified prof_id
+        owner = session.query(Course).filter(
+            Course.course_id == course_id,
+            Course.owner == prof_id
+        ).first()
+        return owner is not None
+
 # get language for course
 def get_language(course_id):
     with sqlalchemy.orm.Session(engine) as session:

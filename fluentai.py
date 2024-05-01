@@ -23,7 +23,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
                       check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
-                      get_assignments_for_prof, get_all_scores)
+                      get_assignments_for_prof, get_all_scores, check_if_owner)
 
 #-----------------------------------------------------------------------
 
@@ -1277,3 +1277,12 @@ def get_scores(prompt_id):
         } for score in scores]), 200
     except Exception as e:
         return flask.jsonify({'error': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
+@app.route('/is-course-owner/<course_id>/<prof_id>', methods=['GET'])
+def is_course_owner(course_id, prof_id):
+    if check_if_owner(course_id, prof_id):
+        return flask.jsonify({'isOwner': True}), 200
+    else:
+        return flask.jsonify({'isOwner': False}), 200
