@@ -85,7 +85,7 @@
     </div>
   </nav>
 
-  <div class="container-fluid">
+  <div class="container-fluid" data-course-id="{{ course_id }}">
     <div class="row mt-4">
       <div class="col offset-sm-1">
         <h1>{{course_id}}</h1>
@@ -215,6 +215,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      const courseID = document.querySelector('.container-fluid').getAttribute('data-course-id');
       const menuItems = document.querySelectorAll('#menu a');
       const scoresTable = document.querySelector('.score-table');
       const scoreBody = scoresTable.querySelector('.score-body'); // This should point to your <tbody> within the score table
@@ -251,8 +252,8 @@
           data.forEach(score => {
             const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
             const conversationLink = score.conv_id ?
-              `<a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a>` :
-              `<button onclick="alert('No conversation history available.')" class="small-button">See Conversation History</button>`;
+              `<a href="/prof-conversation-history/${courseID}/${score.conv_id}" class="small-button">See Conversation History</a>` :
+              `<button onclick="alert('This student has not completed the assignment yet.')" class="small-button">See Conversation History</button>`;
             const row = `<tr>
                           <td>${score.student_id}</td>
                           <td>${displayScore}</td>
