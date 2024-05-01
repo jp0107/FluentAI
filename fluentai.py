@@ -407,7 +407,7 @@ def student_scores(course_id):
 def prof_dashboard():
     username = auth.authenticate()
     user_type = check_user_type(username)
-    
+
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))
@@ -541,8 +541,16 @@ def admin_dashboard():
 @app.route('/admin-prof-roster')
 def admin_prof_roster():
     username = auth.authenticate()
+    
+    user_type = check_user_type(username)
 
-   
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
+    if user_type == "Professor":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('prof_dashboard'))
+    
     return flask.render_template('admin-prof-roster.html',
                                  username = username)
 
@@ -551,6 +559,15 @@ def admin_prof_roster():
 @app.route('/admin-student-roster')
 def admin_student_roster():
     username = auth.authenticate()
+
+    user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
+    if user_type == "Professor":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('prof_dashboard'))
 
     student_list = get_student_info()
 
@@ -564,6 +581,14 @@ def admin_student_roster():
 def admin_roster():
     username = auth.authenticate()
 
+    user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
+    if user_type == "Professor":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('prof_dashboard'))
 
     return flask.render_template('admin-roster.html',
                                  username = username)
@@ -651,6 +676,10 @@ def conversation_history(course_id, conv_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
 
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
+
     flask.session['course_id'] = course_id
 
     try:
@@ -670,6 +699,10 @@ def conversation_history(course_id, conv_id):
 def prof_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
 
     flask.session['course_id'] = course_id
 
@@ -843,23 +876,6 @@ def student_practice_chat(course_id):
                                  user_type = user_type)
 
 #-----------------------------------------------------------------------
-# @app.route('/fetch-conversation')
-# def fetch_conversation():
-#     username = auth.authenticate()
-#     hardcoded_student_id = 123  # Hardcoded value
-
-#     with Session() as session:
-#         conversations = session.query(Conversation).filter(
-#             Conversation.student_id == hardcoded_student_id).all()
-#         conversation_texts = [conv.conv_text for conv in conversations]
-#         return flask.render_template(
-#             'assignment-chat.html', 
-#             username = username,
-#             conversation_data=conversation_texts)
-
-#-----------------------------------------------------------------------
-
-#-----------------------------------------------------------------------
 
 @app.route('/add-course', methods=['POST'])
 def add_course():
@@ -918,7 +934,7 @@ def get_stu_courses():
 
 @app.route('/all-courses')
 def all_courses():
-    courses = get_courses()  # Assuming get_courses() fetches all courses
+    courses = get_courses()  
     course_data = []
     for course in courses:
         course_info = {
@@ -935,7 +951,7 @@ def all_courses():
 @app.route('/join-course', methods=['POST'])
 def join_course():
     course_code = flask.request.form.get('course_code')
-    student_id = flask.session.get('username')  # Assuming student's username is in the session
+    student_id = flask.session.get('username')
 
     # Call the function from database.py
     result = enroll_student_in_course(student_id, course_code)
