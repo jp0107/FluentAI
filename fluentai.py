@@ -12,6 +12,7 @@ import string
 from openai import OpenAI
 import flask
 import sqlalchemy
+import pytz
 import auth
 from req_lib import ReqLib
 from database import (Student, Professor, SuperAdmin, Course, Conversation,
@@ -1041,9 +1042,15 @@ def add_assignment():
     course_id = flask.request.form.get('course_id')
     deadline_str = flask.request.form.get('deadline')
     
+    est = pytz.timezone('America/New_York')  # Define Eastern Standard Time timezone
+    utc = pytz.utc
+    
     if deadline_str:
         try:
-            deadline = datetime.datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
+            # Parse the deadline as EST
+            local_deadline = datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
+            local_deadline = est.localize(local_deadline)  # Localize the naive datetime
+            deadline = local_deadline.astimezone(utc)  # Convert to UTC
         except ValueError:
             return flask.jsonify({"message": "Invalid deadline format"}), 400
     else:

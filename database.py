@@ -619,51 +619,42 @@ def get_prompt_by_id(prompt_id):
 
 #-----------------------------------------------------------------------
 def get_assignments_for_course(course_id):
-    est = pytz.timezone('America/New_York')
+    est = pytz.timezone('America/New_York')  # Eastern Standard Time
     with sqlalchemy.orm.Session(engine) as session:
-        try:
-            now_utc = datetime.now(timezone.utc)  # Use timezone-aware datetime directly
-            now_est = now_utc.astimezone(est)
+        now_utc = datetime.now(pytz.utc)
+        now_est = now_utc.astimezone(est)
 
-            assignments = session.query(
-                Prompt.prompt_id,
-                Prompt.prompt_title,
-                Prompt.prompt_text,
-                Prompt.deadline,
-                Prompt.num_turns,
-                Prompt.created_at,
-                Prompt.assignment_description
-            ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
+        assignments = session.query(
+            Prompt.prompt_id,
+            Prompt.prompt_title,
+            Prompt.prompt_text,
+            Prompt.deadline,
+            Prompt.num_turns,
+            Prompt.created_at,
+            Prompt.assignment_description
+        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
 
-            current_assignments = []
-            past_assignments = []
-            for assignment in assignments:
-                if assignment.deadline:
-                    # Convert UTC deadline to EST, assuming it is stored in UTC
-                    local_deadline = assignment.deadline.astimezone(est) if assignment.deadline.tzinfo else assignment.deadline.replace(tzinfo=pytz.utc).astimezone(est)
-                    formatted_deadline = local_deadline.strftime('%m/%d/%Y %I:%M %p %Z')
-                else:
-                    formatted_deadline = 'No deadline set'
-                
-                assignment_info = {
-                    'prompt_id': assignment.prompt_id,
-                    'prompt_title': assignment.prompt_title,
-                    'prompt_text': assignment.prompt_text,
-                    'deadline': formatted_deadline,
-                    'num_turns': assignment.num_turns,
-                    'created_at': assignment.created_at.astimezone(est).strftime('%Y-%m-%d %H:%M:%S') if assignment.created_at.tzinfo else assignment.created_at.replace(tzinfo=pytz.utc).astimezone(est).strftime('%Y-%m-%d %H:%M:%S'),
-                    'description': assignment.assignment_description
-                }
-                if local_deadline is None or local_deadline > now_est:
-                    current_assignments.append(assignment_info)
-                else:
-                    past_assignments.append(assignment_info)
+        current_assignments = []
+        past_assignments = []
+        for assignment in assignments:
+            local_deadline = assignment.deadline.astimezone(est) if assignment.deadline else None
+            formatted_deadline = local_deadline.strftime('%m/%d/%Y %I:%M %p %Z') if local_deadline else 'No deadline set'
 
-            return {'current_assignments': current_assignments, 'past_assignments': past_assignments}
-        except Exception as e:
-            # Log the error or handle it as per your application's requirement
-            print("Error fetching assignments: ", e)
-            return {'error': 'Failed to fetch assignments'}
+            assignment_info = {
+                'prompt_id': assignment.prompt_id,
+                'prompt_title': assignment.prompt_title,
+                'prompt_text': assignment.prompt_text,
+                'deadline': formatted_deadline,
+                'num_turns': assignment.num_turns,
+                'created_at': assignment.created_at.astimezone(est).strftime('%Y-%m-%d %H:%M:%S'),
+                'description': assignment.assignment_description
+            }
+            if local_deadline is None or local_deadline > now_est:
+                current_assignments.append(assignment_info)
+            else:
+                past_assignments.append(assignment_info)
+
+        return {'current_assignments': current_assignments, 'past_assignments': past_assignments}
 #-----------------------------------------------------------------------
 def get_assignments_for_student(student_id, course_id):
     est = pytz.timezone('America/New_York')
