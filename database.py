@@ -643,7 +643,7 @@ def get_assignments_for_course(course_id):
             Prompt.deadline,
             Prompt.num_turns,
             Prompt.created_at,
-            Prompt.assignment_description
+            Prompt.description
         ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
 
         current_assignments = []
@@ -659,7 +659,7 @@ def get_assignments_for_course(course_id):
                 'deadline': formatted_deadline,
                 'num_turns': assignment.num_turns,
                 'created_at': assignment.created_at.astimezone(est).strftime('%Y-%m-%d %H:%M:%S'),
-                'description': assignment.assignment_description
+                'description': assignment.description
             }
             if local_deadline is None or local_deadline > now_est:
                 current_assignments.append(assignment_info)
@@ -685,7 +685,7 @@ def get_assignments_for_student(student_id, course_id):
             Prompt.prompt_title,
             Prompt.deadline,
             Prompt.created_at,
-            Prompt.assignment_description,
+            Prompt.description,
             completed_subquery  # This already behaves as a scalar subquery
         ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
         return categorize_assignments(assignments, now_est)
@@ -703,7 +703,7 @@ def categorize_assignments(assignments, now):
             a.prompt_title,
             local_deadline,  # Keep as datetime object
             a.created_at,
-            a.assignment_description,
+            a.description,
             a.completed
         )
 

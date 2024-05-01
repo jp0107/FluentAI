@@ -1079,7 +1079,7 @@ def add_assignment():
         prompt_text=assignment_prompt,
         num_turns=int(num_turns),
         deadline=deadline,
-        assignment_description = assignment_description
+        description = assignment_description
     )
 
     with sqlalchemy.orm.Session(engine) as session:
