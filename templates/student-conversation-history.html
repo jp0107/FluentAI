@@ -86,7 +86,7 @@
       <div class="subcontainer">
         <p>
           {% if conversation[0][1] %}
-          {{ conversation[0][1].replace("{{ username }}:", "</div><div class='convo'>{{ username }}:") | safe }}
+          <div>{{ conversation[0][1].replace("{{ username }}:", "</div><div class='convo'>{{ username }}:") | safe }}
           {% else %}
           No conversation history found. Please complete an assignment first.
           {% endif %}
