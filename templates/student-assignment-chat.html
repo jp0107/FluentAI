@@ -121,7 +121,7 @@
         $.ajax({
           url: '/process-input',
           type: 'POST',
-          data: { userInput: userInput },
+          data: { userInput: userInput, currentContent: currentContent },
           success: function (response) {
             currentContent += "\n\nChatbot: " + response.gpt_response;  // Append GPT response
             $('#gptResponse').val(currentContent);  // Update the textarea
