@@ -85,9 +85,9 @@
     </div>
   </nav>
 
-  <div class="container-fluid" data-course-id="{{ course_id }}">
+  <div class="container-fluid">
     <div class="row mt-4">
-      <div class="col offset-sm-1">
+      <div class="col offset-sm-1 course-id-holder" data-course-id="{{ course_id }}">
         <h1>{{course_id}}</h1>
       </div>
     </div>
@@ -218,7 +218,7 @@
       const menuItems = document.querySelectorAll('#menu a');
       const scoreTables = document.querySelectorAll('.score-table');
       const scoreBodies = document.querySelectorAll('.score-body');
-      const courseID = document.querySelector('.container-fluid').getAttribute('data-course-id');
+      const courseID = document.querySelector('.course-id-holder').getAttribute('data-course-id');
 
       // Function to hide the scores tables
       function hideScores() {
