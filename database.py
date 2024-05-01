@@ -6,6 +6,7 @@
 import os
 import sqlalchemy
 import sqlalchemy.orm
+import pytz
 from typing import List
 from datetime import datetime, timedelta
 import logging
@@ -621,8 +622,10 @@ def get_prompt_by_id(prompt_id):
 
 #-----------------------------------------------------------------------
 def get_assignments_for_course(course_id):
+    est = pytz.timezone('America/New_York')
     with sqlalchemy.orm.Session(engine) as session:
-        now = datetime.now()
+        now_utc = datetime.now(pytz.utc)
+        now_est = now_utc.astimezone(est)
         assignments = session.query(
             Prompt.prompt_id,
             Prompt.prompt_title,
@@ -636,8 +639,12 @@ def get_assignments_for_course(course_id):
         current_assignments = []
         past_assignments = []
         for assignment in assignments:
-            # Format the deadline in the desired format
-            formatted_deadline = assignment.deadline.strftime('%m/%d/%Y %I:%M%p') if assignment.deadline else 'No deadline set'
+            if assignment.deadline:
+                local_deadline = est.localize(assignment.deadline.replace(tzinfo=None))  # Assume deadline is stored in UTC
+            else:
+                local_deadline = None
+
+            formatted_deadline = local_deadline.strftime('%m/%d/%Y %I:%M%p') if local_deadline else 'No deadline set'
             
             assignment_info = {
                 'prompt_id': assignment.prompt_id,
@@ -648,7 +655,7 @@ def get_assignments_for_course(course_id):
                 'created_at': assignment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'description': assignment.assignment_description
             }
-            if assignment.deadline is None or assignment.deadline > now:
+            if assignment.deadline is None or assignment.deadline > now_est:
                 current_assignments.append(assignment_info)
             else:
                 past_assignments.append(assignment_info)
@@ -656,8 +663,11 @@ def get_assignments_for_course(course_id):
         return {'current_assignments': current_assignments, 'past_assignments': past_assignments}
 #-----------------------------------------------------------------------
 def get_assignments_for_student(student_id, course_id):
+    est = pytz.timezone('America/New_York')
     with sqlalchemy.orm.Session(engine) as session:
-        now = datetime.now()
+        now_utc = datetime.now(pytz.utc)  # Get the current time in UTC
+        now_est = now_utc.astimezone(est)  # Convert UTC time to EST
+
        # Define the subquery for the completed status
         completed_subquery = sqlalchemy.sql.exists().where(
             Conversation.student_id == student_id,
@@ -672,17 +682,26 @@ def get_assignments_for_student(student_id, course_id):
             Prompt.assignment_description,
             completed_subquery  # This already behaves as a scalar subquery
         ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
-        return categorize_assignments(assignments, now)
+        return categorize_assignments(assignments, now_est)
 #-----------------------------------------------------------------------
 
 def categorize_assignments(assignments, now):
     current_assignments = []
     past_assignments = []
     for a in assignments:
-        # Tuple construction
-        assignment_tuple = (a.prompt_id, a.prompt_title, a.deadline, a.created_at, a.assignment_description, a.completed)
+        # Assume deadline is stored in UTC and convert to EST
+        local_deadline = pytz.utc.localize(a.deadline).astimezone(pytz.timezone('America/New_York')) if a.deadline else None
 
-        if a.deadline is None or a.deadline > now:
+        assignment_tuple = (
+            a.prompt_id,
+            a.prompt_title,
+            local_deadline.strftime('%m/%d/%Y %I:%M%p') if local_deadline else 'No deadline set',
+            a.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            a.assignment_description,
+            a.completed
+        )
+
+        if local_deadline is None or local_deadline > now:
             current_assignments.append(assignment_tuple)
         else:
             past_assignments.append(assignment_tuple)
