@@ -224,7 +224,7 @@
         const modalBody = document.querySelector('#deleteProfModal .modal-body p');
         const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
 
-        $.get(`/is-course-owner/${courseID}/${profId}`, function(response) {
+        $.get(`/is-course-owner/${courseId}/${profId}`, function(response) {
           if (response.isOwner) {
             alert('This professor is the owner of the course and cannot be deleted.');
           } else {
