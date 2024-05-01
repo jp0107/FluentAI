@@ -708,16 +708,39 @@ def generate_unique_conv_id():
 
 def calculate_score(conversation_text):
     evaluation_prompt = f"""
-        Please evaluate the following conversation based on grammar, vocabulary, complexity of sentence structure, and accuracy. Provide a score out of 100. Only output a number in your response and no other words.
+        Please evaluate the following conversation based on the criteria that follows:
+        
+        Content: 
+        - Student adheres to the conversation guidelines and follows instructions (10 points).
+        - Content is relevant and appropriate to the topic and situation (10 points).
+        - Student engages with multiple turns in the conversation (5 points).
+        - Student has effective initiation of the conversation (2.5 points).
+        - Student has proper and clear closing of the conversation (2.5 points).
+
+        Grammar:
+        - Student uses and references pronouns correctly (5 points).
+        - Student has proper gender and number agreement between subjects, verbs, and objects (5 points).
+        - Student accurately uses various verb forms as required (5 points).
+        - Student appropriately uses verb tenses throughout the conversation (5 points).
+
+        Vocabulary:
+        - Student uses vocabulary that is suitable for the context of the conversation (10 points).
+
+        Register:
+        - Student uses appropriate language considering the relationship (peer vs. authority) and situation (10 points).
+
+        Spelling:
+        - There is correct spelling throughout the conversation (10 points).
+
+        Additional Considerations:
+        - Student demonstrates creativity and originality in responses (10 points).
+        - Student is effective in engaging the chatbot to maintain a fluid conversation (10 points).
+
+        Provide a score out of 100 for the conversation below based on the criteria and point distribution. Only output a number in your response and no other words.
 
         Conversation:
         {conversation_text}
 
-        Evaluation Criteria:
-        - Grammar: Correct usage of language grammar.
-        - Vocabulary: Appropriateness and range of vocabulary used.
-        - Sentence Structure: Complexity and variety of sentence structures.
-        - Accuracy: Correctness of the information provided and language use.
     """
     try:
         client = OpenAI(api_key=GPT_API_KEY)
