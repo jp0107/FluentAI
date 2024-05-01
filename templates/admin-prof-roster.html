@@ -225,18 +225,18 @@
         const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
 
         $.get(`/is-course-owner/${courseID}/${profId}`, function(response) {
-        if (response.isOwner) {
-          alert('This professor is the owner of the course and cannot be deleted.');
-        } else {
-            modalBody.textContent = `Are you sure you want to delete ${profName}?`;
-            // Set onclick function for deleting the professor
-            deleteButton.onclick = function () {
-              deleteProf(courseID, profId);
-            };
-            // Show the modal if it's not the owner
-            $('#deleteProfModal').modal('show');
-          }
-        });
+          if (response.isOwner) {
+            alert('This professor is the owner of the course and cannot be deleted.');
+          } else {
+              modalBody.textContent = `Are you sure you want to delete ${profName}?`;
+              // Set onclick function for deleting the professor
+              deleteButton.onclick = function () {
+                deleteProf(courseID, profId);
+              };
+              // Show the modal if it's not the owner
+              $('#deleteProfModal').modal('show');
+            }
+          });
       }
 
       function deleteProfessor(courseId, profId) {
