@@ -312,7 +312,7 @@
                         <td>${displayScore}</td>
                         <td>
                           ${displayProfScore}
-                          <button class="btn p-0" style="background: none; border: none; margin-top: 5px;" data-bs-toggle="modal" data-bs-target="#editProfessorScoreModal">
+                          <button class="btn p-0" style="background: none; border: none; margin-top: 5px;" data-bs-toggle="modal" data-bs-target="#editProfessorScoreModal" data-conv-id="${score.conv_id}">>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 5px; margin-bottom: 8px" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit professor score">
                               <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                               <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9 a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -343,42 +343,48 @@
       });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const profScoreButton = document.getElementById('storeProfessorScore');
-      profScoreButton.addEventListener('click', function () {
-        const profScoreInput = document.getElementById('prof-score');
-        const profScore = profScoreInput.value.trim();
+    // Listener to handle when the modal is shown
+    $('#editProfessorScoreModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var convId = button.data('conv-id'); // Extract info from data-* attributes
+      var modal = $(this);
+      modal.find('#storeProfessorScore').attr('data-conv-id', convId);
+    });
 
-        // Check if the score is provided and valid
-        if (profScore === '') {
-          alert('Please enter a score.');
-          return;
+    const profScoreButton = document.getElementById('storeProfessorScore');
+    profScoreButton.addEventListener('click', function () {
+      const profScoreInput = document.getElementById('prof-score');
+      const profScore = profScoreInput.value.trim();
+
+      // Check if the score is provided and valid
+      if (profScore === '') {
+        alert('Please enter a score.');
+        return;
+      }
+
+      const scoreNum = parseInt(profScore, 10);
+      if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
+        alert('Please enter a valid score between 0 and 100.');
+        return;
+      }
+
+      const convId = profScoreButton.getAttribute('data-conv-id');
+
+      $.ajax({
+        type: 'POST',
+        url: `/update-prof-score/${convId}`,
+        data: JSON.stringify({ profScore: scoreNum }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+          alert('Score updated successfully!');
+          document.querySelector(`#score-${convId}`).innerText = `${scoreNum}/100`;
+          $('#editProfessorScoreModal').modal('hide');
+        },
+        error: function (xhr) {
+          console.error("Error updating score: ", xhr.responseText);
+          alert('Failed to update score: ' + xhr.responseText);
         }
-
-        const scoreNum = parseInt(profScore, 10);
-        if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
-          alert('Please enter a valid score between 0 and 100.');
-          return;
-        }
-
-        const convId = profScoreButton.getAttribute('data-conv-id');
-
-        $.ajax({
-          type: 'POST',
-          url: `/update-prof-score/${convId}`,
-          data: JSON.stringify({ profScore: scoreNum }),
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-          success: function (response) {
-            alert('Score updated successfully!');
-            document.querySelector(`#score-${convId}`).innerText = `${scoreNum}/100`;
-            $('#editProfessorScoreModal').modal('hide');
-          },
-          error: function (xhr) {
-            console.error("Error updating score: ", xhr.responseText);
-            alert('Failed to update score: ' + xhr.responseText);
-          }
-        });
       });
     });
   </script>
