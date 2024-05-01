@@ -1382,10 +1382,11 @@ def update_prof_score(conv_id):
     conversation = Conversation.query.get(conv_id)
     if conversation:
         conversation.prof_score = new_prof_score
-        db.session.commit()
+        with Session() as session:
+            session.commit()
         return flask.jsonify(message="Score updated successfully."), 200
-    else:
-        return flask.jsonify(message="Conversation not found."), 404
+
+    return flask.jsonify(message="Conversation not found."), 404
 
 #-----------------------------------------------------------------------
 
