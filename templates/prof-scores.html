@@ -256,7 +256,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary">Edit professor score</button>
+          <button type="button" class="btn btn-primary" id="storeProfessorScore">Edit professor score</button>
         </div>
       </div>
     </div>
@@ -338,6 +338,45 @@
             fetchAndDisplayScores(promptId);
           } else {
             hideScores(); // Hide all scores if 'Scores Overview' is selected
+          }
+        });
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const profScoreButton = document.getElementById('storeProfessorScore');
+      profScoreButton.addEventListener('click', function () {
+        const profScoreInput = document.getElementById('prof-score');
+        const profScore = profScoreInput.value.trim();
+
+        // Check if the score is provided and valid
+        if (profScore === '') {
+          alert('Please enter a score.');
+          return;
+        }
+
+        const scoreNum = parseInt(profScore, 10);
+        if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
+          alert('Please enter a valid score between 0 and 100.');
+          return;
+        }
+
+        const convId = profScoreButton.getAttribute('data-conv-id');
+
+        $.ajax({
+          type: 'POST',
+          url: `/update-prof-score/${convId}`,
+          data: JSON.stringify({ profScore: scoreNum }),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (response) {
+            alert('Score updated successfully!');
+            document.querySelector(`#score-${convId}`).innerText = `${scoreNum}/100`;
+            $('#editProfessorScoreModal').modal('hide');
+          },
+          error: function (xhr) {
+            console.error("Error updating score: ", xhr.responseText);
+            alert('Failed to update score: ' + xhr.responseText);
           }
         });
       });

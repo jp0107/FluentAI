@@ -1364,6 +1364,31 @@ def get_scores(prompt_id):
 
 #-----------------------------------------------------------------------
 
+@app.route('/update-prof-score/<int:conv_id>', methods=['POST'])
+def update_prof_score(conv_id):
+    prof_score = request.json.get('profScore')
+
+    if prof_score is None:
+        return jsonify(message="Score must be provided."), 400
+
+    try:
+        new_prof_score = int(prof_score)
+    except ValueError:
+        return jsonify(message="Invalid input. Score must be an integer."), 400
+
+    if not (0 <= new_prof_score <= 100):
+        return jsonify(message="Score must be between 0 and 100."), 400
+
+    conversation = Conversation.query.get(conv_id)
+    if conversation:
+        conversation.prof_score = new_prof_score
+        db.session.commit()
+        return jsonify(message="Score updated successfully."), 200
+    else:
+        return jsonify(message="Conversation not found."), 404
+
+#-----------------------------------------------------------------------
+
 @app.route('/is-course-owner/<course_id>/<prof_id>', methods=['GET'])
 def is_course_owner(course_id, prof_id):
     if check_if_owner(course_id, prof_id):
