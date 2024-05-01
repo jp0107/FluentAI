@@ -202,8 +202,7 @@
             <td>${prof.net_id}</td>
             <td>${prof.courses}</td>
             <td>
-              <a href="#" data-bs-toggle="modal" data-bs-target="#deleteProfModal"
-                data-profname="${prof.name}" data-profid="${prof.net_id}" data-courseid="${prof.courses}"
+              <a href="#" data-profname="${prof.name}" data-profid="${prof.net_id}" data-courseid="${prof.courses}"
                 onclick="prepareDeleteProfModal(this);">
                 <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#5E5E5E"
                   class="bi bi-trash3" aria-label="Delete" viewBox="0 0 16 16" style="position: relative; top: -2px;">
@@ -225,10 +224,19 @@
         const modalBody = document.querySelector('#deleteProfModal .modal-body p');
         const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
 
-        modalBody.textContent = `Are you sure you want to delete ${profName}?`;
-        deleteButton.onclick = function () {
-          deleteProfessor(courseId, profId);
-        };
+        $.get(`/is-course-owner/${courseID}/${profId}`, function(response) {
+        if (response.isOwner) {
+          alert('This professor is the owner of the course and cannot be deleted.');
+        } else {
+            modalBody.textContent = `Are you sure you want to delete ${profName}?`;
+            // Set onclick function for deleting the professor
+            deleteButton.onclick = function () {
+              deleteProf(courseID, profId);
+            };
+            // Show the modal if it's not the owner
+            $('#deleteProfModal').modal('show');
+          }
+        });
       }
 
       function deleteProfessor(courseId, profId) {

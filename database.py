@@ -623,7 +623,7 @@ def get_assignments_for_course(course_id):
     est = pytz.timezone('America/New_York')
     with sqlalchemy.orm.Session(engine) as session:
         try:
-            now_utc = datetime.now(pytz.timezone.utc)  # Use timezone-aware datetime directly
+            now_utc = datetime.now(datetime.timezone.utc)  # Use timezone-aware datetime directly
             now_est = now_utc.astimezone(est)
 
             assignments = session.query(
