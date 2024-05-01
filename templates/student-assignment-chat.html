@@ -104,6 +104,10 @@
     isFinished = false;
 
     $(document).ready(function () {
+      // Check if the page was reloaded with an unfinished assignment and redirect if necessary
+      if (localStorage.getItem('unfinishedAssignment') === 'true') {
+        window.location.href = '/student-assignments/{{ course_id }}'; // Redirect to assignments page
+      }
 
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
@@ -132,6 +136,7 @@
               $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
               isFinished = true;
               if (confirm("You have reached the end of this conversation. Your score is " + response.score + "/100. Click OK to go back to the Assignments page.")) {
+                localStorage.removeItem('unfinishedAssignment');
                 window.location.href = '/student-assignments/{{ course_id }}'; // Redirect to assignments page
               }
             }
@@ -164,6 +169,7 @@
 
           // Set a flag in localStorage
           localStorage.setItem('reloadAssignments', 'true');
+          localStorage.setItem('unfinishedAssignment', 'true');
         }
       });
     });
