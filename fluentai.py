@@ -550,6 +550,11 @@ def student_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
 
+    # Check if the assignment has been completed
+    if has_completed_assignment(username, prompt_id):
+        # Redirect to the assignments page or a specific message page
+        return flask.redirect(flask.url_for('student_assignments', course_id=course_id))
+
     flask.session['course_id'] = course_id
     flask.session['student_id'] = username
     flask.session['prompt_id'] = prompt_id
@@ -585,6 +590,16 @@ def student_assignment_chat(course_id, prompt_id):
                                 course_id = flask.session.get('course_id'),
                                 prompt_id = flask.session.get('prompt_id'),
                                 conversation_text = flask.session.get('conversation_text'))
+
+#-----------------------------------------------------------------------
+
+def has_completed_assignment(student_id, prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        conversation = session.query(Conversation).filter_by(
+            student_id=student_id,
+            prompt_id=prompt_id
+        ).first()
+        return conversation is not None
 
 #-----------------------------------------------------------------------
 
