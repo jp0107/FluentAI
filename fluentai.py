@@ -23,7 +23,7 @@ from database import (Student, Professor, SuperAdmin, Course, Conversation,
                       get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
                       get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
                       check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
-                      get_assignments_for_prof, get_all_scores, check_if_owner)
+                      get_assignments_for_prof, get_all_scores, check_if_owner, check_prof_in_course)
 
 #-----------------------------------------------------------------------
 
@@ -333,11 +333,14 @@ def student_course(course_id):
 
     # get user's first name to display on dashboard
     user_type = check_user_type(username)
-    if(user_type == "Student"):
+    if user_type == "Student":
+        if not check_student_in_course(course_id, username):
+            flask.flash("You are not enrolled in this course.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         first_name = get_student_firstname(username)
-    elif(user_type == "Professor"):
+    elif user_type == "Professor":
         first_name = get_prof_firstname(username)
-    elif(user_type == "SuperAdmin"):
+    elif user_type == "SuperAdmin":
         first_name = get_admin_firstname(username)
 
     return flask.render_template('student-course.html', 
@@ -426,10 +429,14 @@ def prof_course(course_id):
 
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('student_dashboard'))  # Redirecting to the home page or a suitable route
-    if(user_type == "Professor"):
+        return flask.redirect(flask.url_for('student_dashboard'))  
+    if user_type == "Professor":
+        if not check_prof_in_course(course_id, username):
+            flask.flash("Access denied: Unauthorized access.", "error")
+            # Redirect unauthorized professors to their dashboard
+            return flask.redirect(flask.url_for('prof_dashboard'))
         first_name = get_prof_firstname(username)
-    elif(user_type == "SuperAdmin"):
+    elif user_type == "SuperAdmin":
         first_name = get_admin_firstname(username)
 
 

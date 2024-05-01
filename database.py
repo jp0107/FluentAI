@@ -812,6 +812,8 @@ def fetch_professors_and_courses():
             session.rollback()
             raise Exception(f"Failed to fetch data due to: {str(e)}")
 
+#-----------------------------------------------------------------------
+
 def fetch_students_and_courses():
     with sqlalchemy.orm.Session(engine) as session:
         try:
@@ -864,3 +866,14 @@ def fetch_students_and_courses():
         except Exception as e:
             session.rollback()
             raise Exception(f"Failed to fetch data due to: {str(e)}")
+#-----------------------------------------------------------------------
+def check_prof_in_course(course_id, prof_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        # Directly check for an existing association record between the professor and the course
+        association = session.query(CoursesProfs).filter(
+            CoursesProfs.course_id == course_id,
+            CoursesProfs.prof_id == prof_id
+        ).first()
+
+        # Return True if the association exists, False otherwise
+        return association is not None
