@@ -99,15 +99,17 @@
   </div>
 
   <script>
-    // Immediately mark the session as dirty
-    window.isDirty = true;
-    isFinished = false;
-
     $(document).ready(function () {
       // Check if the page was reloaded with an unfinished assignment and redirect if necessary
       if (localStorage.getItem('unfinishedAssignment') === 'true') {
+        localStorage.removeItem('unfinishedAssignment'); // Clear the flag to avoid redirect loops
         window.location.href = '/student-assignments/{{ course_id }}'; // Redirect to assignments page
       }
+
+      // Immediately mark the session as dirty
+      window.isDirty = true;
+      isFinished = false;
+      var hasChatStarted = false;
 
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
@@ -118,6 +120,7 @@
 
       $('#chatForm').submit(function (event) {
         event.preventDefault();
+        hasChatStarted = true; // Set flag to true as the chat has started
         var userInput = $('input[name="userInput"]').val();
         var currentContent = $('#gptResponse').val();
         currentContent += "\n\nYou: " + userInput;  // Append user input to the chat
@@ -148,7 +151,7 @@
       });
 
       $(window).on('beforeunload', function (e) {
-        if (window.isDirty && !isFinished) {
+        if (window.isDirty && !isFinished && hasChatStarted) {
           var message = "Are you sure you want to leave? Leaving this page will result in a score of 0 for this assignment.";
           e.preventDefault();
           e.returnValue = message;
@@ -157,7 +160,7 @@
       });
 
       $(window).on('unload', function () {
-        if (window.isDirty && !isFinished) {  // Only send if the conversation was started and not properly finished
+        if (window.isDirty && !isFinished && hasChatStarted) {  // Only send if the conversation was started and not properly finished
           var data = JSON.stringify({
             student_id: "{{ student_id }}",
             course_id: "{{ course_id }}",
