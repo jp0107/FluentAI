@@ -468,39 +468,39 @@ def get_assignments_and_scores_for_student(course_id, student_id):
         return results if results else None
 
 # gets all student scores in alphabetical order for an assignment given the assignment id (FOR PROF SCORES PAGE)
-# def get_all_scores(prompt_id):
-#     with sqlalchemy.orm.Session(engine) as session:
-
-#         query = (session.query(
-#                     sqlalchemy.func.concat(Student.first_name, ' ', Student.last_name).label('student_id'), 
-#                     Conversation.conv_id, 
-#                     Conversation.score)
-#                  .join(CoursesStudents, CoursesStudents.student_id == Student.student_id)
-#                  .join(Prompt, Prompt.course_id == CoursesStudents.course_id)
-#                  .outerjoin(Conversation, sqlalchemy.and_(
-#                      Conversation.student_id == Student.student_id,
-#                      Conversation.prompt_id == Prompt.prompt_id))
-#                  .filter(Prompt.prompt_id == prompt_id)
-#                  .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name)))
-
-#         results = query.all()
-
-#         return results 
-
 def get_all_scores(prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
+
         query = (session.query(
-                    CoursesStudents.student_id,
-                    Conversation.conv_id, 
+                    sqlalchemy.func.concat(Student.first_name, ' ', Student.last_name).label('student_id'),
+                    Conversation.conv_id,
                     Conversation.score)
-                 .join(Prompt, CoursesStudents.course_id == Prompt.course_id)
+                 .join(CoursesStudents, CoursesStudents.student_id == Student.student_id)
+                 .join(Prompt, Prompt.course_id == CoursesStudents.course_id)
                  .outerjoin(Conversation, sqlalchemy.and_(
-                     Conversation.student_id == CoursesStudents.student_id,
-                     Conversation.prompt_id == prompt_id))
-                 .filter(Prompt.prompt_id == prompt_id))
+                     Conversation.student_id == Student.student_id,
+                     Conversation.prompt_id == Prompt.prompt_id))
+                 .filter(Prompt.prompt_id == prompt_id)
+                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name)))
 
         results = query.all()
+
         return results
+
+# def get_all_scores(prompt_id):
+#     with sqlalchemy.orm.Session(engine) as session:
+#         query = (session.query(
+#                     CoursesStudents.student_id,
+#                     Conversation.conv_id, 
+#                     Conversation.score)
+#                  .join(Prompt, CoursesStudents.course_id == Prompt.course_id)
+#                  .outerjoin(Conversation, sqlalchemy.and_(
+#                      Conversation.student_id == CoursesStudents.student_id,
+#                      Conversation.prompt_id == prompt_id))
+#                  .filter(Prompt.prompt_id == prompt_id))
+
+#         results = query.all()
+#         return results
 
 # get conversation history given a conv_id
 def get_conversation(conv_id):
@@ -623,43 +623,49 @@ def get_prompt_by_id(prompt_id):
 def get_assignments_for_course(course_id):
     est = pytz.timezone('America/New_York')
     with sqlalchemy.orm.Session(engine) as session:
-        now_utc = datetime.now(pytz.utc)
-        now_est = now_utc.astimezone(est)
-        assignments = session.query(
-            Prompt.prompt_id,
-            Prompt.prompt_title,
-            Prompt.prompt_text,
-            Prompt.deadline,
-            Prompt.num_turns,
-            Prompt.created_at,
-            Prompt.assignment_description
-        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
+        try:
+            now_utc = datetime.now(pytz.timezone.utc)  # Use timezone-aware datetime directly
+            now_est = now_utc.astimezone(est)
 
-        current_assignments = []
-        past_assignments = []
-        for assignment in assignments:
-            if assignment.deadline:
-                local_deadline = est.localize(assignment.deadline.replace(tzinfo=None))  # Assume deadline is stored in UTC
-            else:
-                local_deadline = None
+            assignments = session.query(
+                Prompt.prompt_id,
+                Prompt.prompt_title,
+                Prompt.prompt_text,
+                Prompt.deadline,
+                Prompt.num_turns,
+                Prompt.created_at,
+                Prompt.assignment_description
+            ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
 
-            formatted_deadline = local_deadline.strftime('%m/%d/%Y %I:%M%p') if local_deadline else 'No deadline set'
-            
-            assignment_info = {
-                'prompt_id': assignment.prompt_id,
-                'prompt_title': assignment.prompt_title,
-                'prompt_text': assignment.prompt_text,
-                'deadline': formatted_deadline,
-                'num_turns': assignment.num_turns,
-                'created_at': assignment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                'description': assignment.assignment_description
-            }
-            if assignment.deadline is None or assignment.deadline > now_est:
-                current_assignments.append(assignment_info)
-            else:
-                past_assignments.append(assignment_info)
+            current_assignments = []
+            past_assignments = []
+            for assignment in assignments:
+                if assignment.deadline:
+                    # Convert UTC deadline to EST, assuming it is stored in UTC
+                    local_deadline = assignment.deadline.astimezone(est) if assignment.deadline.tzinfo else assignment.deadline.replace(tzinfo=pytz.utc).astimezone(est)
+                    formatted_deadline = local_deadline.strftime('%m/%d/%Y %I:%M %p %Z')
+                else:
+                    formatted_deadline = 'No deadline set'
+                
+                assignment_info = {
+                    'prompt_id': assignment.prompt_id,
+                    'prompt_title': assignment.prompt_title,
+                    'prompt_text': assignment.prompt_text,
+                    'deadline': formatted_deadline,
+                    'num_turns': assignment.num_turns,
+                    'created_at': assignment.created_at.astimezone(est).strftime('%Y-%m-%d %H:%M:%S') if assignment.created_at.tzinfo else assignment.created_at.replace(tzinfo=pytz.utc).astimezone(est).strftime('%Y-%m-%d %H:%M:%S'),
+                    'description': assignment.assignment_description
+                }
+                if local_deadline is None or local_deadline > now_est:
+                    current_assignments.append(assignment_info)
+                else:
+                    past_assignments.append(assignment_info)
 
-        return {'current_assignments': current_assignments, 'past_assignments': past_assignments}
+            return {'current_assignments': current_assignments, 'past_assignments': past_assignments}
+        except Exception as e:
+            # Log the error or handle it as per your application's requirement
+            print("Error fetching assignments: ", e)
+            return {'error': 'Failed to fetch assignments'}
 #-----------------------------------------------------------------------
 def get_assignments_for_student(student_id, course_id):
     est = pytz.timezone('America/New_York')
