@@ -67,7 +67,7 @@ def get_gpt_response(prompt_text, user_input=""):
 #-----------------------------------------------------------------------
 
 # function for storing conversation
-def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, score):
+def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, score, prof_score):
     with Session() as session:
         new_conversation = Conversation(
             conv_id = conv_id,
@@ -76,7 +76,7 @@ def store_conversation(conv_id, course_id, student_id, prompt_id, conv_text, sco
             prompt_id=prompt_id,
             conv_text=conv_text,
             score = score,
-            prof_scores = None
+            prof_score = prof_score
         )
         session.add(new_conversation)
         session.commit()
