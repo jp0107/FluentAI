@@ -178,10 +178,23 @@ def delete_prof_from_course(prof_id, course_id):
                 CoursesProfs.course_id == course_id
             ).delete(synchronize_session=False)
 
+            # Attempt to commit the deletion of the course-professor association
             if association_deleted:
                 session.commit()
                 print(f"Deleted association for professor ID {prof_id} from course ID {course_id}")
-                return True
+
+                # Now delete the professor from the professors table
+                prof_deleted = session.query(Professor).filter(
+                    Professor.prof_id == prof_id
+                ).delete(synchronize_session=False)
+
+                if prof_deleted:
+                    session.commit()
+                    print(f"Professor ID {prof_id} deleted from the Professors database.")
+                    return True
+            
+                print("Professor not found in Professors database.")
+                return False
             
             print("No association found to delete.")
             return False
@@ -201,10 +214,23 @@ def delete_student_from_course(student_id, course_id):
                 CoursesStudents.course_id == course_id
             ).delete(synchronize_session=False)
 
+           # Attempt to commit the deletion of the course-student association
             if association_deleted:
                 session.commit()
                 print(f"Deleted association for student ID {student_id} from course ID {course_id}")
-                return True
+
+                # Now delete the student from the students table
+                student_deleted = session.query(Student).filter(
+                    Student.student_id == student_id
+                ).delete(synchronize_session=False)
+                
+                if student_deleted:
+                    session.commit()
+                    print(f"Student ID {student_id} deleted from the Students database.")
+                    return True
+                
+                print("Student not found in Students database.")
+                return False
             
             print("No association found to delete.")
             return False
@@ -262,13 +288,13 @@ def login():
 
     user_type = check_user_type(username)
 
-    if user_type == "Student":
-        return flask.redirect(flask.url_for('student_dashboard'))
-    if user_type == "Professor":
-        return flask.redirect(flask.url_for('prof_dashboard'))
     if user_type == "SuperAdmin":
         return flask.redirect(flask.url_for('admin_dashboard'))
-
+    if user_type == "Professor":
+        return flask.redirect(flask.url_for('prof_dashboard'))
+    if user_type == "Student":
+        return flask.redirect(flask.url_for('student_dashboard'))
+    
     return "Login Required", 401
 
 #----------------------   STUDENT PAGES   ------------------------------
@@ -280,7 +306,7 @@ def student_dashboard():
     user_type = check_user_type(username)
 
     html_code = flask.render_template('student-dashboard.html', 
-                                      username = username, 
+                                      username = username,
                                       user_type = user_type)
     return flask.make_response(html_code)
 
@@ -381,6 +407,11 @@ def student_scores(course_id):
 def prof_dashboard():
     username = auth.authenticate()
     user_type = check_user_type(username)
+    
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
+    
     return flask.render_template('prof-dashboard.html',
                                  username = username,
                                  user_type = user_type)
@@ -420,6 +451,10 @@ def prof_course(course_id):
 def prof_assignments(course_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
+    
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
 
     flask.session['course_id'] = course_id
 
@@ -434,7 +469,7 @@ def delete_assignment_click(prompt_id):
     try:
         if delete_assignment(prompt_id):
             return flask.jsonify({'message': 'Assignment deleted successfully'}), 200
-        
+
         return flask.jsonify({'message': 'Error deleting assignment'}), 200
     except Exception as e:
         return flask.jsonify({'message': str(e)}), 500
@@ -445,6 +480,10 @@ def delete_assignment_click(prompt_id):
 def prof_roster(course_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
 
     flask.session['course_id'] = course_id
 
@@ -459,6 +498,10 @@ def prof_roster(course_id):
 def prof_scores(course_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
 
     flask.session['course_id'] = course_id
 
@@ -479,16 +522,16 @@ def admin_dashboard():
 
     # get user's type to make sure they can access page and display name if correct
     user_type = check_user_type(username)
-    
-    if (user_type == "Student"):
+
+    if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('student_dashboard'))  # Redirecting to the home page or a suitable route
-    if(user_type == "Professor"):
+        return flask.redirect(flask.url_for('student_dashboard'))
+    if user_type == "Professor":
         flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for('prof_dashboard'))  # Redirecting to the home page or a suitable route
-    if(user_type == "SuperAdmin"):
+        return flask.redirect(flask.url_for('prof_dashboard'))
+    if user_type == "SuperAdmin":
         first_name = get_admin_firstname(username)
-        
+
     return flask.render_template('admin-dashboard.html',
                                  username = username,
                                  first_name = first_name)
@@ -612,7 +655,7 @@ def conversation_history(course_id, conv_id):
 
     try:
         conversation = get_conversation(conv_id)
-    except:
+    except Exception:
         conversation = get_default_conversation()
 
     return flask.render_template('prof-conversation-history.html',
