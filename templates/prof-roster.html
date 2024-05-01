@@ -365,10 +365,16 @@
       const modalBody = document.querySelector('#deleteProfModal .modal-body p');
       const deleteButton = document.querySelector('#deleteProfModal .btn-primary');
 
-      modalBody.textContent = `Are you sure you want to delete ${profName}?`;
-      deleteButton.onclick = function () {
-        deleteProf(courseID, profId);
-      };
+      $.get(`/is-course-owner/${courseID}/${profId}`, function(response) {
+        if (response.isOwner) {
+          alert('This professor is the owner of the course and cannot be deleted.');
+        } else {
+          modalBody.textContent = `Are you sure you want to delete ${profName}?`;
+          deleteButton.onclick = function () {
+            deleteProf(courseID, profId);
+          };
+        }
+      });
     }
 
     function deleteProf(courseID, profId) {
