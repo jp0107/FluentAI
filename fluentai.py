@@ -340,8 +340,14 @@ def student_course(course_id):
             return flask.redirect(flask.url_for('student_dashboard'))
         first_name = get_student_firstname(username)
     elif user_type == "Professor":
+        if not check_student_in_course(course_id, username):
+            flask.flash("You are not enrolled in this course.", "error")
+            return flask.redirect(flask.url_for('prof_dashboard'))
         first_name = get_prof_firstname(username)
     elif user_type == "SuperAdmin":
+        if not check_student_in_course(course_id, username):
+            flask.flash("You are not enrolled in this course.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         first_name = get_admin_firstname(username)
 
     return flask.render_template('student-course.html', 
@@ -432,14 +438,16 @@ def prof_course(course_id):
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))  
     if user_type == "Professor":
-        is_authorized = check_prof_in_course(course_id, username)
-        print(course_id, flush = True)
-        print(f"Is authorized: {is_authorized}", flush=True)  # Debug output
-        if not is_authorized:
+        if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
+            # Redirect unauthorized professors to their dashboard
             return flask.redirect(flask.url_for('prof_dashboard'))
         first_name = get_prof_firstname(username)
     elif user_type == "SuperAdmin":
+        if not check_prof_in_course(course_id, username):
+            flask.flash("Access denied: Unauthorized access.", "error")
+            # Redirect unauthorized professors to their dashboard
+            return flask.redirect(flask.url_for('prof_dashboard'))
         first_name = get_admin_firstname(username)
 
 
