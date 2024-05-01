@@ -345,7 +345,7 @@ class Prompt(Base):
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     num_turns = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
-    assignment_description = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    description = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
 # get prompt title by id
 def get_prompt_title(prompt_id):
@@ -416,7 +416,7 @@ class Conversation(Base):
     conv_text = sqlalchemy.Column(sqlalchemy.Text)
     score = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
-    prof_scores = sqlalchemy.Column(sqlalchemy.Integer)
+    prof_score = sqlalchemy.Column(sqlalchemy.Integer)
 
 # get default student scores for a course
 def get_default_student_scores():
