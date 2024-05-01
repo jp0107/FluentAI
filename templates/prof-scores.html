@@ -180,7 +180,7 @@
             </li>
             {% endfor %}
             {% else %}
-                <li>No assignments found.</li>
+            <li>No assignments found.</li>
             {% endif %}
           </ul>
         </div>
@@ -215,70 +215,63 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const courseID = document.querySelector('.container-fluid').getAttribute('data-course-id');
       const menuItems = document.querySelectorAll('#menu a');
-      const scoresTable = document.querySelector('.score-table');
-      const scoreBody = scoresTable.querySelector('.score-body'); // This should point to your <tbody> within the score table
-      
-      // Initially hide the scores table
-      scoresTable.style.display = 'none';
+      const scoreTables = document.querySelectorAll('.score-table');
+      const scoreBodies = document.querySelectorAll('.score-body');
 
-      // Function to hide the scores table
+      // Function to hide the scores tables
       function hideScores() {
-        scoresTable.style.display = 'none';
-        console.log('Scores table hidden');
+        scoreTables.forEach(table => {
+          table.style.display = 'none';
+        });
       }
+
+      // Initially hide the scores tables
+      hideScores();
 
       // Fetch and display scores for a given prompt ID
       function fetchAndDisplayScores(promptId) {
-        console.log(`Fetching scores for promptId: ${promptId}`);
         fetch(`/get-scores/${promptId}`)
           .then(response => response.json())
           .then(data => {
-            console.log(`Data received for promptId: ${promptId}`, data);
             updateScoresDisplay(data);
           })
           .catch(error => {
-            console.error('Failed to fetch scores:', error);
             updateScoresDisplay([]); // Handle errors by clearing the display
           });
       }
 
       // Update display with fetched data
       function updateScoresDisplay(data) {
-        if (data.length > 0) {
-          scoresTable.style.display = 'table'; // Show the table if there are scores
-          scoreBody.innerHTML = ''; // Clear previous scores
-          data.forEach(score => {
-            const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
-            const conversationLink = score.conv_id ?
-              `<a href="/prof-conversation-history/${courseID}/${score.conv_id}" class="small-button">See Conversation History</a>` :
-              `<button onclick="alert('This student has not completed the assignment yet.')" class="small-button">See Conversation History</button>`;
-            const row = `<tr>
-                          <td>${score.student_id}</td>
-                          <td>${displayScore}</td>
-                          <td>${conversationLink}</td>
-                        </tr>`;
-            console.log('Appending row:', row);
-            scoreBody.innerHTML += row;
-          });
-          // Log the innerHTML of scoreBody to see what's been appended
-          console.log('Current innerHTML of scoreBody:', scoreBody.innerHTML);
-          console.log('Scores displayed successfully');
-        } else {
-          hideScores();
-          console.log('No scores to display, table hidden');
-        }
+        scoreBodies.forEach(body => {
+          body.innerHTML = ''; // Clear previous scores
+          if (data.length > 0) {
+            scoreTables.forEach(table => {
+              table.style.display = 'table'; // Show the table if there are scores
+            });
+            data.forEach(score => {
+              const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
+              const conversationLink = score.conv_id ?
+                `<a href="/conversation-history/${score.conv_id}" class="small-button">See Conversation History</a>` :
+                `<button onclick="alert('No conversation history available.')" class="small-button">See Conversation History</button>`;
+              const row = `<tr>
+                        <td>${score.student_id}</td>
+                        <td>${displayScore}</td>
+                        <td>${conversationLink}</td>
+                      </tr>`;
+              body.innerHTML += row; // Append new score to each score body
+            });
+          } else {
+            hideScores(); // Hide the tables if no data
+          }
+        });
       }
-      // Initially hide scores
-      hideScores();
 
       // Event listeners for menu items
       menuItems.forEach(item => {
         item.addEventListener('click', function (e) {
           e.preventDefault();
           const promptId = this.getAttribute('data-assignment');
-          console.log(`Menu item clicked for promptId: ${promptId}`);
           if (promptId !== 'general') {
             fetchAndDisplayScores(promptId);
           } else {
