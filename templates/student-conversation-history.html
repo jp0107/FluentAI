@@ -86,7 +86,7 @@
       <div class="subcontainer">
         <p>
           {% if conversation[0][1] %}
-          <div>{{ conversation[0][1].replace("\n", "</div><div class='convo'>") | safe }}
+          <div>Chatbot: {{ conversation[0][1].replace("\n", "</div><div class='convo'>") | safe }}
           {% else %}
           No conversation history found. Please complete an assignment first.
           {% endif %}
