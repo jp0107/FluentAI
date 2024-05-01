@@ -619,8 +619,9 @@ def get_assignments_for_course(course_id):
             Prompt.prompt_text,
             Prompt.deadline,
             Prompt.num_turns,
-            Prompt.created_at
-        ).filter(Prompt.course_id == course_id).all()
+            Prompt.created_at,
+            Prompt.assignment_description
+        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
 
         current_assignments = []
         past_assignments = []
@@ -634,7 +635,8 @@ def get_assignments_for_course(course_id):
                 'prompt_text': assignment.prompt_text,
                 'deadline': formatted_deadline,
                 'num_turns': assignment.num_turns,
-                'created_at': assignment.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                'created_at': assignment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                'description': assignment.assignment_description
             }
             if assignment.deadline is None or assignment.deadline > now:
                 current_assignments.append(assignment_info)

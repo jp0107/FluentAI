@@ -332,6 +332,8 @@
                 '<div class="job-left my-4 d-md-flex align-items-center flex-wrap">' +
                 '<div class="job-content">' +
                 '<h5>' + assignment.prompt_title + '</h5>' +
+                '<h5><a data-bs-toggle="collapse" href="#multiCollapseExample' + assignment.prompt_id + '" role="button" aria-expanded="false" aria-controls="multiCollapseExample' + assignment.prompt_id + '" style="font-size: 16px; color:#5E5E5E !important;">' +
+                'Assignment Description</a></h5>' +
                 '<h5 id="deadline-text">Deadline: ' + assignment.deadline + '</h5>' +
                 '</div></div>' +
                 '<div class="large-screen-layout">' +
@@ -345,6 +347,8 @@
                 '<div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">' +
                 (isPast ? '' : '<div class="col d-flex">' +
                   '<a href="/prof-assignment-chat/{{ course_id }}/' + assignment.prompt_id + '" class="class-button w-100 d-flex align-items-center justify-content-center" role="button" id="class-button">Start Assignment</a></div>') +
+                '</div></div>' + 
+                '<div class="collapse multi-collapse" id="multiCollapseExample' + assignment.prompt_id + '"><div class="content">' + assignment.assignment_description + 
                 '</div></div></div>';
             });
           } else {
