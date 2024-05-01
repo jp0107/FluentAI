@@ -468,39 +468,39 @@ def get_assignments_and_scores_for_student(course_id, student_id):
         return results if results else None
 
 # gets all student scores in alphabetical order for an assignment given the assignment id (FOR PROF SCORES PAGE)
-# def get_all_scores(prompt_id):
-#     with sqlalchemy.orm.Session(engine) as session:
-
-#         query = (session.query(
-#                     sqlalchemy.func.concat(Student.first_name, ' ', Student.last_name).label('student_id'), 
-#                     Conversation.conv_id, 
-#                     Conversation.score)
-#                  .join(CoursesStudents, CoursesStudents.student_id == Student.student_id)
-#                  .join(Prompt, Prompt.course_id == CoursesStudents.course_id)
-#                  .outerjoin(Conversation, sqlalchemy.and_(
-#                      Conversation.student_id == Student.student_id,
-#                      Conversation.prompt_id == Prompt.prompt_id))
-#                  .filter(Prompt.prompt_id == prompt_id)
-#                  .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name)))
-
-#         results = query.all()
-
-#         return results 
-
 def get_all_scores(prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
+
         query = (session.query(
-                    CoursesStudents.student_id,
-                    Conversation.conv_id, 
+                    sqlalchemy.func.concat(Student.first_name, ' ', Student.last_name).label('student_id'),
+                    Conversation.conv_id,
                     Conversation.score)
-                 .join(Prompt, CoursesStudents.course_id == Prompt.course_id)
+                 .join(CoursesStudents, CoursesStudents.student_id == Student.student_id)
+                 .join(Prompt, Prompt.course_id == CoursesStudents.course_id)
                  .outerjoin(Conversation, sqlalchemy.and_(
-                     Conversation.student_id == CoursesStudents.student_id,
-                     Conversation.prompt_id == prompt_id))
-                 .filter(Prompt.prompt_id == prompt_id))
+                     Conversation.student_id == Student.student_id,
+                     Conversation.prompt_id == Prompt.prompt_id))
+                 .filter(Prompt.prompt_id == prompt_id)
+                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name)))
 
         results = query.all()
+
         return results
+
+# def get_all_scores(prompt_id):
+#     with sqlalchemy.orm.Session(engine) as session:
+#         query = (session.query(
+#                     CoursesStudents.student_id,
+#                     Conversation.conv_id, 
+#                     Conversation.score)
+#                  .join(Prompt, CoursesStudents.course_id == Prompt.course_id)
+#                  .outerjoin(Conversation, sqlalchemy.and_(
+#                      Conversation.student_id == CoursesStudents.student_id,
+#                      Conversation.prompt_id == prompt_id))
+#                  .filter(Prompt.prompt_id == prompt_id))
+
+#         results = query.all()
+#         return results
 
 # get conversation history given a conv_id
 def get_conversation(conv_id):
