@@ -18,7 +18,7 @@
   <style>
     /* Tooltip specific styles */
     .tooltip .tooltip-inner {
-      min-width: 600px !important;
+      min-width: 400px !important;
     }
 
     @media (max-width: 768px) {
@@ -140,14 +140,24 @@
         <tr>
           <th>Student Name</th>
           <th>
+            AI Score
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
               class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;" data-bs-toggle="tooltip"
               data-bs-placement="top"
-              title="Disclaimer: Please be aware that the scores provided for the student answers have been graded by ChatGPT, an artificial intelligence language model. While ChatGPT is designed to assess answers based on language usage and correctness, it does not replicate the comprehensive understanding or judgment of a human instructor. The scores should be considered as indicative and used in conjunction with teacher assessments to ensure accuracy and fairness in grading.">
+              title="Disclaimer: Please be aware that the scores provided have been graded by ChatGPT. While this AI model is designed to assess answers based on language usage and correctness, it does not match the comprehensive judgment of a human instructor. Please use them as a guide alongside other assessments for accurate scoring.">
               <path
                 d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
             </svg>
-            AI Score
+          </th>
+          <th>
+            Professor Score
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+              class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;" data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Professors can review the conversation history and input their own score to ensure the most accurate evaluation.">
+              <path
+                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+            </svg>
           </th>
           <th>Conversation History</th>
         </tr>
@@ -196,7 +206,17 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
                     class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;"
                     data-bs-toggle="tooltip" data-bs-placement="top"
-                    title="Disclaimer: Please be aware that the scores provided for the student answers have been graded by ChatGPT, an artificial intelligence language model. While ChatGPT is designed to assess answers based on language usage and correctness, it does not replicate the comprehensive understanding or judgment of a human instructor. The scores should be considered as indicative and used in conjunction with teacher assessments to ensure accuracy and fairness in grading.">
+                    title="Disclaimer: Please be aware that the scores provided have been graded by ChatGPT. While this AI model is designed to assess answers based on language usage and correctness, it does not match the comprehensive judgment of a human instructor. Please use them as a guide alongside other assessments for accurate scoring.">
+                    <path
+                      d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                  </svg>
+                </th>
+                <th>
+                  Professor Score
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                    class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Professors can review the conversation history and input their own score to ensure the most accurate evaluation.">
                     <path
                       d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
                   </svg>
@@ -212,6 +232,37 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal -->
+
+  <div class="modal fade" id="editProfessorScoreModal" tabindex="-1" role="dialog"
+    aria-labelledby="editProfessorScoreModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfessorScoreModalLabel">Edit Professor Score</h5>
+          <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Professor Score:</label>
+              <textarea class="form-control" id="prof-score" rows="1" data-max-length="3"
+                placeholder="Type a score out of 100"></textarea>
+              <small>Characters left: <span id="char-count-prof-score">3</span></small>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary">Edit professor score</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Modal -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -252,12 +303,22 @@
             });
             data.forEach(score => {
               const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
+              const displayProfScore = score.prof_score !== null ? `${score.prof_score}/100` : '-/100';
               const conversationLink = score.conv_id ?
                 `<a href="/prof-conversation-history/${courseID}/${score.conv_id}" class="small-button">See Conversation History</a>` :
                 `<button onclick="alert('This student has not completed the assignment yet.')" class="small-button">See Conversation History</button>`;
               const row = `<tr>
                         <td>${score.student_id}</td>
                         <td>${displayScore}</td>
+                        <td>
+                          ${displayProfScore}
+                          <button class="btn p-0" style="background: none; border: none; margin-top: 5px;" data-bs-toggle="modal" data-bs-target="#editProfessorScoreModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 5px; margin-bottom: 8px" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit professor score">
+                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9 a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                          </button>
+                        </td>
                         <td>${conversationLink}</td>
                       </tr>`;
               body.innerHTML += row; // Append new score to each score body

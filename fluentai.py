@@ -1356,6 +1356,7 @@ def get_scores(prompt_id):
         return flask.jsonify([{
             'student_id': score.name,
             'score': score.score,
+            'prof_score': score.prof_score,
             'conv_id': score.conv_id
         } for score in scores]), 200
     except Exception as e:

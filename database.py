@@ -484,7 +484,8 @@ def get_all_scores(prompt_id):
         query = (session.query(
                     student_union.c.name,
                     Conversation.conv_id,
-                    Conversation.score)
+                    Conversation.score,
+                    Conversation.prof_score)
                  .join(CoursesStudents, CoursesStudents.student_id == student_union.c.student_id)
                  .join(Prompt, Prompt.course_id == CoursesStudents.course_id)
                  .outerjoin(Conversation, sqlalchemy.and_(
