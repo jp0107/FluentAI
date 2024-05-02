@@ -269,13 +269,7 @@
     function updateProfScoreInTable(convId, newScore) {
       const scoreCell = document.querySelector(`[data-score-id="${convId}"]`);
       if (scoreCell) {
-        scoreCell.innerHTML = `${newScore}/100` +
-          `<button class="btn p-0" style="background: none; border: none; margin-top: 5px;" data-bs-toggle="modal" data-bs-target="#editProfessorScoreModal" data-conv-id="${convId}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 5px; margin-bottom: 8px" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit professor score">
-              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9 a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-            </svg>
-          </button>`;
+        scoreCell.innerHTML = `${newScore}/100`
       }
     }
 
@@ -324,8 +318,8 @@
               const row = `<tr>
                         <td>${score.student_id}</td>
                         <td>${displayScore}</td>
-                        <td data-score-id="${score.conv_id}">
-                          ${displayProfScore}
+                        <td>
+                          <span data-score-id="${score.conv_id}"> ${displayProfScore}</span>
                           <button class="btn p-0" style="background: none; border: none; margin-top: 5px;" data-bs-toggle="modal" data-bs-target="#editProfessorScoreModal" data-conv-id="${score.conv_id}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 5px; margin-bottom: 8px" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit professor score">
                               <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
