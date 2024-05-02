@@ -364,12 +364,15 @@
 
       const scoreNum = parseInt(profScore, 10);
       if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
-        alert('Please enter a valid score between 0 and 100.');
+        alert('Please enter a valid integer score between 0 and 100.');
         return;
       }
 
       const convId = profScoreButton.getAttribute('data-conv-id');
-      console.log(convId);  // Check the retrieved value of convId
+      if (!convId) {
+        alert('Score cannot be provided at this time as the student has not completed the assignment.');
+        return;
+      }
 
       $.ajax({
         type: 'POST',

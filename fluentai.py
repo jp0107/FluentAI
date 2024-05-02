@@ -1361,29 +1361,12 @@ def get_scores(prompt_id):
 
 @app.route('/edit-prof-score/<int:conv_id>', methods=['POST'])
 def edit_prof_score(conv_id):
-    if conv_id is None:
-        return flask.jsonify(
-            message="Score cannot be provided at this time as the \
-                  student has not completed the assignment."), 400
-
-    prof_score = flask.request.json.get('profScore')
-
-    if prof_score is None:
-        return flask.jsonify(message="Score must be provided."), 400
-
-    try:
-        new_prof_score = int(prof_score)
-    except ValueError:
-        return flask.jsonify(message="Invalid input. Score must be an integer."), 400
-
-    if not (0 <= new_prof_score <= 100):
-        return flask.jsonify(message="Score must be between 0 and 100."), 400
-    
+    prof_score = flask.request.json.get('profScore') 
 
     with sqlalchemy.orm.Session(engine) as session:
         conversation = session.query(Conversation).filter_by(conv_id=conv_id).first()
         if conversation:
-            conversation.prof_score = new_prof_score
+            conversation.prof_score = int(prof_score)
             session.commit()
             return flask.jsonify(message="Score edited successfully."), 200
         
