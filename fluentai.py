@@ -1373,15 +1373,16 @@ def edit_prof_score(conv_id):
 
     if not (0 <= new_prof_score <= 100):
         return flask.jsonify(message="Score must be between 0 and 100."), 400
+    
 
-    conversation = Conversation.query.get(conv_id)
-    if conversation:
-        conversation.prof_score = new_prof_score
-        with Session() as session:
+    with sqlalchemy.orm.Session(engine) as session:
+        conversation = session.query(Conversation).filter_by(conv_id=conv_id).first()
+        if conversation:
+            conversation.prof_score = new_prof_score
             session.commit()
-        return flask.jsonify(message="Score edited successfully."), 200
-
-    return flask.jsonify(message="Conversation not found."), 404
+            return flask.jsonify(message="Score edited successfully."), 200
+        
+        return flask.jsonify(message="Conversation not found."), 404
 
 #-----------------------------------------------------------------------
 
