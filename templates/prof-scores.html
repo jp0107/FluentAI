@@ -266,6 +266,14 @@
 
   <script>
 
+    // Function to update the professor score in the table
+    function updateProfScoreInTable(convId, newScore) {
+      const scoreCell = document.querySelector(`[data-score-id="${convId}"]`);
+      if (scoreCell) {
+        scoreCell.innerHTML = `${newScore}/100`
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       const menuItems = document.querySelectorAll('#menu a');
       const scoreTables = document.querySelectorAll('.score-table');
@@ -342,14 +350,6 @@
           }
         });
       });
-
-      // Function to update the professor score in the table
-      function updateProfScoreInTable(convId, newScore) {
-        const scoreCell = document.querySelector(`[data-score-id="${convId}"]`);
-        if (scoreCell) {
-          scoreCell.innerHTML = `${newScore}/100`
-        }
-      }
 
       // Listener to handle when the modal is shown
       $('#editProfessorScoreModal').on('show.bs.modal', function (event) {
