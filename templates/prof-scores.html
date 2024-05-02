@@ -265,6 +265,14 @@
   <!-- End Modal -->
 
   <script>
+    // Function to update the professor score in the table
+    function updateProfScoreInTable(convId, newScore) {
+      const scoreCells = document.querySelectorAll(`[data-conv-id="${convId}"]`);
+      scoreCells.forEach(cell => {
+        cell.innerHTML = `${newScore}/100`;
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       const menuItems = document.querySelectorAll('#menu a');
       const scoreTables = document.querySelectorAll('.score-table');
@@ -341,54 +349,54 @@
           }
         });
       });
-    });
 
-    // Listener to handle when the modal is shown
-    $('#editProfessorScoreModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget); // Button that triggered the modal
-      var convId = button.data('conv-id'); // Extract info from data-* attributes
-      var modal = $(this);
-      modal.find('#storeProfessorScore').attr('data-conv-id', convId);
-    });
+      // Listener to handle when the modal is shown
+      $('#editProfessorScoreModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var convId = button.data('conv-id'); // Extract info from data-* attributes
+        var modal = $(this);
+        modal.find('#storeProfessorScore').attr('data-conv-id', convId);
+      });
 
-    const profScoreButton = document.getElementById('storeProfessorScore');
-    profScoreButton.addEventListener('click', function () {
-      const profScoreInput = document.getElementById('prof-score');
-      const profScore = profScoreInput.value.trim();
+      const profScoreButton = document.getElementById('storeProfessorScore');
+      profScoreButton.addEventListener('click', function () {
+        const profScoreInput = document.getElementById('prof-score');
+        const profScore = profScoreInput.value.trim();
 
-      // Check if the score is provided and valid
-      if (profScore === '') {
-        alert('Please enter a score.');
-        return;
-      }
-
-      const scoreNum = parseInt(profScore, 10);
-      if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
-        alert('Please enter a valid integer score between 0 and 100.');
-        return;
-      }
-
-      const convId = profScoreButton.getAttribute('data-conv-id');
-      if (!convId) {
-        alert('Score cannot be provided at this time as the student has not completed the assignment.');
-        return;
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: '/edit-prof-score/' + convId,
-        data: JSON.stringify({ profScore: scoreNum }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-          alert('Score edited successfully!');
-          document.querySelector(`#score-${convId}`).innerText = `${scoreNum}/100`;
-          $('#editProfessorScoreModal').modal('hide');
-        },
-        error: function (xhr) {
-          console.error("Error editing score: ", xhr.responseText);
-          alert('Failed to edit score: ' + xhr.responseText);
+        // Check if the score is provided and valid
+        if (profScore === '') {
+          alert('Please enter a score.');
+          return;
         }
+
+        const scoreNum = parseInt(profScore, 10);
+        if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
+          alert('Please enter a valid integer score between 0 and 100.');
+          return;
+        }
+
+        const convId = profScoreButton.getAttribute('data-conv-id');
+        if (!convId) {
+          alert('Score cannot be provided at this time as the student has not completed the assignment.');
+          return;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '/edit-prof-score/' + convId,
+          data: JSON.stringify({ profScore: scoreNum }),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (response) {
+            alert('Score edited successfully!');
+            $('#editProfessorScoreModal').modal('hide');
+            updateProfScoreInTable(convId, scoreNum);
+          },
+          error: function (xhr) {
+            console.error("Error editing score: ", xhr.responseText);
+            alert('Failed to edit score: ' + xhr.responseText);
+          }
+        });
       });
     });
   </script>
