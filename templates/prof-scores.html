@@ -370,15 +370,19 @@
           return;
         }
 
-        // Check if the score is provided and valid
         if (profScore === '') {
           alert('Please enter a score.');
           return;
         }
 
+        if (!/^\d+$/.test(profScore)) {
+          alert('Please enter a valid integer score.');
+          return;
+        }
+
         const scoreNum = parseInt(profScore, 10);
-        if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
-          alert('Please enter a valid integer score between 0 and 100.');
+        if (scoreNum < 0 || scoreNum > 100) {
+          alert('Please enter a valid score between 0 and 100.');
           return;
         }
 
