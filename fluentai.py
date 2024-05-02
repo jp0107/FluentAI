@@ -1359,8 +1359,8 @@ def get_scores(prompt_id):
 
 #-----------------------------------------------------------------------
 
-@app.route('/update-prof-score/<int:conv_id>', methods=['POST'])
-def update_prof_score(conv_id):
+@app.route('/edit-prof-score/<int:conv_id>', methods=['POST'])
+def edit_prof_score(conv_id):
     prof_score = flask.request.json.get('profScore')
 
     if prof_score is None:
@@ -1379,7 +1379,7 @@ def update_prof_score(conv_id):
         conversation.prof_score = new_prof_score
         with Session() as session:
             session.commit()
-        return flask.jsonify(message="Score updated successfully."), 200
+        return flask.jsonify(message="Score edited successfully."), 200
 
     return flask.jsonify(message="Conversation not found."), 404
 

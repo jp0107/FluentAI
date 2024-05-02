@@ -372,18 +372,18 @@
 
       $.ajax({
         type: 'POST',
-        url: `/update-prof-score/${convId}`,
+        url: '/edit-prof-score/' + convId,
         data: JSON.stringify({ profScore: scoreNum }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-          alert('Score updated successfully!');
+          alert('Score edited successfully!');
           document.querySelector(`#score-${convId}`).innerText = `${scoreNum}/100`;
           $('#editProfessorScoreModal').modal('hide');
         },
         error: function (xhr) {
-          console.error("Error updating score: ", xhr.responseText);
-          alert('Failed to update score: ' + xhr.responseText);
+          console.error("Error editing score: ", xhr.responseText);
+          alert('Failed to edit score: ' + xhr.responseText);
         }
       });
     });
