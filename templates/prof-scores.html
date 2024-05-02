@@ -319,7 +319,7 @@
                             </svg>
                           </button>
                         </td>
-                        <td>${conversationLink}</td>
+                        <td>${score.conv_id}</td>
                       </tr>`;
               body.innerHTML += row; // Append new score to each score body
             });
@@ -369,6 +369,7 @@
       }
 
       const convId = profScoreButton.getAttribute('data-conv-id');
+      console.log(convId);  // Check the retrieved value of convId
 
       $.ajax({
         type: 'POST',
