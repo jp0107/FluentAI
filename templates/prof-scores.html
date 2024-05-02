@@ -12,8 +12,8 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
   <style>
     /* Tooltip specific styles */
@@ -364,6 +364,11 @@
       profScoreButton.addEventListener('click', function () {
         const profScoreInput = document.getElementById('prof-score');
         const profScore = profScoreInput.value.trim();
+        const convId = profScoreButton.getAttribute('data-conv-id');
+        if (!convId) {
+          alert('Score cannot be provided at this time as the student has not completed the assignment.');
+          return;
+        }
 
         // Check if the score is provided and valid
         if (profScore === '') {
@@ -374,12 +379,6 @@
         const scoreNum = parseInt(profScore, 10);
         if (!Number.isInteger(scoreNum) || scoreNum < 0 || scoreNum > 100) {
           alert('Please enter a valid integer score between 0 and 100.');
-          return;
-        }
-
-        const convId = profScoreButton.getAttribute('data-conv-id');
-        if (!convId) {
-          alert('Score cannot be provided at this time as the student has not completed the assignment.');
           return;
         }
 
@@ -399,6 +398,16 @@
             alert('Failed to edit score: ' + xhr.responseText);
           }
         });
+      });
+    });
+
+    const links = document.querySelectorAll('.nav-link');
+    links.forEach(link => {
+      link.addEventListener('click', function () {
+        // Remove 'active' from all links
+        links.forEach(l => l.classList.remove('active'));
+        // Add 'active' to the clicked link
+        this.classList.add('active');
       });
     });
   </script>

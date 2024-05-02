@@ -33,6 +33,13 @@ body {
   text-underline-offset: 2px;
 }
 
+.nav-link.active {
+  color: #1E1E1E !important; 
+  background-color: #EAF2FF !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 #underlined {
   text-decoration: underline;
   text-underline-offset: 2px;
