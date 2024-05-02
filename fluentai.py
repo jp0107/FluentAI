@@ -1361,6 +1361,11 @@ def get_scores(prompt_id):
 
 @app.route('/edit-prof-score/<int:conv_id>', methods=['POST'])
 def edit_prof_score(conv_id):
+    if conv_id is None:
+        return flask.jsonify(
+            message="Score cannot be provided at this time as the \
+                  student has not completed the assignment."), 400
+
     prof_score = flask.request.json.get('profScore')
 
     if prof_score is None:
