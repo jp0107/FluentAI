@@ -15,16 +15,7 @@ import sqlalchemy
 import pytz
 import auth
 from req_lib import ReqLib
-from database import (Student, Professor, SuperAdmin, Course, Conversation,
-                      CoursesStudents, CoursesProfs, engine, Base, Prompt, get_profs, get_all_profs,
-                      get_superadmins, check_user_type, get_student_firstname, get_professor_courses,
-                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
-                      edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
-                      get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
-                      get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
-                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
-                      get_assignments_for_prof, get_all_scores, check_if_owner, check_prof_in_course)
+from database import *
 
 #-----------------------------------------------------------------------
 
@@ -385,8 +376,9 @@ def student_practice(course_id):
 
     try:
         practice_assignments = get_practice_prompts(course_id)
-    except Exception:
-        practice_assignments = get_default_practice()
+    except Exception as e:
+        print(f"An error occurred while getting practice assignments: {str(e)}")
+        return None
 
     return flask.render_template('student-practice.html',
                                  username = username,
@@ -702,8 +694,9 @@ def conversation_history(course_id, conv_id):
 
     try:
         conversation = get_conversation(conv_id)
-    except Exception:
-        conversation = get_default_conversation()
+    except Exception as e:
+        print(f"An error occurred while getting conversation history: {str(e)}")
+        return None
 
     return flask.render_template('prof-conversation-history.html',
                                  username = username,

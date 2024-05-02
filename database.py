@@ -382,16 +382,6 @@ class PracticePrompt(Base):
     prompt_text = sqlalchemy.Column(sqlalchemy.Text)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
 
-# get default practice prompts
-def get_default_practice():
-    now = datetime.now()
-    return [
-        (98762, 'Assignment 0: Say Hello', now),
-        (98765, 'Assignment 1: Café Fluent', now),
-        (87654, 'Assignment 2: Job Interview', now),
-        (76543, 'Assignment 3: Airport Troubles', now)
-    ]
-
 # get all practice prompts for a given course, ordered by most to least recently created
 def get_practice_prompts(course_id) -> List[Prompt]:
     with sqlalchemy.orm.Session(engine) as session:
@@ -401,7 +391,7 @@ def get_practice_prompts(course_id) -> List[Prompt]:
         
         results = query.all()
 
-        return results if results else get_default_practice()
+        return results
 
 #-----------------------------------------------------------------------
 
@@ -417,27 +407,6 @@ class Conversation(Base):
     score = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     prof_score = sqlalchemy.Column(sqlalchemy.Integer)
-
-# get default student scores for a course
-def get_default_student_scores():
-    return [
-        (98762, 'Assignment 0: Say Hello', 1, 100),
-        (98765, 'Assignment 1: Café Fluent', 2, 96),
-        (87654, 'Assignment 2: Job Interview', 3, 25),
-        (76543, 'Assignment 3: Airport Troubles', 4, None)
-    ]
-
-# get default scores for an assignment for each student in a course
-def get_default_scores_for_assignment():
-    return [
-        ('Irene', 'Kim', 1, 100),
-        ('Jonathan', 'Peixoto', 2, 25),
-        ('Jessie', 'Wang', 3, None)
-    ]
-
-# get default conversation
-def get_default_conversation():
-    return [('Assignment 0: Default', 'Mi nueva casa está en una calle ancha que tiene muchos árboles. El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña terraza con piscina donde puedo tomar el sol en verano.')]
 
 # get assignments for prof (FOR PROF SCORES PAGE)
 def get_assignments_for_prof(course_id):
