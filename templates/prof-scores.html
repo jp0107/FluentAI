@@ -345,13 +345,12 @@
 
       // Function to update the professor score in the table
       function updateProfScoreInTable(convId, newScore) {
-        const scoreCell = document.querySelector(`[data-score-id="${convId}"]`);
-        if (scoreCell) {
-          const scoreText = document.createTextNode(`${newScore}/100`);
-          scoreCell.innerHTML = ''; // Clear the existing content
-          scoreCell.appendChild(scoreText); // Append new text node
-        }
+        const scoreCells = document.querySelectorAll(`[data-score-id="${convId}"]`);
+        scoreCells.forEach((scoreCell) => {
+          scoreCell.innerHTML = `${newScore}/100`
+        });
       }
+
 
       // Listener to handle when the modal is shown
       $('#editProfessorScoreModal').on('show.bs.modal', function (event) {
