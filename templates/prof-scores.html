@@ -267,7 +267,7 @@
   <script>
     // Function to update the professor score in the table
     function updateProfScoreInTable(convId, newScore) {
-      const scoreCells = document.querySelectorAll(`[data-score-id="${convId}"]`);
+      const scoreCell = document.querySelectorAll(`[data-score-id="${convId}"]`);
       scoreCell.innerHTML = `${newScore}/100` +
         `<button class="btn p-0" style="background: none; border: none; margin-top: 5px;" data-bs-toggle="modal" data-bs-target="#editProfessorScoreModal" data-conv-id="${convId}">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" style="margin-left: 5px; margin-bottom: 8px" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit professor score">
