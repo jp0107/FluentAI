@@ -1062,6 +1062,9 @@ def add_assignment():
 
     if not all([assignment_name, assignment_description, assignment_prompt, num_turns, course_id]):
         return flask.jsonify({"message": "All fields are required."}), 400
+    
+    if deadline is None:
+        return flask.jsonify({"message": "Deadline error."}), 400
 
     prof_id = flask.session.get('username')
     new_assignment = Prompt(
