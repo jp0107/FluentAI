@@ -80,6 +80,8 @@
                 <tr>
                     <th>Course ID</th>
                     <th>Course Name</th>
+                    <th>Course Owner</th>
+                    <th>Language</th>
                 </tr>
             </thead>
             {% if courses %}
@@ -88,6 +90,8 @@
                 <tr>
                     <td>{{ course.course_id }}</td>
                     <td>{{ course.course_name }}</td>
+                    <td>{{ course.owner }}</td>
+                    <td>{{ course.language }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
