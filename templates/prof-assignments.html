@@ -276,15 +276,31 @@
 
         // Function to create a new assignment
         $('#addAssignmentModal .btn-primary').click(function () {
+          var assignment_name = $('#assignment-name').val();
+          var assignment_description = $('#assignment-description').val();
+          var assignment_prompt = $('#assignment-prompt').val();
+          var num_turns = $('#num-turns-select').val();
+          var course_id = '{{ course_id }}';
+
+          if (!assignment_name || !assignment_description || !assignment_prompt || !num_turns) {
+            alert('All fields must be filled out.');
+            return
+          }
+
           var deadlineDate = $('#deadline-date').val();
           var deadlineTime = $('#deadline-time').val();
+          console.log(deadlineDate)
+          console.log(deadlineTime)
+
           var deadline = deadlineDate + 'T' + deadlineTime + ':00'; // ISO 8601 format
+
+
           var formData = {
-            'assignment_name': $('#assignment-name').val(),
-            'assignment_description': $('#assignment-description').val(),
-            'assignment_prompt': $('#assignment-prompt').val(),
-            'num_turns': $('#num-turns-select').val(),
-            'course_id': '{{ course_id }}',
+            'assignment_name': assignment_name,
+            'assignment_description': assignment_description,
+            'assignment_prompt': assignment_prompt,
+            'num_turns': num_turns,
+            'course_id': course_id,
             'deadline': deadline
           };
 
