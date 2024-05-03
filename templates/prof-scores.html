@@ -296,10 +296,10 @@
       function updateScoresDisplay(data) {
         scoreBodies.forEach(body => {
           body.innerHTML = ''; // Clear previous scores
-          if (data.length > 0) {
-            scoreTables.forEach(table => {
+          scoreTables.forEach(table => {
               table.style.display = 'table'; // Show the table if there are scores
-            });
+          });
+          if (data.length > 0) {
             data.forEach(score => {
               const displayScore = score.score !== null ? `${score.score}/100` : '-/100';
               const displayProfScore = score.prof_score !== null ? `${score.prof_score}/100` : '-/100';
@@ -323,7 +323,13 @@
               body.innerHTML += row; // Append new score to each score body
             });
           } else {
-            hideScores(); // Hide the tables if no data
+            const row = `<tr>
+                        <td>No scores to display as there are no students in this course.</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>`;
+            body.innerHTML += row;
           }
         });
       }
