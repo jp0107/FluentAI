@@ -413,7 +413,7 @@
           fetchStudents(); // Refresh the student list
         },
         error: function (xhr) {
-          alert('Failed to add student: ' + xhr.responseText);
+          alert('Failed to add student: ' + xhr.message);
         }
       });
     });

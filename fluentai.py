@@ -1045,22 +1045,18 @@ def add_assignment():
     num_turns = flask.request.form.get('num_turns')
     course_id = flask.request.form.get('course_id')
     deadline_str = flask.request.form.get('deadline')
-    print(deadline_str)
     
     est = pytz.timezone('America/New_York')  # Define Eastern Standard Time timezone
     utc = pytz.utc
     
-    if deadline_str:
-        try:
-            # Parse the deadline as EST
-            local_deadline = datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
-            local_deadline = est.localize(local_deadline)  # Localize the naive datetime
-            deadline = local_deadline.astimezone(utc)  # Convert to UTC
-        except Exception as e:
-            print(f"Failed to parse deadline: {e}")
-            return flask.jsonify({"message": "Invalid deadline format"}), 400
-    else:
-        deadline = None
+    try:
+        # Parse the deadline as EST
+        local_deadline = datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
+        local_deadline = est.localize(local_deadline)  # Localize the naive datetime
+        deadline = local_deadline.astimezone(utc)  # Convert to UTC
+    except Exception as e:
+        print(f"Failed to parse deadline: {e}")
+        return flask.jsonify({"message": "Invalid deadline format"}), 400
 
     prof_id = flask.session.get('username')
     new_assignment = Prompt(
