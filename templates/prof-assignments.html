@@ -298,9 +298,8 @@
               fetchAllAssignments();  // Refresh the assignments list
             },
             error: function (xhr) {
-              var response = JSON.parse(xhr.responseText);
-              console.error("Error adding assignment: ", response.message);
-              alert('Failed to create assignment: ' + response.message);
+              console.error("Error adding assignment: ", xhr.responseText);
+              alert('Failed to create assignment: ' + xhr.responseText);
             }
           });
         });
