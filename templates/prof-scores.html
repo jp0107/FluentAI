@@ -297,7 +297,7 @@
         scoreBodies.forEach(body => {
           body.innerHTML = ''; // Clear previous scores
           scoreTables.forEach(table => {
-              table.style.display = 'table'; // Show the table if there are scores
+            table.style.display = 'table'; // Show the table if there are scores
           });
           if (data.length > 0) {
             data.forEach(score => {
@@ -324,11 +324,8 @@
             });
           } else {
             const row = `<tr>
-                        <td>No scores to display as there are no students in this course.</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>`;
+                        <td colspan="4">No scores to display as there are no students in this course.</td>
+                        </tr>`;
             body.innerHTML += row;
           }
         });
