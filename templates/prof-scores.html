@@ -415,6 +415,12 @@
         // Add 'active' to the clicked link
         this.classList.add('active');
       });
+      // Set the default active link to 'Scores Overview'
+      const defaultActiveLink = document.querySelector('.nav-link[data-assignment="general"]');
+      if (defaultActiveLink) {
+        defaultActiveLink.classList.add('active');
+      }
+
     });
   </script>
 
