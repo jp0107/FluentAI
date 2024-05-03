@@ -188,7 +188,8 @@
             updateProfessorsTable(response);
           },
           error: function (xhr) {
-            console.error('Error fetching professors:', xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            console.error('Error fetching professors:', response.message);
           }
         });
       }
@@ -248,7 +249,8 @@
             fetchProfessorsAndAdmins(); // Refresh the professor list
           },
           error: function (xhr) {
-            alert('Error deleting professor: ' + xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            alert('Error deleting professor: ' + response.message);
           }
         });
       }
@@ -273,7 +275,8 @@
             fetchProfessorsAndAdmins(); // Assuming there is a function to refresh the list
           },
           error: function (xhr) {
-            alert('Failed to add professor: ' + xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            alert('Failed to add professor: ' + response.message);
           }
         });
       });

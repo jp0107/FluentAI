@@ -396,8 +396,9 @@
             $('#editProfessorScoreModal').modal('hide');
           },
           error: function (xhr) {
-            console.error("Error editing score: ", xhr.responseText);
-            alert('Failed to edit score: ' + xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            console.error("Error editing score: ", response.message);
+            alert('Failed to edit score: ' + response.message);
           }
         });
       });

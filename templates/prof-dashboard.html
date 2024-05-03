@@ -128,7 +128,8 @@
                             displayCourses(response); // Update the course list on the page
                         },
                         error: function (xhr, status, error) {
-                            alert('Error fetching courses: ' + xhr.statusText);
+                            var response = JSON.parse(xhr.responseText);
+                            alert('Error fetching courses: ' + response.message);
                         }
                     });
                 }
@@ -182,7 +183,8 @@
                             fetchCourses();
                         },
                         error: function (xhr, status, error) {
-                            alert('Error adding course: ' + xhr.statusText);
+                            var response = JSON.parse(xhr.responseText);
+                            alert('Error adding course: ' + response.message);
                         }
                     });
                 });

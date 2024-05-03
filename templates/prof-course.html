@@ -290,7 +290,8 @@
                         location.reload();
                     },
                     error: function (xhr) {
-                        alert('Error updating course code: ' + xhr.responseText);
+                        var response = JSON.parse(xhr.responseText);
+                        alert('Error updating course code: ' + response.message);
                     }
                 });
             });
