@@ -281,20 +281,25 @@
           var assignment_prompt = $('#assignment-prompt').val();
           var num_turns = $('#num-turns-select').val();
           var course_id = '{{ course_id }}';
+          var deadlineDate = $('#deadline-date').val();
+          var deadlineTime = $('#deadline-time').val();
 
-          if (!assignment_name || !assignment_description || !assignment_prompt || !num_turns) {
+          if (!assignment_name || !assignment_description || !assignment_prompt || !num_turns || !deadlineDate || !deadlineTime) {
             alert('All fields must be filled out.');
             return
           }
 
-          var deadlineDate = $('#deadline-date').val();
-          var deadlineTime = $('#deadline-time').val();
-          console.log(deadlineDate)
-          console.log(deadlineTime)
+          var today = new Date()
+          var dd = String(today.getDate()).padStart(2, '0');
+          var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+          var yyyy = today.getFullYear();
+          today = yyyy + '-' + mm + '-' + dd;
+          if (deadlineDate < today) {
+            alert('The deadline date cannot be in the past. Please select a valid date.');
+            return
+          }
 
           var deadline = deadlineDate + 'T' + deadlineTime + ':00'; // ISO 8601 format
-
-
           var formData = {
             'assignment_name': assignment_name,
             'assignment_description': assignment_description,

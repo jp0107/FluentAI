@@ -1045,6 +1045,7 @@ def add_assignment():
     num_turns = flask.request.form.get('num_turns')
     course_id = flask.request.form.get('course_id')
     deadline_str = flask.request.form.get('deadline')
+    print(deadline_str)
     
     est = pytz.timezone('America/New_York')  # Define Eastern Standard Time timezone
     utc = pytz.utc
