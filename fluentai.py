@@ -6,7 +6,7 @@
 import os
 import sys
 import random
-import datetime
+from datetime import datetime
 import re
 import string
 from openai import OpenAI
@@ -1052,7 +1052,7 @@ def add_assignment():
     if deadline_str:
         try:
             # Parse the deadline as EST
-            local_deadline = datetime.datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
+            local_deadline = datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
             local_deadline = est.localize(local_deadline)  # Localize the naive datetime
             deadline = local_deadline.astimezone(utc)  # Convert to UTC
         except Exception as e:
