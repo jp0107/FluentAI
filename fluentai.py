@@ -16,16 +16,6 @@ import pytz
 import auth
 from req_lib import ReqLib
 from database import *
-from database import (Student, Professor, SuperAdmin, Course, Conversation,
-                      CoursesStudents, CoursesProfs, engine, Base, Prompt, get_profs, get_all_profs,
-                      get_superadmins, check_user_type, get_student_firstname, get_professor_courses,
-                      get_prof_firstname, get_courses, get_student_courses, enroll_student_in_course, get_course_code,
-                      edit_course_code, get_admin_firstname, get_prompt_by_id, get_practice_prompts, get_default_practice,
-                      get_assignments_and_scores_for_student, get_default_student_scores, get_conversation, get_default_conversation, get_courses_and_profs, get_prof_info, get_student_info,
-                      get_profs_for_course, get_assignments_for_course, get_assignments_for_student,
-                      get_prompt_title, get_students_for_course, get_language, fetch_professors_and_courses,
-                      check_student_in_course, get_superadmins_roster, fetch_students_and_courses, in_superadmins,
-                      get_assignments_for_prof, get_all_scores, check_if_owner, check_prof_in_course)
 
 #-----------------------------------------------------------------------
 
