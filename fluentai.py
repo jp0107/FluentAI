@@ -420,6 +420,24 @@ def prof_dashboard():
 
 #-----------------------------------------------------------------------
 
+@app.route('/prof-all-courses')
+def prof_all_courses():
+    username = auth.authenticate()
+    user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
+    
+    courses = get_courses()
+    
+    return flask.render_template('prof-all-courses.html',
+                                 username = username,
+                                 user_type = user_type,
+                                 courses=courses)
+
+#-----------------------------------------------------------------------
+
 @app.route('/prof-course/<course_id>')
 def prof_course(course_id):
     username = auth.authenticate()
