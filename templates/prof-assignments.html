@@ -97,7 +97,7 @@
 
             document.querySelector('.btn-primary').addEventListener('click', function (event) {
               var inputDate = document.getElementById('deadline-date').value;
-              if (inputDate < today) {
+              if (!inputDate && inputDate < today) {
                 event.preventDefault(); // Prevent form submission
                 alert('The deadline date cannot be in the past. Please select a valid date.');
               }
@@ -287,6 +287,9 @@
             'course_id': '{{ course_id }}',
             'deadline': deadline
           };
+
+          // Log the formData to the console
+          console.log("Form Data:", formData);
 
           $.ajax({
             type: 'POST',
