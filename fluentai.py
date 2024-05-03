@@ -1055,16 +1055,13 @@ def add_assignment():
             local_deadline = datetime.datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
             local_deadline = est.localize(local_deadline)  # Localize the naive datetime
             deadline = local_deadline.astimezone(utc)  # Convert to UTC
-        except ValueError:
+        except Exception:
             return flask.jsonify({"message": "Invalid deadline format"}), 400
     else:
         deadline = None
 
     if not all([assignment_name, assignment_description, assignment_prompt, num_turns, course_id]):
         return flask.jsonify({"message": "All fields are required."}), 400
-    
-    if deadline is None:
-        return flask.jsonify({"message": "Deadline error."}), 400
 
     prof_id = flask.session.get('username')
     new_assignment = Prompt(
