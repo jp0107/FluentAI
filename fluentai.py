@@ -1048,6 +1048,8 @@ def add_assignment():
     
     est = pytz.timezone('America/New_York')  # Define Eastern Standard Time timezone
     utc = pytz.utc
+
+    deadline = None
     
     if deadline_str:
         try:
@@ -1057,11 +1059,10 @@ def add_assignment():
             deadline = local_deadline.astimezone(utc)  # Convert to UTC
         except ValueError:
             return flask.jsonify({"message": "Invalid deadline format"}), 400
-    else:
-        deadline = None
+        
 
 
-    if not all([assignment_name, assignment_description, assignment_prompt, num_turns, course_id]):
+    if not all([assignment_name, assignment_description, assignment_prompt, num_turns, course_id, deadline]):
         return flask.jsonify({"message": "All fields are required."}), 400
 
 
