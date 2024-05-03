@@ -1055,7 +1055,8 @@ def add_assignment():
             local_deadline = datetime.datetime.strptime(deadline_str, '%Y-%m-%dT%H:%M:%S')
             local_deadline = est.localize(local_deadline)  # Localize the naive datetime
             deadline = local_deadline.astimezone(utc)  # Convert to UTC
-        except Exception:
+        except Exception as e:
+            print(f"Failed to parse deadline: {e}")
             return flask.jsonify({"message": "Invalid deadline format"}), 400
     else:
         deadline = None
