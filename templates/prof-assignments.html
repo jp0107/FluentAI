@@ -94,14 +94,6 @@
 
             today = yyyy + '-' + mm + '-' + dd;
             document.getElementById("deadline-date").setAttribute("min", today);
-
-            document.querySelector('.btn-primary').addEventListener('click', function (event) {
-              var inputDate = document.getElementById('deadline-date').value;
-              if (inputDate < today) {
-                event.preventDefault(); // Prevent form submission
-                alert('The deadline date cannot be in the past. Please select a valid date.');
-              }
-            });
           };
         </script>
       </div>
@@ -284,17 +276,17 @@
           var deadlineDate = $('#deadline-date').val();
           var deadlineTime = $('#deadline-time').val();
 
+          if (!assignment_name || !assignment_description || !assignment_prompt || !num_turns || !deadlineDate || !deadlineTime) {
+            alert('All fields must be filled out.');
+            return;
+          }
+
           var today = new Date()
           var dd = String(today.getDate()).padStart(2, '0');
           var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
           var yyyy = today.getFullYear();
           today = yyyy + '-' + mm + '-' + dd;
-
-          if (!assignment_name || !assignment_description || !assignment_prompt || !num_turns || !deadlineDate || !deadlineTime) {
-            alert('All fields must be filled out.');
-            return;
-          }
-          else if (deadlineDate < today) {
+          if (deadlineDate < today) {
             alert('The deadline date cannot be in the past. Please select a valid date.');
             return;
           }
