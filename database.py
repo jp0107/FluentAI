@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import sqlalchemy
 import sqlalchemy.orm
 import pytz
+import numpy as np
 
 #-----------------------------------------------------------------------
 
@@ -355,6 +356,12 @@ def get_prompt_title(prompt_id):
 
         return query.all()
 
+# get prompt object by id
+def get_prompt_by_id(prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        prompt = session.query(Prompt).filter(Prompt.prompt_id == prompt_id).first()
+        return prompt
+
 # get all current course assignments for a student, with the earliest deadline first (FOR STUDENT ASSIGNMENTS PAGE)
 # mark whether assignment has been completed or not
 def get_current_assignments_for_student(student_id, course_id):
@@ -370,6 +377,16 @@ def get_current_assignments_for_student(student_id, course_id):
 
         results = query.all()
         return results
+
+# get assignments for prof (FOR PROF SCORES PAGE)
+def get_assignments_for_prof(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        assignments = session.query(
+            Prompt.prompt_id,
+            Prompt.prompt_title,
+        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.created_at)).all()
+
+        return assignments
 
 #-----------------------------------------------------------------------
 
@@ -407,17 +424,6 @@ class Conversation(Base):
     score = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     prof_score = sqlalchemy.Column(sqlalchemy.Integer)
-
-# get assignments for prof (FOR PROF SCORES PAGE)
-def get_assignments_for_prof(course_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        assignments = session.query(
-            Prompt.prompt_id,
-            Prompt.prompt_title,
-            Prompt.deadline
-        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
-
-        return assignments
 
 # gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
@@ -467,20 +473,18 @@ def get_all_scores(prompt_id):
 
         return results
 
-# def get_all_scores(prompt_id):
-#     with sqlalchemy.orm.Session(engine) as session:
-#         query = (session.query(
-#                     CoursesStudents.student_id,
-#                     Conversation.conv_id, 
-#                     Conversation.score)
-#                  .join(Prompt, CoursesStudents.course_id == Prompt.course_id)
-#                  .outerjoin(Conversation, sqlalchemy.and_(
-#                      Conversation.student_id == CoursesStudents.student_id,
-#                      Conversation.prompt_id == prompt_id))
-#                  .filter(Prompt.prompt_id == prompt_id))
+def get_scores_for_assignment(prompt_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = (session.query(
+                    Conversation.score,
+                    Conversation.prof_score)
+                 .join(Prompt, Conversation.prompt_id == Prompt.prompt_id)
+                 .filter(Prompt.prompt_id == prompt_id)
+                 .order_by(sqlalchemy.asc(Prompt.created_at)))
 
-#         results = query.all()
-#         return results
+        results = query.all()
+
+        return results
 
 # get conversation history given a conv_id
 def get_conversation(conv_id):
@@ -591,13 +595,6 @@ def enroll_student_in_course(student_id, course_code):
         session.commit()
 
         return {"status": "success", "message": "Course joined successfully"}
-
-#-----------------------------------------------------------------------
-
-def get_prompt_by_id(prompt_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        prompt = session.query(Prompt).filter(Prompt.prompt_id == prompt_id).first()
-        return prompt
 
 #-----------------------------------------------------------------------
 def get_assignments_for_course(course_id):

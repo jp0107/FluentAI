@@ -14,6 +14,7 @@ import flask
 import sqlalchemy
 import pytz
 import auth
+import statistics
 from req_lib import ReqLib
 from database import *
 

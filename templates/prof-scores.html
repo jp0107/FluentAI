@@ -120,7 +120,7 @@
                   Scores Overview
                 </a>
               </li>
-              {% for prompt_id, title, deadline in assignments %}
+              {% for prompt_id, title in assignments %}
               <li class="nav-item">
                 <a href="#" class="nav-link align-middle px-0" data-assignment="{{ prompt_id }}">
                   {{ title }}
@@ -135,37 +135,39 @@
 
     <br>
 
-    <table class="col offset-sm-1 table scores-section score-table" style="display: none;">
-      <thead>
-        <tr>
-          <th>Student Name</th>
-          <th>
-            AI Score
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
-              class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;" data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="Disclaimer: Please be aware that the scores provided have been graded by ChatGPT. While this AI model is designed to assess answers based on language usage and correctness, it does not match the comprehensive judgment of a human instructor. Please use them as a guide alongside other assessments for accurate scoring.">
-              <path
-                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-            </svg>
-          </th>
-          <th>
-            Professor Score
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
-              class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;" data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="Professors can review the conversation history and input their own score to ensure the most accurate evaluation.">
-              <path
-                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-            </svg>
-          </th>
-          <th>Conversation History</th>
-        </tr>
-      </thead>
-      <tbody class="score-body">
-        <!-- Data rows will go here -->
-      </tbody>
-    </table>
+    <div class="scores-section">
+      <table class="col offset-sm-1 table score-table" style="display: none;">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>
+              AI Score
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;" data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Disclaimer: Please be aware that the scores provided have been graded by ChatGPT. While this AI model is designed to assess answers based on language usage and correctness, it does not match the comprehensive judgment of a human instructor. Please use them as a guide alongside other assessments for accurate scoring.">
+                <path
+                  d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+              </svg>
+            </th>
+            <th>
+              Professor Score
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                class="bi bi-info-square-fill" viewBox="0 0 16 16" style="position: relative;" data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Professors can review the conversation history and input their own score to ensure the most accurate evaluation.">
+                <path
+                  d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+              </svg>
+            </th>
+            <th>Conversation History</th>
+          </tr>
+        </thead>
+        <tbody class="score-body">
+          <!-- Data rows will go here -->
+        </tbody>
+      </table>
+    </div>
 
   </div>
 
@@ -180,7 +182,7 @@
               </a>
             </li>
             {% if assignments %}
-            {% for prompt_id, title, deadline in assignments %}
+            {% for prompt_id, title in assignments %}
             <li class="nav-item">
               <a href="#" class="nav-link align-middle px-0" data-assignment="{{ prompt_id }}">
                 {{ title }}
@@ -193,9 +195,10 @@
           </ul>
         </div>
       </div>
+      
       <div class="col py-3">
-        <div class="container-fluid">
-          <table class="col offset-sm-1 table score-table scores-section" style="display: none;">
+        <div class="container-fluid scores-section">
+          <table class="col offset-sm-1 table score-table" style="display: none;">
             <thead>
               <tr>
                 <th>Student Name</th>
