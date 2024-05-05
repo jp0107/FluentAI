@@ -826,6 +826,8 @@ def process_input_ungraded():
 #-----------------------------------------------------------------------
 
 def generate_unique_conv_id():
+
+
     return random.randint(10000000, 99999999)
 
 def calculate_score(conversation_text):
@@ -1007,7 +1009,7 @@ def update_course_code_click():
         if edit_course_code(course_id, new_code):  
             return flask.jsonify({'message': 'Course code updated successfully!'})
         else:
-            return flask.jsonify({'message': 'Update failed!'}), 500
+            return flask.jsonify({'message': 'Code already exists for another course, choose a new code.'}), 500
     except Exception as e:
         return flask.jsonify({'message': str(e)}), 500
 

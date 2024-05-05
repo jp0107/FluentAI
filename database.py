@@ -192,12 +192,18 @@ def edit_course_code(course_id, new_course_code):
     with sqlalchemy.orm.Session(engine) as session:
         course = session.query(Course).filter(Course.course_id == course_id).first()
 
-        if course:
+        if check_unique_code(new_course_code):
             course.course_code = new_course_code
             session.commit()
             return True
         else:
-            return False 
+            return False
+
+# check if course code is unique
+def check_unique_code(course_code):
+    with sqlalchemy.orm.Session(engine) as session:
+        count = session.query(sqlalchemy.func.count(Course.course_code)).filter(Course.course_code == course_code).scalar()
+        return count == 0
 
 #-----------------------------------------------------------------------
 
@@ -424,6 +430,12 @@ class Conversation(Base):
     score = sqlalchemy.Column(sqlalchemy.Integer)
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     prof_score = sqlalchemy.Column(sqlalchemy.Integer)
+
+# # check if conv_id is unique
+# def check_unique_convid(conv_id):
+#     with sqlalchemy.orm.Session(engine) as session:
+#         count = session.query(sqlalchemy.func.count(Conversation.conv_id)).filter_by(conv_id=conv_id).scalar()
+#         return count == 0
 
 # gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
