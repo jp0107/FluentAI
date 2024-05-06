@@ -15,6 +15,13 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/assignments.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <style>
+    .modal-content ul {
+      list-style-type: disc;
+      margin-left: 20px;
+      padding-left: 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -37,6 +44,40 @@
         </div>
         <div class="modal-body">
           <form>
+            <h5><a data-bs-toggle="collapse" href="#create-assignment-collapse" role="button" aria-expanded="false"
+                aria-controls="create-assignment-collapse" style="font-size: 16px; color:#5E5E5E !important;">
+                See more detailed instructions...</a></h5>
+            <div class="collapse multi-collapse" id="create-assignment-collapse">
+              <ol>
+                <li>Enter a unique and descriptive name for your assignment.</li>
+                <li>Provide a specific prompt that will guide the interaction with the AI chatbot by thoroughly
+                  describing: </li>
+                <ul>
+                  <li>the scenario for the assignment.</li>
+                  <li>the role that you would like the AI chatbot to perform.</li>
+                  <li>the role that you would like the student to have when conversing with the chatbot.</li>
+                  <li>the tasks/question that you would like the AI chatbot to accomplish/ask when conversing with the
+                    student.</li>
+                </ul>
+                <li>Offer a detailed description of the assignment for the students by explaining the objective,
+                  context, and expectations of the assignment.</li>
+                <li>
+                  Specify how many conversatinoal exchanges or turns (back-and-forth interactions) should occur
+                  between the student and the chatbot.
+                  One conversation turn is equivalent to one message from the chatbot and one message from the
+                  student.
+                </li>
+                <li>
+                  Set the final date by which the assignment must be submitted.
+                  You can also click on the calendar icon on the right of the text field to select the date from a
+                  calendar pop-up.</li>
+                <li>
+                  Set the exact time that the assignment will be due.
+                  You can also click on the clock icon on the right of the text field to select the time from a time
+                  pop-up.
+                </li>
+              </ol>
+            </div>
             <div class="form-group">
               <label for="message-text" class="col-form-label">Assignment Name:</label>
               <textarea class="form-control" id="assignment-name" rows="1" data-max-length="100"
@@ -45,8 +86,9 @@
             </div>
             <div class="form-group">
               <label for="message-text" class="col-form-label">Assignment Prompt to Chatbot:</label>
-              <textarea class="form-control" id="assignment-prompt" rows="4" data-max-length="500"
-                placeholder="Type assignment prompt to ChatGPT (e.g. Imagine that you are a waiter at a restaurant. Please talk to me and get my order.)"></textarea>
+              <textarea class="form-control" id="assignment-prompt" rows="4" data-max-length="500" placeholder="Type assignment prompt to ChatGPT 
+                (e.g. Imagine that you are a waiter at a restaurant and I (the student) am a customer that you are serving at this restaurant.
+                Please talk to me in Spanish and get my order.)"></textarea>
               <small>Characters left: <span id="char-count-assignment-prompt">500</span></small>
             </div>
             <div class="form-group">
