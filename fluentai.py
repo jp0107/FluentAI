@@ -791,7 +791,7 @@ def process_input():
 
         # get feedback and append to conv history
         content = get_feedback(conversation_text, score)
-        feedback = "\n\n------ FEEDBACK ------\n\n" + content
+        feedback = "\n\n\n\n ------ FEEDBACK ------ \n\n" + content
         conversation_text += feedback
 
         store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
