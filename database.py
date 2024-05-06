@@ -390,7 +390,7 @@ def get_assignments_for_prof(course_id):
         assignments = session.query(
             Prompt.prompt_id,
             Prompt.prompt_title,
-        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.created_at)).all()
+        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
 
         return assignments
 
