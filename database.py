@@ -434,7 +434,7 @@ class Conversation(Base):
 # check if conv_id is unique
 def check_unique_convid(conv_id):
     with sqlalchemy.orm.Session(engine) as session:
-        count = session.query(sqlalchemy.func.count(Conversation.conv_id)).filter_by(Conversation.conv_id == conv_id).scalar()
+        count = session.query(sqlalchemy.func.count(Conversation.conv_id)).filter(Conversation.conv_id == conv_id).scalar()
         return count == 0
 
 # gets the course assignments and their scores for each given a student id
