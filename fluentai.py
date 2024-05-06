@@ -788,6 +788,11 @@ def process_input():
         score = calculate_score(conversation_text)
         conv_id = generate_unique_conv_id()
         prof_score = None
+
+        # get feedback and append to conv history
+        feedback = get_feedback(conversation_text)
+        conversation_text += feedback
+
         store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
 
         # Clean up session
@@ -833,6 +838,56 @@ def generate_unique_conv_id():
         id = random.randint(10000000, 99999999)
         if check_unique_convid(id):
             return id
+
+def get_feedback(conversation_text):
+    evaluation_prompt = f"""
+        Please evaluate the following conversation based on the criteria that follows:
+        
+        Content: 
+        - Student adheres to the conversation guidelines and follows instructions (10 points).
+        - Content is relevant and appropriate to the topic and situation (10 points).
+        - Student engages with multiple turns in the conversation (5 points).
+        - Student has effective initiation of the conversation (2.5 points).
+        - Student has proper and clear closing of the conversation (2.5 points).
+
+        Grammar:
+        - Student uses and references pronouns correctly (5 points).
+        - Student has proper gender and number agreement between subjects, verbs, and objects (5 points).
+        - Student accurately uses various verb forms as required (5 points).
+        - Student appropriately uses verb tenses throughout the conversation (5 points).
+
+        Vocabulary:
+        - Student uses vocabulary that is suitable for the context of the conversation (10 points).
+
+        Register:
+        - Student uses appropriate language considering the relationship (peer vs. authority) and situation (10 points).
+
+        Spelling:
+        - There is correct spelling throughout the conversation (10 points).
+
+        Additional Considerations:
+        - Student demonstrates creativity and originality in responses (10 points).
+        - Student is effective in engaging the chatbot to maintain a fluid conversation (10 points).
+
+        Provide concise feedback to the student and tell them what they did well and what they can improve on based on the criteria above.
+
+        Conversation:
+        {conversation_text}
+
+    """
+    try:
+        client = OpenAI(api_key=GPT_API_KEY)
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            messages=[
+                {"role": "system", "content": evaluation_prompt}
+            ]
+        )
+        content = response.choices[0].message.content.strip()
+        return content
+    except Exception as e:
+        print(f"An error occurred while getting feedback: {str(e)}")
+        return None
 
 def calculate_score(conversation_text):
     evaluation_prompt = f"""
