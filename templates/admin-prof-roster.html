@@ -240,7 +240,7 @@
         });
       }
 
-      function deleteProfessor(courseId, profId) {
+      function deleteProf(courseId, profId) {
         $.ajax({
           type: 'POST',
           url: `/delete-prof/${courseId}/${profId}`,
