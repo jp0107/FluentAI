@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------
 # fluentai.py
-# Authors: Irene Kim, Jessie Wang, Jonathan Peixoto, Tinney Mak
+# Authors: Jessie Wang, Irene Kim, Jonathan Peixoto, Tinney Mak
 #-----------------------------------------------------------------------
 
 import os
