@@ -173,6 +173,17 @@
                 var adminName = $('#admin-name').val().trim();
                 var adminNetID = $('#admin-netid').val().trim();
 
+                if (!adminName || !adminNetID) {
+                    alert('All fields must be filled out.');
+                    return;
+                }
+
+                // Check if professor name contains numbers
+                if (/\d/.test(adminName)) {
+                    alert("The admin's name cannot contain numbers.");
+                    return;
+                }
+
                 $.ajax({
                     type: 'POST',
                     url: '/admin-add-admin',

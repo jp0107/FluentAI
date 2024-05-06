@@ -260,6 +260,16 @@
         var professorNetID = $('#professor-netid').val().trim(); // Fetching value from textarea
         var courseID = $('#course-id').val().trim(); // Fetching value from textarea
 
+        if (!professorName || !professorNetID || !courseID) {
+          alert('All fields must be filled out.');
+          return;
+        }
+
+        // Check if professor name contains numbers
+        if (/\d/.test(professorName)) {
+          alert("The professor's name cannot contain numbers.");
+          return;
+        }
 
         $.ajax({
           type: 'POST',
