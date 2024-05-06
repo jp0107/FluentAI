@@ -232,7 +232,7 @@
             modalBody.textContent = `Are you sure you want to delete ${profName}?`;
             // Set onclick function for deleting the professor
             deleteButton.onclick = function () {
-              deleteProf(courseID, profId);
+              deleteProf(courseId, profId);
             };
             // Show the modal if it's not the owner
             $('#deleteProfModal').modal('show');

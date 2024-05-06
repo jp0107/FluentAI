@@ -1409,7 +1409,7 @@ def admin_add_professor_to_course():
 
     with Session() as session:
         # Check if the course exists
-        course = session.query(Course).filter_by(course_id=course_id).first()
+        course = check_if_course_exists(course_id)
         if not course:
             return flask.jsonify({"message": "Course does not exist."}), 404
 
@@ -1445,7 +1445,7 @@ def admin_add_student_to_course():
 
     with Session() as session:
         # Check if the course exists
-        course = session.query(Course).filter_by(course_id=course_id).first()
+        course = check_if_course_exists(course_id)
         if not course:
             return flask.jsonify({"message": "Course does not exist."}), 404
 
