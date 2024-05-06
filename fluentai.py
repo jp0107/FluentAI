@@ -790,7 +790,7 @@ def process_input():
         prof_score = None
 
         # get feedback and append to conv history
-        feedback = get_feedback(conversation_text)
+        feedback = get_feedback(conversation_text, score)
         conversation_text += feedback
 
         store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
@@ -839,7 +839,7 @@ def generate_unique_conv_id():
         if check_unique_convid(id):
             return id
 
-def get_feedback(conversation_text):
+def get_feedback(conversation_text, score):
     evaluation_prompt = f"""
         Please evaluate the following conversation based on the criteria that follows:
         
@@ -869,7 +869,7 @@ def get_feedback(conversation_text):
         - Student demonstrates creativity and originality in responses (10 points).
         - Student is effective in engaging the chatbot to maintain a fluid conversation (10 points).
 
-        Provide concise feedback to the student and tell them what they did well and what they can improve on based on the criteria above. In your response, don't put any headings or titles. Only output several sentences of feedback.
+        You gave a score of {score} for the conversation below. Provide concise feedback to the student and tell them what they did well and what they can improve on based on the criteria above. In your response, don't put any headings or titles. Please only output several sentences of feedback and put no new lines in your response. 
 
         Conversation:
         {conversation_text}
