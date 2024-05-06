@@ -680,7 +680,7 @@ def student_assignment_chat(course_id, prompt_id):
     flask.session['prompt_text'] = new_prompt_text  # Store the initial prompt text for future use
     flask.session['turns_count'] = 0  # Initialize turn count
     flask.session['max_turns'] = prompt.num_turns   # store max turns from database
-    initial_response = get_gpt_response(prompt.prompt_text)
+    initial_response = get_gpt_response(new_prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('student-assignment-chat.html',
                                 prompt_title = title,
@@ -762,7 +762,7 @@ def prof_assignment_chat(course_id, prompt_id):
     flask.session['prompt_text'] = new_prompt_text  # Store the initial prompt text for future use
     flask.session['turns_count'] = 0  # Initialize turn count
     flask.session['max_turns'] = prompt.num_turns   # store max turns from database
-    initial_response = get_gpt_response(prompt.prompt_text)
+    initial_response = get_gpt_response(new_prompt_text)
     # Render the chat page with the initial prompt data
     return flask.render_template('prof-assignment-chat.html',
                                 course_id = course_id,
@@ -798,7 +798,7 @@ def process_input():
 
         # get feedback and append to conv history
         content = get_feedback(conversation_text, score)
-        feedback = "</div><div class='convo'>" + "\n\n ---- FEEDBACK ---- \n\n" + content
+        feedback = "</div><div class='convo' style='margin-top: 30px; padding-top: 10px;'>" + "\n\n ---- FEEDBACK ---- \n\n" + content
         conversation_text += feedback
 
         store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
