@@ -130,7 +130,35 @@
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
         $('input[name="userInput"]').attr('placeholder', 'Escribe conversación aquí...');
-      } else {
+      } 
+      else if (language === 'Arabic') {
+        $('input[name="userInput"]').attr('placeholder', 'اكتب المحادثة هنا...');
+      } 
+      else if (language === 'Chinese') {
+        $('input[name="userInput"]').attr('placeholder', '在此输入对话...');
+      } 
+      else if (language === 'French') {
+        $('input[name="userInput"]').attr('placeholder', 'Tapez conversation ici...');
+      } 
+      else if (language === 'German') {
+        $('input[name="userInput"]').attr('placeholder', 'Geben Sie hier Konversation ein...');
+      }
+      else if (language === 'Italian') {
+        $('input[name="userInput"]').attr('placeholder', 'Digita la conversazione qui...');
+      }
+      else if (language === 'Japanese') {
+        $('input[name="userInput"]').attr('placeholder', 'ここに会話を入力してください...');
+      }
+      else if (language === 'Korean') {
+        $('input[name="userInput"]').attr('placeholder', '여기에 대화를 입력하세요...');
+      }
+      else if (language === 'Portuguese') {
+        $('input[name="userInput"]').attr('placeholder', 'Digite conversa aqui...');
+      }
+      else if (language === 'Russian') {
+        $('input[name="userInput"]').attr('placeholder', 'Введите разговор здесь...');
+      }
+      else {
         $('input[name="userInput"]').attr('placeholder', 'Type conversation here...');
       }
 
