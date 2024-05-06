@@ -1112,6 +1112,9 @@ def add_course():
     if not any(prof.prof_id == prof_id for prof in get_profs()) and \
        not any(admin.admin_id == prof_id for admin in get_superadmins()):
         return flask.jsonify({"message": "You are not allowed to create a course"}), 403
+    
+    if check_if_course_exists(course_id):
+        return flask.jsonify({"message": "Course with this course ID already exists."}), 400
 
     course_code = generate_course_code()  # Generate a random course code
     new_course = Course(course_id=course_id, course_code=course_code, course_name=course_name, owner=prof_id, language=language)
