@@ -192,6 +192,14 @@ h2 {
     padding: 8px 40px; /* Adjust button size */
   }
 
+  #hello {
+    font-size: 80px;
+    margin-top: 180px;
+    margin-bottom: -30px;
+    display: flex;
+    justify-content: center;
+  }
+
   #goodbye {
     font-size: 80px;
     margin-top: 170px;
