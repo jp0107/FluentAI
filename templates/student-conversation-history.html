@@ -85,8 +85,8 @@
       <br>
       <div class="subcontainer">
           {% if conversation[0][1] %}
-          <div>Chatbot: {{ conversation[0][1].replace("\n", "</div><div class='convo'>") | safe }}
-          </div>
+          <div>Chatbot: {{ conversation[0][1].replace("\n", "</div>
+          <div class='convo'>") | safe }}</div>
           {% else %}
           No conversation history found. Please complete an assignment first.
           {% endif %}
