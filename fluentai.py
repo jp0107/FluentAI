@@ -845,7 +845,7 @@ def get_feedback(conversation_text, score):
         Please evaluate the following conversation based on the criteria that follows:
         
         Content: 
-        - Student adheres to the conversation guidelines and follows instructions (10 points).
+        - Student adheres to the conversation guidelines, follows instructions, and stays in the same language as the chatbot (10 points).
         - Content is relevant and appropriate to the topic and situation (10 points).
         - Student engages with multiple turns in the conversation (5 points).
         - Student has effective initiation of the conversation (2.5 points).
