@@ -105,11 +105,37 @@
     $(document).ready(function () {
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
-        $('input[name="userInput"]').attr('placeholder', 'Escribe conversación aquí...');
-      } else if (language === 'Chinese') {
-        $('input[name="userInput"]').attr('placeholder', '在此输入对话...');
-      } else {
-        $('input[name="userInput"]').attr('placeholder', 'Type conversation here...');
+        $('input[name="userInput"]').attr('placeholder', 'Escribe practica aquí...');
+      } 
+      else if (language === 'Arabic') {
+        $('input[name="userInput"]').attr('placeholder', 'اكتب الممارسة هنا...');
+      } 
+      else if (language === 'Chinese') {
+        $('input[name="userInput"]').attr('placeholder', '在此练习中文...');
+      }
+      else if (language === 'French') {
+        $('input[name="userInput"]').attr('placeholder', 'Tapez pratique ici...');
+      } 
+      else if (language === 'German') {
+        $('input[name="userInput"]').attr('placeholder', 'Geben Sie hier Übung ein...');
+      } 
+      else if (language === 'Italian') {
+        $('input[name="userInput"]').attr('placeholder', 'Digita la pratica qui...');
+      }
+      else if (language === 'Japanese') {
+        $('input[name="userInput"]').attr('placeholder', 'タイプ練習はこちらから...');
+      }
+      else if (language === 'Korean') {
+        $('input[name="userInput"]').attr('placeholder', '여기에 대화를 입력하세요...');
+      }
+      else if (language === 'Portuguese') {
+        $('input[name="userInput"]').attr('placeholder', 'Digite prática aqui...');
+      }
+      else if (language === 'Russian') {
+        $('input[name="userInput"]').attr('placeholder', 'Введите практику здесь...');
+      }
+      else {
+        $('input[name="userInput"]').attr('placeholder', 'Type practice conversation here...');
       }
 
       $('#chatForm').submit(function (event) {
