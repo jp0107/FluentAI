@@ -869,7 +869,7 @@ def get_feedback(conversation_text):
         - Student demonstrates creativity and originality in responses (10 points).
         - Student is effective in engaging the chatbot to maintain a fluid conversation (10 points).
 
-        Provide concise feedback to the student and tell them what they did well and what they can improve on based on the criteria above.
+        Provide concise feedback to the student and tell them what they did well and what they can improve on based on the criteria above. In your response, don't put any headings or titles. Only output several sentences of feedback.
 
         Conversation:
         {conversation_text}
@@ -883,7 +883,7 @@ def get_feedback(conversation_text):
                 {"role": "system", "content": evaluation_prompt}
             ]
         )
-        feedback = "\n\nFeedback: " + response.choices[0].message.content.strip()
+        feedback = "\n\n------ FEEDBACK ------\n\n" + response.choices[0].message.content.strip()
         return feedback
     except Exception as e:
         print(f"An error occurred while getting feedback: {str(e)}")
