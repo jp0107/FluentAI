@@ -106,6 +106,8 @@
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
         $('input[name="userInput"]').attr('placeholder', 'Escribe conversación aquí...');
+      } else if (language === 'Chinese') {
+        $('input[name="userInput"]').attr('placeholder', '在此输入对话...');
       } else {
         $('input[name="userInput"]').attr('placeholder', 'Type conversation here...');
       }
