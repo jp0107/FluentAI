@@ -32,7 +32,10 @@ app.secret_key = '1234567'  # hardcoded
 #-----------------------------------------------------------------------
 def generate_course_code(length=6):
     characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for i in range(length))
+    while True:
+        code = ''.join(random.choice(characters) for i in range(length))
+        if check_unique_code(code):
+            return code
 #-----------------------------------------------------------------------
 
 def get_gpt_response(prompt_text, user_input=""):
@@ -826,9 +829,10 @@ def process_input_ungraded():
 #-----------------------------------------------------------------------
 
 def generate_unique_conv_id():
-
-
-    return random.randint(10000000, 99999999)
+    while True:
+        id = random.randint(10000000, 99999999)
+        if check_unique_convid(id):
+            return id
 
 def calculate_score(conversation_text):
     evaluation_prompt = f"""

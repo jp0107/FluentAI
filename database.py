@@ -431,20 +431,15 @@ class Conversation(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     prof_score = sqlalchemy.Column(sqlalchemy.Integer)
 
-# # check if conv_id is unique
-# def check_unique_convid(conv_id):
-#     with sqlalchemy.orm.Session(engine) as session:
-#         count = session.query(sqlalchemy.func.count(Conversation.conv_id)).filter_by(conv_id=conv_id).scalar()
-#         return count == 0
+# check if conv_id is unique
+def check_unique_convid(conv_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        count = session.query(sqlalchemy.func.count(Conversation.conv_id)).filter_by(Conversation.conv_id == conv_id).scalar()
+        return count == 0
 
 # gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
     with sqlalchemy.orm.Session(engine) as session:
-        # check if the student exists in the database
-        # student_exists = session.query(sqlalchemy.exists().where(Student.student_id == student_id)).scalar()
-        # if not student_exists:
-        #     return None
-
         query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
                  .outerjoin(Conversation, sqlalchemy.and_(Conversation.prompt_id == Prompt.prompt_id, Conversation.student_id == student_id))
                  .filter(Prompt.course_id == course_id)
