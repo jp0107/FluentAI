@@ -81,6 +81,26 @@
     <div class="row mt-4">
       <div class="col offset-sm-1">
         <h2>{{ prompt_title }}</h2>
+        <h5><a data-bs-toggle="collapse" href="#assignment-chat-collapse" role="button" aria-expanded="false"
+            aria-controls="assignment-chat-collapse" style="font-size: 16px; color:#EAF2FF !important;">
+            See more detailed instructions...</a></h5>
+        <div class="collapse multi-collapse" id="assignment-chat-collapse">
+          <div class="content" style="margin-right: 15px;">
+            <ul>
+              <li>Type your response to the prompt in the input text box.</li>
+              <li>Interaction Tips:</li>
+              <ul>
+                <li>Stay engaged by writing detailed responses.</li>
+                <li>Ask questions and interact with the chatbot as if this is a real conversation.</li>
+                <li>Continue the conversation in {{language}}, as expected of your course.</li>
+              </ul>
+              <li>Press the 'Submit' button after you have finished your response for each turn.</li>
+              <li>The conversation will consist of a set number of conversational turns, as specified by your professor.</li>
+              <li>Once you reach the end of the conversation, you will receive your score and feedback for the assignment.</li>
+              <li>Remember, each response contributes to your overall performance, so make each interaction count!</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -105,16 +125,16 @@
       var language = "{{ language }}"; // This will be the variable passed from your server-side code
       if (language === 'Spanish') {
         $('input[name="userInput"]').attr('placeholder', 'Escribe conversación aquí...');
-      } 
+      }
       else if (language === 'Arabic') {
         $('input[name="userInput"]').attr('placeholder', 'اكتب المحادثة هنا...');
-      } 
+      }
       else if (language === 'Chinese') {
         $('input[name="userInput"]').attr('placeholder', '在此输入对话...');
-      } 
+      }
       else if (language === 'French') {
         $('input[name="userInput"]').attr('placeholder', 'Tapez conversation ici...');
-      } 
+      }
       else if (language === 'German') {
         $('input[name="userInput"]').attr('placeholder', 'Geben Sie hier Konversation ein...');
       }
