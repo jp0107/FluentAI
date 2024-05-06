@@ -304,6 +304,12 @@
       var profNetID = $('#prof-netid').val();
       var courseID = '{{ course_id }}';
 
+      // Check if professor name contains numbers
+      if (/\d/.test(profName)) {
+        alert("The professor's name cannot contain numbers.");
+        return;
+      }
+
       $.ajax({
         type: 'POST',
         url: '/add-professor-to-course',
@@ -401,6 +407,12 @@
       var studentName = $('#student-name').val();
       var studentNetID = $('#student-netid').val();
       var courseID = '{{ course_id }}';
+
+      // Check if student name contains numbers
+      if (/\d/.test(studentName)) {
+        alert("The student's name cannot contain numbers.");
+        return;
+      }
 
       $.ajax({
         type: 'POST',
