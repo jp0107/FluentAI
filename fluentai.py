@@ -790,7 +790,8 @@ def process_input():
         prof_score = None
 
         # get feedback and append to conv history
-        feedback = get_feedback(conversation_text, score)
+        content = get_feedback(conversation_text, score)
+        feedback = "\n\n------ FEEDBACK ------\n\n" + content
         conversation_text += feedback
 
         store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
@@ -800,7 +801,7 @@ def process_input():
         flask.session.pop('max_turns', None)
         flask.session.pop('conversation_text', None)
 
-        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100.", 'score': score})
+        return flask.jsonify({'gpt_response': f"This conversation has reached its turn limit. Your score is {score}/100.", 'score': score, 'feedback': content})
 
     if not flask.session.get('prompt_used', False):
         prompt_text = flask.session.get('prompt_text', '')  # Use the stored prompt text
@@ -883,8 +884,7 @@ def get_feedback(conversation_text, score):
                 {"role": "system", "content": evaluation_prompt}
             ]
         )
-        feedback = "\n\n------ FEEDBACK ------\n\n" + response.choices[0].message.content.strip()
-        return feedback
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"An error occurred while getting feedback: {str(e)}")
         return None

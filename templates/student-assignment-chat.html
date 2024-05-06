@@ -154,7 +154,7 @@
             if (response.gpt_response.includes("This conversation has reached its turn limit.")) {
               $('input[name="userInput"], button[type="submit"]').prop('disabled', true);  // Disable inputs
               isFinished = true;
-              if (confirm("You have reached the end of this conversation. Your score is " + response.score + "/100. Click OK to go back to the Assignments page.")) {
+              if (confirm("You have reached the end of this conversation. Your score is " + response.score + "/100. " +  response.feedback + " Click OK to go back to the Assignments page.")) {
                 localStorage.removeItem('unfinishedAssignment');
                 window.location.href = '/student-assignments/{{ course_id }}'; // Redirect to assignments page
               }
