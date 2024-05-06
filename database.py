@@ -158,6 +158,13 @@ class Course(Base):
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
+# check if a course exists
+def check_if_course_exists(course_id):
+    with sqlalchemy.orm.Session(engine) as session:
+        query = session.query(Course.course_id).filter(
+            sqlalchemy.func.lower(Course.course_id) == course_id.lower()).first()
+        return query is not None
+
 # check if a professor is the course owner
 def check_if_owner(course_id, prof_id):
     with sqlalchemy.orm.Session(engine) as session:
