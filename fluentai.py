@@ -650,6 +650,10 @@ def student_assignment_chat(course_id, prompt_id):
     username = auth.authenticate()
     user_type = check_user_type(username)
 
+    # get generic instructions for course language
+    language = get_language(course_id)[0][0]
+    instructions = f"You are conversing with a student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them. Do not break character."
+
     # Check if the assignment has been completed
     if has_completed_assignment(username, prompt_id):
         # Redirect to the assignments page or a specific message page
@@ -663,18 +667,17 @@ def student_assignment_chat(course_id, prompt_id):
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
 
-    # get the course language
-    language = get_language(course_id)[0][0]
-
     if not prompt:
         # Handle cases where no prompt is found for the given ID
         return "Prompt not found", 404
+
+    prompt_text = instructions + prompt.prompt_text
     
     # get prompt title
     title = get_prompt_title(prompt_id)[0][0]
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
-    flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
+    flask.session['prompt_text'] = prompt_text  # Store the initial prompt text for future use
     flask.session['turns_count'] = 0  # Initialize turn count
     flask.session['max_turns'] = prompt.num_turns   # store max turns from database
     initial_response = get_gpt_response(prompt.prompt_text)
@@ -682,7 +685,7 @@ def student_assignment_chat(course_id, prompt_id):
     return flask.render_template('student-assignment-chat.html',
                                 prompt_title = title,
                                 initial_data=initial_response,
-                                prompt=prompt.prompt_text,
+                                prompt=prompt_text,
                                 username=username,
                                 language = language,
                                 user_type = user_type,
@@ -739,20 +742,24 @@ def prof_assignment_chat(course_id, prompt_id):
 
     flask.session['course_id'] = course_id
 
-    # get the course language
+    # get generic instructions for course language
     language = get_language(course_id)[0][0]
+    instructions = f"You are conversing with a student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them. Do not break character."
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
+
     if not prompt:
         # Handle cases where no prompt is found for the given ID
         return "Prompt not found", 404
+    
+    prompt_text = instructions + prompt.prompt_text
     
     # get prompt title
     title = get_prompt_title(prompt_id)[0][0]
     
     flask.session['prompt_used'] = False  # Initialize prompt usage state
-    flask.session['prompt_text'] = prompt.prompt_text  # Store the initial prompt text for future use
+    flask.session['prompt_text'] = prompt_text  # Store the initial prompt text for future use
     flask.session['turns_count'] = 0  # Initialize turn count
     flask.session['max_turns'] = prompt.num_turns   # store max turns from database
     initial_response = get_gpt_response(prompt.prompt_text)
@@ -761,7 +768,7 @@ def prof_assignment_chat(course_id, prompt_id):
                                 course_id = course_id,
                                 prompt_title = title,
                                 initial_data=initial_response,
-                                prompt=prompt.prompt_text,
+                                prompt=prompt_text,
                                 username=username,
                                 language = language,
                                 user_type = user_type)
@@ -791,7 +798,7 @@ def process_input():
 
         # get feedback and append to conv history
         content = get_feedback(conversation_text, score)
-        feedback = "\n\n\n\n ------ FEEDBACK ------ \n\n" + content
+        feedback = "\n\n          \n\n" + "\n\n <<<< FEEDBACK >>>> \n\n" + content
         conversation_text += feedback
 
         store_conversation(conv_id, course_id, student_id, prompt_id, conversation_text, score, prof_score)
@@ -953,7 +960,7 @@ def student_practice_chat(course_id):
     language = get_language(course_id)[0][0]
 
     # initialize practice prompt here based on the language of the course
-    practice_prompt = f"You are conversing with a student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them."
+    practice_prompt = f"You are conversing with a student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them. Do not break character."
 
     flask.session['prompt_used'] = False  # Initialize prompt usage state
     flask.session['prompt_text'] = practice_prompt  # Store the initial prompt text for future use
