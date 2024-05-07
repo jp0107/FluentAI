@@ -285,6 +285,12 @@ h2 {
   font-size: 15px;
 }
 
+.chart-container {
+  max-width: 800px; /* Adjust this value to control the maximum width of the chart */
+  max-height: 700px;
+  margin: 0 auto; /* Center the chart horizontally */
+}
+
 /* Responsive styling*/
 @media (max-width: 768px) {
   .small-screen-layout {

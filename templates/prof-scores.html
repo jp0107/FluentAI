@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
   <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     /* Tooltip specific styles */
     .tooltip .tooltip-inner {
@@ -136,6 +137,11 @@
     <br>
 
     <div class="scores-section">
+
+      <div class="chart-container">
+        <canvas id="scoresChartSmall" width="100" height="100"></canvas>
+      </div>
+
       <table class="col offset-sm-1 table score-table" style="display: none;">
         <thead>
           <tr>
@@ -168,7 +174,7 @@
         </tbody>
       </table>
     </div>
-
+    <br><br>
   </div>
 
   <div class="container-fluid large-screen-layout">
@@ -198,6 +204,11 @@
 
       <div class="col py-3">
         <div class="container-fluid scores-section">
+
+          <div class="chart-container">
+            <canvas id="scoresChart" width="100" height="100"></canvas>
+          </div>
+
           <table class="col offset-sm-1 table score-table" style="display: none;">
             <thead>
               <tr>
@@ -272,6 +283,9 @@
       const scoreTables = document.querySelectorAll('.score-table');
       const scoreBodies = document.querySelectorAll('.score-body');
       const courseID = document.querySelector('.course-id-holder').getAttribute('data-course-id');
+      const chartContainers = document.querySelectorAll('.chart-container'); // Define chart container
+      var scoresChart;
+      var scoresChartSmall;
 
       // Function to hide the scores tables
       function hideScores() {
@@ -334,18 +348,123 @@
         });
       }
 
+      function hideChart() {
+        if (scoresChart) {
+          scoresChart.destroy(); // Properly destroy the chart instance
+        }
+        if (scoresChartSmall) {
+          scoresChartSmall.destroy(); // Properly destroy the chart instance
+        }
+
+        chartContainers.forEach(chartContainer => {
+          chartContainer.style.display = 'none'; // Hide the chart container
+        });
+      }
+
+      function renderChart() {
+        if (scoresChart) {
+          scoresChart.destroy(); // Destroy the existing chart instance if it exists
+        }
+        if (scoresChartSmall) {
+          scoresChartSmall.destroy(); // Destroy the existing chart instance if it exists
+        }
+
+        const Utils = {
+          CHART_COLORS: {
+            light: 'rgb(100, 149, 237)',
+            dark: '#1E1E1E',
+          },
+          transparentize: function (color, alpha) {
+            const rgb = color.match(/\d+/g);
+            return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+          }
+        };
+
+        const config = {
+          type: 'bar',
+          data: {
+            labels: assignment_names,
+            datasets: [{
+              label: 'AI Mean Score',
+              data: mean_ai_scores,
+              borderColor: Utils.CHART_COLORS.dark,
+              backgroundColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.5),
+            },
+            {
+              label: 'Professor Mean Score',
+              data: mean_prof_scores,
+              borderColor: Utils.CHART_COLORS.light,
+              backgroundColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.6),
+            },
+            {
+              label: 'AI Median Score',
+              data: median_ai_scores,
+              borderColor: Utils.CHART_COLORS.black,
+              backgroundColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.3),
+            },
+            {
+              label: 'Professor Median Score',
+              data: median_prof_scores,
+              borderColor: Utils.CHART_COLORS.light,
+              backgroundColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.3),
+            }
+            ]
+          },
+          options: {
+            indexAxis: 'y',
+            elements: {
+              bar: {
+                borderWidth: 0.5,
+              }
+            },
+            responsive: true,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  boxWidth: 15,
+                  padding: 30
+                },
+                font: {
+                  family: 'Inter', // Optional: specify the font family
+                },
+              },
+              title: {
+                display: true,
+                text: 'Mean and Median Scores for Course Assignments',
+                font: {
+                  size: 20, // Set the title font size to 24
+                  family: 'Inter', // Optional: specify the font family
+                }
+              }
+            }
+          },
+        };
+        chartContainers.forEach(chartContainer => {
+          chartContainer.style.display = 'block'; // Ensure the chart container is visible
+        });
+        scoresChart = new Chart(document.getElementById('scoresChart'), config);
+        scoresChartSmall = new Chart(document.getElementById('scoresChartSmall'), config);
+      }
+
       // Event listeners for menu items
       menuItems.forEach(item => {
         item.addEventListener('click', function (e) {
           e.preventDefault();
           const promptId = this.getAttribute('data-assignment');
-          if (promptId !== 'general') {
-            fetchAndDisplayScores(promptId);
+          if (promptId === 'general') {
+            hideScores();
+            renderChart();
           } else {
-            hideScores(); // Hide all scores if 'Scores Overview' is selected
+            hideChart();
+            fetchAndDisplayScores(promptId);
           }
         });
       });
+
+      // Initialize the default view
+      renderChart(); // Render the chart by default
 
       // Function to update the professor score in the table
       function updateProfScoreInTable(convId, newScore) {
