@@ -565,7 +565,7 @@ def fetch_students_and_courses():
                 grouped_results[result.course_id].append({
                     "id": result.id,
                     "name": f"{result.first_name} {result.last_name}",
-                    "course_id": result.course_id
+                    "courses": result.course_id
                 })
 
             # Flatten the groups into a single list sorted by course_id
