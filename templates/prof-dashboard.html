@@ -12,7 +12,6 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
     <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
@@ -90,15 +89,17 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/prof-all-courses" data-intro="View all active courses here!"
-                        data-setp="3">All Courses</a>
+                            data-setp="3">All Courses</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary tutorial-button" id="startTutorial" style="margin-right: 5px;">Tutorial</button>
+                    <button type="button" class="btn btn-primary tutorial-button" id="startTutorial"
+                        style="margin-right: 5px;">Tutorial</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false"
-                            data-intro="Click on this dropdown on any page to view your role and/or log out!" data-step="4">
+                            data-intro="Click on this dropdown on any page to view your role and/or log out!"
+                            data-step="4">
                             {{username}}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
@@ -126,14 +127,17 @@
 
     <div class="container">
         <div class="row mt-4">
-            <div class="row mt-4 align-items-center"
-            data-intro="Welcome! You can see all of your courses on this page!" data-step="1">
+            <div class="row mt-4 align-items-center" data-intro="Welcome! You can see all of your courses on this page!"
+                data-step="1">
                 <h1>Professor Dashboard</h1>
             </div>
             <br>
             <div class="row row-cols-1 row-cols-md-3 g-2 g-md-3 d-flex align-items-stretch">
             </div>
         </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
 
         <script type="text/javascript">
             $(document).ready(function () {
@@ -209,16 +213,14 @@
                     });
                 });
 
+                $(document).ready(function () {
+                    $("#startTutorial").click(function () {
+                        introJs().start();
+                    });
+                });
+
                 // Initial fetch of courses when the page loads
                 fetchCourses();
-            });
-        </script>
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $("#startTutorial").click(function () {
-                    introJs().start();
-                });
             });
         </script>
 
