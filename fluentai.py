@@ -1887,7 +1887,7 @@ def add_admin():
         )
         if existing_admin is not None:
             return flask.jsonify(
-                {"message": "This user is already an admin"}), 409
+                {"message": "This user is already an admin."}), 409
 
         # If the admin does not exist, proceed to add them
         first_name, last_name = (
@@ -1901,25 +1901,25 @@ def add_admin():
         session.add(new_admin)
         session.commit()
 
-    return flask.jsonify({"message": "Admin added successfully"}), 201
+    return flask.jsonify({"message": "Admin added successfully."}), 201
 
 #-----------------------------------------------------------------------
 
 @app.route("/delete-admin/<adminid>", methods=["POST"])
 def delete_admin(adminid):
     if not adminid:
-        return flask.jsonify({"message": "Admin ID is required"}), 400
+        return flask.jsonify({"message": "Admin ID is required."}), 400
 
     with Session() as session:
         admin = session.query(
             SuperAdmin).filter_by(admin_id=adminid).first()
         if not admin:
-            return flask.jsonify({"message": "Admin not found"}), 404
+            return flask.jsonify({"message": "Admin not found."}), 404
 
         session.delete(admin)
         session.commit()
 
-    return flask.jsonify({"message": "Admin deleted successfully"}), 200
+    return flask.jsonify({"message": "Admin deleted successfully."}), 200
 
 #-----------------------------------------------------------------------
 
