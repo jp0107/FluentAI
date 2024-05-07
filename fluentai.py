@@ -1117,7 +1117,8 @@ def add_course():
         return flask.jsonify({"message": "Course with this course ID already exists."}), 400
 
     course_code = generate_course_code()  # Generate a random course code
-    new_course = Course(course_id=course_id, course_code=course_code, course_name=course_name, owner=prof_id, language=language)
+    upper_course_id = course_id.upper()
+    new_course = Course(course_id=upper_course_id, course_code=course_code, course_name=course_name, owner=prof_id, language=language)
 
     with sqlalchemy.orm.Session(engine) as session:
         session.add(new_course)
@@ -1412,6 +1413,8 @@ def admin_add_professor_to_course():
         course = check_if_course_exists(course_id)
         if not course:
             return flask.jsonify({"message": "Course does not exist."}), 404
+        
+        upper_course_id = course_id.upper()
 
         # Check if the professor already exists
         professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
@@ -1422,12 +1425,12 @@ def admin_add_professor_to_course():
             session.add(professor)
 
         # Check if the professor is already linked to the course
-        existing_link = session.query(CoursesProfs).filter_by(course_id=course_id, prof_id=prof_netid).first()
+        existing_link = session.query(CoursesProfs).filter_by(course_id=upper_course_id, prof_id=prof_netid).first()
         if existing_link:
             return flask.jsonify({"message": "Professor already added to this course."}), 409
 
         # Create a new link between the professor and the course
-        new_course_prof = CoursesProfs(course_id=course_id, prof_id=prof_netid)
+        new_course_prof = CoursesProfs(course_id=upper_course_id, prof_id=prof_netid)
         session.add(new_course_prof)
         session.commit()
 
@@ -1442,6 +1445,8 @@ def admin_add_student_to_course():
 
     if not course_id or not student_name or not student_id:
         return flask.jsonify({"message": "All fields (student first name, last name, netID, and course ID) are required."}), 400
+
+    upper_course_id = course_id.upper()
 
     with Session() as session:
         # Check if the course exists
@@ -1458,12 +1463,12 @@ def admin_add_student_to_course():
             session.add(student)
 
         # Check if the student is already linked to the course
-        existing_link = session.query(CoursesStudents).filter_by(course_id=course_id, student_id=student_id).first()
+        existing_link = session.query(CoursesStudents).filter_by(course_id=upper_course_id, student_id=student_id).first()
         if existing_link:
             return flask.jsonify({"message": "Student already added to this course."}), 409
 
         # Create a new link between the student and the course
-        new_course_student = CoursesStudents(course_id=course_id, student_id=student_id)
+        new_course_student = CoursesStudents(course_id=upper_course_id, student_id=student_id)
         session.add(new_course_student)
         session.commit()
 

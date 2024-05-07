@@ -162,7 +162,7 @@ class Course(Base):
 def check_if_course_exists(course_id):
     with sqlalchemy.orm.Session(engine) as session:
         query = session.query(Course.course_id).filter(
-            sqlalchemy.func.lower(Course.course_id) == course_id.lower()).first()
+            sqlalchemy.func.upper(Course.course_id) == course_id.upper()).first()
         return query is not None
 
 # check if a professor is the course owner
