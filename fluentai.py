@@ -1398,7 +1398,7 @@ def get_profs_in_course(course_id):
     except Exception:
         return flask.jsonify({'error': 'Failed to fetch professors'}), 500
 #-----------------------------------------------------------------------
-@app.route('/get-students-in-course/<course_id>')
+@app.route('/get-students-in-course/<course_id>', methods=['POST'])
 def get_students_in_course(course_id):
     try:
         students = get_students_for_course(course_id)
@@ -1544,14 +1544,14 @@ def admin_add_student_to_course():
         # Check if the identifier (student, professor, or admin) is already linked to the course
         existing_link = session.query(CoursesStudents).filter_by(course_id=upper_course_id, student_id=student_id).first()
         if existing_link:
-            return flask.jsonify({"message": "This user is already added to the course."}), 409
+            return flask.jsonify({"message": "This student is already added to the course."}), 409
 
         # Link the identifier (student, professor, or admin) to the course
         new_course_student = CoursesStudents(course_id=upper_course_id, student_id=student_id)
         session.add(new_course_student)
         session.commit()
 
-        return flask.jsonify({"message": "User added successfully to the course."}), 200
+        return flask.jsonify({"message": "Student added successfully to the course."}), 200
 
 #-----------------------------------------------------------------------
 @app.route('/admin-admins', methods=['GET'])
@@ -1668,5 +1668,4 @@ def edit_prof_score(conv_id):
 def is_course_owner(course_id, prof_id):
     if check_if_owner(course_id, prof_id):
         return flask.jsonify({'isOwner': True}), 200
-    else:
-        return flask.jsonify({'isOwner': False}), 200
+    return flask.jsonify({'isOwner': False}), 200
