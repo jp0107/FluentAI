@@ -51,7 +51,7 @@ body {
 
 .nav-button:hover, .nav-button:active, .nav-button:focus {
   background-color: #1E1E1E;
-  color: #EAF2FF;
+  color: #EAF2FF !important;
 }
 
 .nav-link.dropdown-toggle:active,
