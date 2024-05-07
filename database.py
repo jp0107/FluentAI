@@ -521,9 +521,8 @@ def get_students_for_course(course_id):
             session.rollback()
             raise Exception(f"Failed to fetch course participants due to a database error: {str(e)}")
 
-# Function for fetching all students and the courses they are enrolled in
 def fetch_students_and_courses():
-    with sqlalchemy.orm.Session(engine) as session:
+    with Session(engine) as session:
         try:
             # Fetching students linked to courses
             students_query = session.query(
@@ -533,7 +532,7 @@ def fetch_students_and_courses():
                 CoursesStudents.course_id
             ).join(
                 CoursesStudents, Student.student_id == CoursesStudents.student_id
-            ).order_by(Student.first_name, Student.last_name)
+            )
 
             # Fetching professors linked to courses
             professors_query = session.query(
@@ -543,7 +542,7 @@ def fetch_students_and_courses():
                 CoursesStudents.course_id
             ).join(
                 CoursesStudents, Professor.prof_id == CoursesStudents.student_id
-            ).order_by(Professor.first_name, Professor.last_name)
+            )
 
             # Fetching superadmins linked to courses
             superadmins_query = session.query(
@@ -552,23 +551,31 @@ def fetch_students_and_courses():
                 SuperAdmin.last_name,
                 CoursesStudents.course_id
             ).join(
-                CoursesStudents,
-                SuperAdmin.admin_id == CoursesStudents.student_id
-            ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
+                CoursesStudents, SuperAdmin.admin_id == CoursesStudents.student_id
+            )
 
             # Combine all results using union_all
             combined_query = students_query.union_all(professors_query).union_all(superadmins_query)
             results = combined_query.all()
 
-            # Convert results into a list of dictionaries
-            merged_results = sorted([
-                {
+            # Grouping results by course_id and sorting within those groups
+            from collections import defaultdict
+            grouped_results = defaultdict(list)
+            for result in results:
+                grouped_results[result.course_id].append({
                     "id": result.id,
                     "name": f"{result.first_name} {result.last_name}",
-                    "courses": [result.course_id]
-                }
-                for result in results
-            ], key=lambda x: x['course_id'])
+                    "course_id": result.course_id
+                })
+
+            # Optionally convert grouped results to a sorted list if needed
+            sorted_grouped_results = sorted(
+                (grouped_results[key] for key in grouped_results),
+                key=lambda x: x[0]['course_id']
+            )
+
+            # Flatten the sorted grouped results into a single list to maintain original format
+            merged_results = [item for sublist in sorted_grouped_results for item in sublist]
 
             return merged_results
 
