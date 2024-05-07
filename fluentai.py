@@ -14,7 +14,6 @@ import flask
 import sqlalchemy
 import pytz
 import auth
-import statistics
 from req_lib import ReqLib
 from database import *
 
@@ -165,8 +164,8 @@ def delete_assignment(prompt_id):
 
 #-----------------------------------------------------------------------
 
-def delete_prof_from_course(prof_id, course_id):
-    with Session() as session:
+def delete_prof_from_course(prof_id, course_id, engine):
+    with Session(engine) as session:
         try:
             # Delete the association between the professor and the course
             association_deleted = session.query(CoursesProfs).filter(
@@ -308,10 +307,8 @@ def login():
         return flask.redirect(flask.url_for('admin_dashboard'))
     if user_type == "Professor":
         return flask.redirect(flask.url_for('prof_dashboard'))
-    if user_type == "Student":
-        return flask.redirect(flask.url_for('student_dashboard'))
     
-    return "Login Required", 401
+    return flask.redirect(flask.url_for('student_dashboard'))
 
 #----------------------   STUDENT PAGES   ------------------------------
 #-----------------------------------------------------------------------
