@@ -858,20 +858,6 @@ def get_all_scores(prompt_id):
 
         return results
 
-# Gets all scores given prompt_id
-def get_scores_for_assignment(prompt_id):
-    with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(
-                    Conversation.score,
-                    Conversation.prof_score)
-                 .join(Prompt, Conversation.prompt_id == Prompt.prompt_id)
-                 .filter(Prompt.prompt_id == prompt_id)
-                 .order_by(sqlalchemy.asc(Prompt.created_at)))
-
-        results = query.all()
-
-        return results
-
 # Gets conversation history given a conv_id
 def get_conversation(conv_id):
     with sqlalchemy.orm.Session(engine) as session:

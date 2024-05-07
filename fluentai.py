@@ -624,15 +624,15 @@ def calculate_mean_and_median_scores(assignments):
     median_prof_scores = []
 
     for prompt_id, title in assignments:
-        scores = get_scores_for_assignment(prompt_id)
-        ai_scores = np.array([score[0] for score in scores if score[0] is not None])
-        professor_scores = np.array([score[1] for score in scores if score[1] is not None])
+        scores = get_all_scores(prompt_id)
+        ai_scores = np.array([score[1] for score in scores if score[1] is not None])
+        professor_scores = np.array([score[2] for score in scores if score[2] is not None])
 
         # Calculate mean and median scores
-        mean_ai_score = np.mean(ai_scores) if ai_scores.size else ""
-        median_ai_score = np.median(ai_scores) if ai_scores.size else ""
-        mean_prof_score = np.mean(professor_scores) if professor_scores.size else ""
-        median_prof_score = np.median(professor_scores) if professor_scores.size else ""
+        mean_ai_score = np.mean(ai_scores) if ai_scores.size else None
+        median_ai_score = np.median(ai_scores) if ai_scores.size else None
+        mean_prof_score = np.mean(professor_scores) if professor_scores.size else None
+        median_prof_score = np.median(professor_scores) if professor_scores.size else None
 
         # Append values to respective lists
         assignment_names.append(title)
