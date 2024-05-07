@@ -10,7 +10,6 @@ from collections import defaultdict
 import sqlalchemy
 import sqlalchemy.orm
 import pytz
-import numpy as np
 
 #-----------------------------------------------------------------------
 
