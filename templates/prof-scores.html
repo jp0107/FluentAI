@@ -396,31 +396,37 @@
             datasets: [{
               label: 'AI Mean Score',
               data: data.mean_ai_scores,
-              borderColor: Utils.CHART_COLORS.dark,
+              borderColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.5),
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.5),
             },
             {
               label: 'Professor Mean Score',
               data: data.mean_prof_scores,
-              borderColor: Utils.CHART_COLORS.light,
+              borderColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.6),
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.6),
             },
             {
               label: 'AI Median Score',
               data: data.median_ai_scores,
-              borderColor: Utils.CHART_COLORS.black,
+              borderColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.3),
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.3),
             },
             {
               label: 'Professor Median Score',
               data: data.median_prof_scores,
-              borderColor: Utils.CHART_COLORS.light,
+              borderColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.3),
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.3),
             }
             ]
           },
           options: {
             indexAxis: 'y',
+            scales: {
+              y: {
+                min: 0,
+                max: 100
+              }
+            },
             elements: {
               bar: {
                 borderWidth: 0.5,
