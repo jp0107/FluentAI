@@ -625,8 +625,8 @@ def calculate_mean_and_median_scores(assignments):
 
     for prompt_id, title in assignments:
         scores = get_all_scores(prompt_id)
-        ai_scores = np.array([score[1] for score in scores if score[1] is not None])
-        professor_scores = np.array([score[2] for score in scores if score[2] is not None])
+        ai_scores = np.array([score[2] for score in scores if score[2] is not None])
+        professor_scores = np.array([score[3] for score in scores if score[3] is not None])
 
         # Calculate mean and median scores
         mean_ai_score = np.mean(ai_scores) if ai_scores.size else None
