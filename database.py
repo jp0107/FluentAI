@@ -169,9 +169,9 @@ def get_all_profs():
 class Course(Base):
     __tablename__ = 'courses'
     course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # e.g. SPA101
-    course_code = sqlalchemy.Column(sqlalchemy.VARCHAR) # unique course code that gives students access
+    course_code = sqlalchemy.Column(sqlalchemy.VARCHAR) 
     course_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    owner = sqlalchemy.Column(sqlalchemy.VARCHAR)   # professor or superadmin netid
+    owner = sqlalchemy.Column(sqlalchemy.VARCHAR)  
     created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
     language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
@@ -185,7 +185,6 @@ def check_if_course_exists(course_id):
 # Checks if a professor is the course owner
 def check_if_owner(course_id, prof_id):
     with sqlalchemy.orm.Session(engine) as session:
-        # Check if there is a course record with the given course_id that is owned by the specified prof_id
         owner = session.query(Course).filter(
             Course.course_id == course_id,
             Course.owner == prof_id
@@ -243,7 +242,10 @@ class Student(Base):
 # Gets student info and the courses they belong to in alphabetical order by student first name
 def get_all_students():
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Student.student_id, Student.first_name, Student.last_name, CoursesStudents.course_id)
+        query = (session.query(Student.student_id,
+                            Student.first_name,
+                            Student.last_name,
+                            CoursesStudents.course_id)
                 .join(CoursesStudents, Student.student_id == CoursesStudents.student_id)
                 .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name))) 
         return query.all()
@@ -251,7 +253,8 @@ def get_all_students():
 # Gets student first name based on their netid
 def get_student_firstname(student_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(Student.first_name).filter(Student.student_id == student_id).one_or_none()
+        query = session.query(Student.first_name).filter(
+            Student.student_id == student_id).one_or_none()
 
         if query is None:
             return "Default"
@@ -263,10 +266,13 @@ def delete_student(student_id):
     with sqlalchemy.orm.Session(engine) as session:
         try:
             # Delete associated entries from CoursesStudents first
-            session.query(CoursesStudents).filter(CoursesStudents.student_id == student_id).delete(synchronize_session='fetch')
+            session.query(CoursesStudents).filter(
+                CoursesStudents.student_id == student_id).delete(
+                    synchronize_session='fetch')
 
             # Delete the course entry
-            student_to_delete = session.query(Student).filter(Student.student_id == student_id).one_or_none()
+            student_to_delete = session.query(Student).filter(
+                Student.student_id == student_id).one_or_none()
             if student_to_delete:
                 session.delete(student_to_delete)
                 session.commit()
@@ -290,11 +296,13 @@ class CoursesProfs(Base):
 # Gets all courses that a professor teaches given the prof_id
 def get_professor_courses(prof_id):
     with sqlalchemy.orm.Session(engine) as session:
-        my_courses = session.query(CoursesProfs).filter(CoursesProfs.prof_id == prof_id).all()
+        my_courses = session.query(CoursesProfs).filter(
+            CoursesProfs.prof_id == prof_id).all()
 
         course_data = []
         for course_prof in my_courses:
-            course = session.query(Course).filter(Course.course_id == course_prof.course_id).first()
+            course = session.query(Course).filter(
+                Course.course_id == course_prof.course_id).first()
             if course:
                 course_data.append({
                     'course_id': course.course_id,
@@ -328,12 +336,16 @@ def fetch_professors_and_courses():
             ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
 
             professors = [
-                {"net_id": prof.prof_id, "name": f"{prof.first_name} {prof.last_name}", "courses": [prof.course_id]}
+                {"net_id": prof.prof_id, 
+                "name": f"{prof.first_name} {prof.last_name}", 
+                "courses": [prof.course_id]}
                 for prof in profs_query.all()
             ]
 
             superadmins = [
-                {"net_id": admin.admin_id, "name": f"{admin.first_name} {admin.last_name}", "courses": [admin.course_id]}
+                {"net_id": admin.admin_id, 
+                "name": f"{admin.first_name} {admin.last_name}", 
+                "courses": [admin.course_id]}
                 for admin in admins_query.all()
             ]
 
@@ -359,7 +371,9 @@ def check_prof_in_course(course_id, prof_id):
 # Gets courses and professors for each one (FOR ADMIN COURSES PAGE)
 def get_courses_and_profs():
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(CoursesProfs.course_id, Professor.first_name, Professor.last_name)
+        query = (session.query(CoursesProfs.course_id, 
+                            Professor.first_name, 
+                            Professor.last_name)
                 .join(Professor, CoursesProfs.prof_id == Professor.prof_id)
                 .order_by(CoursesProfs.course_id))
         
@@ -374,7 +388,8 @@ def get_courses_and_profs():
 
         for course_id, first_name, last_name in results:
             if course_id not in courses:
-                courses[course_id] = {'course_id': course_id, 'professors': []}
+                courses[course_id] = {'course_id': course_id, 
+                                    'professors': []}
             courses[course_id]['professors'].append(f"{first_name} {last_name}")
 
         print("success")
@@ -384,7 +399,10 @@ def get_courses_and_profs():
 # Gets prof info (FOR ADMIN PROFESSORS PAGE)
 def get_prof_info():
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(CoursesProfs.course_id, CoursesProfs.prof_id, Professor.first_name, Professor.last_name)
+        query = (session.query(CoursesProfs.course_id, 
+                            CoursesProfs.prof_id, 
+                            Professor.first_name, 
+                            Professor.last_name)
                 .join(Professor, CoursesProfs.prof_id == Professor.prof_id)
                 .order_by(sqlalchemy.asc(Professor.first_name), sqlalchemy.asc(Professor.last_name)))
         
@@ -398,7 +416,9 @@ def get_prof_info():
 
         for course_id, prof_id, first_name, last_name in results:
             if prof_id not in profs:
-                profs[prof_id] = {'prof_id': prof_id, 'prof_name': f"{first_name} {last_name}", 'courses': []}
+                profs[prof_id] = {'prof_id': prof_id, 
+                                'prof_name': f"{first_name} {last_name}", 
+                                'courses': []}
             profs[prof_id]['courses'].append(course_id)
 
         return profs
@@ -414,11 +434,13 @@ class CoursesStudents(Base):
 # Gets all courses that a student is in given their student id
 def get_student_courses(student_id):
     with sqlalchemy.orm.Session(engine) as session:
-        my_courses = session.query(CoursesStudents).filter(CoursesStudents.student_id == student_id).all()
+        my_courses = session.query(CoursesStudents).filter(
+            CoursesStudents.student_id == student_id).all()
 
         course_data = []
         for student in my_courses:
-            course = session.query(Course).filter(Course.course_id == student.course_id).first()
+            course = session.query(Course).filter(
+                Course.course_id == student.course_id).first()
             if course:
                 course_data.append({
                     'course_id': course.course_id,
@@ -446,12 +468,14 @@ def enroll_student_in_course(student_id, course_code):
             return {"status": "error", "message": "Invalid course code"}
 
         # Check if the student is already enrolled
-        existing_enrollment = session.query(CoursesStudents).filter_by(course_id=course.course_id, student_id=student_id).first()
+        existing_enrollment = session.query(CoursesStudents).filter_by(
+            course_id=course.course_id, student_id=student_id).first()
         if existing_enrollment:
             return {"status": "error", "message": "Already enrolled in this course"}
 
         # Enroll the student in the course
-        new_enrollment = CoursesStudents(course_id=course.course_id, student_id=student_id)
+        new_enrollment = CoursesStudents(course_id=course.course_id, 
+                                        student_id=student_id)
         session.add(new_enrollment)
         session.commit()
 
@@ -473,7 +497,9 @@ def get_students_for_course(course_id):
                 .order_by(Professor.first_name, Professor.last_name)
             )
             professors = [
-                {"student_id": prof.student_.id, "first_name": prof.first_name, "last_name": prof.last_name}
+                {"student_id": prof.student_.id, 
+                "first_name": prof.first_name, 
+                "last_name": prof.last_name}
                 for prof in profs_query.all()
             ]
 
@@ -489,7 +515,9 @@ def get_students_for_course(course_id):
                 .order_by(SuperAdmin.first_name, SuperAdmin.last_name)
             )
             superadmins = [
-                {"student_id": admin.student_id, "first_name": admin.first_name, "last_name": admin.last_name}
+                {"student_id": admin.student_id,
+                "first_name": admin.first_name,
+                "last_name": admin.last_name}
                 for admin in admins_query.all()
             ]
 
@@ -548,7 +576,8 @@ def fetch_students_and_courses():
                 SuperAdmin.last_name,
                 CoursesStudents.course_id
             ).join(
-                CoursesStudents, SuperAdmin.admin_id == CoursesStudents.student_id
+                CoursesStudents, 
+                SuperAdmin.admin_id == CoursesStudents.student_id
             ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
 
             # Combine all results using union_all
@@ -574,9 +603,14 @@ def fetch_students_and_courses():
 # Gets student info (FOR ADMIN STUDENTS PAGE)
 def get_student_info():
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(CoursesStudents.course_id, CoursesStudents.student_id, Student.first_name, Student.last_name)
-                .join(Student, CoursesStudents.student_id == Student.student_id)
-                .order_by(sqlalchemy.asc(Student.first_name), sqlalchemy.asc(Student.last_name)))
+        query = (session.query(CoursesStudents.course_id, 
+                            CoursesStudents.student_id, 
+                            Student.first_name, 
+                            Student.last_name)
+                .join(Student, 
+                    CoursesStudents.student_id == Student.student_id)
+                .order_by(sqlalchemy.asc(Student.first_name), 
+                        sqlalchemy.asc(Student.last_name)))
         
         results = query.all()
         
@@ -588,7 +622,9 @@ def get_student_info():
 
         for course_id, student_id, first_name, last_name in results:
             if student_id not in students:
-                students[student_id] = {'student_id': student_id, 'student_name': f"{first_name} {last_name}", 'courses': []}
+                students[student_id] = {'student_id': student_id, 
+                                        'student_name': f"{first_name} {last_name}", 
+                                        'courses': []}
             students[student_id]['courses'].append(course_id)
 
         return students
@@ -629,7 +665,8 @@ def get_assignments_for_course(course_id):
         past_assignments = []
         for assignment in assignments:
             local_deadline = assignment.deadline.astimezone(est) if assignment.deadline else None
-            formatted_deadline = local_deadline.strftime('%m/%d/%Y %I:%M %p %Z') if local_deadline else 'No deadline set'
+            formatted_deadline = local_deadline.strftime(
+                '%m/%d/%Y %I:%M %p %Z') if local_deadline else 'No deadline set'
 
             assignment_info = {
                 'prompt_id': assignment.prompt_id,
@@ -667,7 +704,8 @@ def get_assignments_for_student(student_id, course_id):
             Prompt.created_at,
             Prompt.description,
             completed_subquery  
-        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
+        ).filter(Prompt.course_id == course_id
+        ).order_by(sqlalchemy.asc(Prompt.deadline)).all()
         return categorize_assignments(assignments, now_est)
 
 # Categorize assignments into past and present
@@ -675,7 +713,8 @@ def categorize_assignments(assignments, now):
     current_assignments = []
     past_assignments = []
     for a in assignments:
-        local_deadline = pytz.utc.localize(a.deadline).astimezone(pytz.timezone('America/New_York')) if a.deadline else None
+        local_deadline = pytz.utc.localize(a.deadline).astimezone(
+            pytz.timezone('America/New_York')) if a.deadline else None
 
         assignment_tuple = (
             a.prompt_id,
@@ -697,7 +736,8 @@ def categorize_assignments(assignments, now):
 def get_prompt_title(prompt_id):
     with sqlalchemy.orm.Session(engine) as session:
         
-        query = (session.query(Prompt.prompt_title).filter(Prompt.prompt_id == prompt_id))
+        query = (session.query(Prompt.prompt_title).filter(
+            Prompt.prompt_id == prompt_id))
 
         return query.all()
 
@@ -713,11 +753,18 @@ def get_current_assignments_for_student(student_id, course_id):
     with sqlalchemy.orm.Session(engine) as session:
         
         subquery = (session.query(Conversation.prompt_id)
-                    .filter(Conversation.student_id == student_id, Conversation.prompt_id == Prompt.prompt_id)
+                    .filter(Conversation.student_id == student_id, 
+                            Conversation.prompt_id == Prompt.prompt_id)
                     .exists()).label("completed")
 
-        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Prompt.deadline, Prompt.past_deadline, Prompt.created_at, subquery)
-                 .filter(Prompt.course_id == course_id, Prompt.past_deadline == False)
+        query = (session.query(Prompt.prompt_id,
+                            Prompt.prompt_title,
+                            Prompt.deadline,
+                            Prompt.past_deadline,
+                            Prompt.created_at,
+                            subquery)
+                 .filter(Prompt.course_id == course_id, 
+                        Prompt.past_deadline == False)
                  .order_by(sqlalchemy.asc(Prompt.deadline)))
 
         results = query.all()
@@ -729,7 +776,8 @@ def get_assignments_for_prof(course_id):
         assignments = session.query(
             Prompt.prompt_id,
             Prompt.prompt_title,
-        ).filter(Prompt.course_id == course_id).order_by(sqlalchemy.asc(Prompt.deadline)).all()
+        ).filter(Prompt.course_id == course_id
+        ).order_by(sqlalchemy.asc(Prompt.deadline)).all()
 
         return assignments
 
@@ -747,7 +795,9 @@ class PracticePrompt(Base):
 # Gets all practice prompts for a given course, ordered by most to least recently created
 def get_practice_prompts(course_id) -> List[Prompt]:
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(PracticePrompt.prompt_id, PracticePrompt.prompt_title, PracticePrompt.created_at)
+        query = (session.query(PracticePrompt.prompt_id, 
+                            PracticePrompt.prompt_title, 
+                            PracticePrompt.created_at)
                 .filter(PracticePrompt.course_id == course_id)
                 .order_by(sqlalchemy.desc(PracticePrompt.created_at)))
         
@@ -773,14 +823,20 @@ class Conversation(Base):
 # Checks if conv_id is unique
 def check_unique_convid(conv_id):
     with sqlalchemy.orm.Session(engine) as session:
-        count = session.query(sqlalchemy.func.count(Conversation.conv_id)).filter(Conversation.conv_id == conv_id).scalar()
+        count = session.query(sqlalchemy.func.count(Conversation.conv_id)).filter(
+            Conversation.conv_id == conv_id).scalar()
         return count == 0
 
 # Gets the course assignments and their scores for each given a student id
 def get_assignments_and_scores_for_student(course_id, student_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = (session.query(Prompt.prompt_id, Prompt.prompt_title, Conversation.conv_id, Conversation.score)
-                 .outerjoin(Conversation, sqlalchemy.and_(Conversation.prompt_id == Prompt.prompt_id, Conversation.student_id == student_id))
+        query = (session.query(Prompt.prompt_id, 
+                            Prompt.prompt_title, 
+                            Conversation.conv_id, 
+                            Conversation.score)
+                 .outerjoin(Conversation, sqlalchemy.and_(
+                     Conversation.prompt_id == Prompt.prompt_id, 
+                     Conversation.student_id == student_id))
                  .filter(Prompt.course_id == course_id)
                  .order_by(sqlalchemy.asc(Prompt.created_at)))
 
