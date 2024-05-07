@@ -261,30 +261,6 @@ def get_student_firstname(student_id):
         
         return query[0]
 
-# # Function for deleting student
-# def delete_student(student_id):
-#     with sqlalchemy.orm.Session(engine) as session:
-#         try:
-#             # Delete associated entries from CoursesStudents first
-#             session.query(CoursesStudents).filter(
-#                 CoursesStudents.student_id == student_id).delete(
-#                     synchronize_session='fetch')
-
-#             # Delete the course entry
-#             student_to_delete = session.query(Student).filter(
-#                 Student.student_id == student_id).one_or_none()
-#             if student_to_delete:
-#                 session.delete(student_to_delete)
-#                 session.commit()
-#                 return True
-#             else:
-#                 session.commit()  
-#                 return False
-#         except Exception as e:
-#             session.rollback()  
-#             print(f"An error occurred: {e}")
-#             return False
-
 #-----------------------------------------------------------------------
 
 # Creates table mapping courses to professors
@@ -497,7 +473,7 @@ def get_students_for_course(course_id):
                 .order_by(Professor.first_name, Professor.last_name)
             )
             professors = [
-                {"student_id": prof.student_.id, 
+                {"student_id": prof.student_.id,
                 "first_name": prof.first_name, 
                 "last_name": prof.last_name}
                 for prof in profs_query.all()
@@ -557,7 +533,7 @@ def fetch_students_and_courses():
                 CoursesStudents.course_id
             ).join(
                 CoursesStudents, Student.student_id == CoursesStudents.student_id
-            )
+            ).order_by(Student.first_name, Student.last_name)
 
             # Fetching professors linked to courses
             professors_query = session.query(
@@ -567,7 +543,7 @@ def fetch_students_and_courses():
                 CoursesStudents.course_id
             ).join(
                 CoursesStudents, Professor.prof_id == CoursesStudents.student_id
-            )
+            ).order_by(Professor.first_name, Professor.last_name)
 
             # Fetching superadmins linked to courses
             superadmins_query = session.query(
@@ -576,25 +552,23 @@ def fetch_students_and_courses():
                 SuperAdmin.last_name,
                 CoursesStudents.course_id
             ).join(
-                CoursesStudents, SuperAdmin.admin_id == CoursesStudents.student_id
-            )
+                CoursesStudents,
+                SuperAdmin.admin_id == CoursesStudents.student_id
+            ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
 
             # Combine all results using union_all
             combined_query = students_query.union_all(professors_query).union_all(superadmins_query)
             results = combined_query.all()
 
-            # Convert results into a list of dictionaries and sort by course_id
-            merged_results = sorted(
-                [
-                    {
-                        "id": result.id,
-                        "name": f"{result.first_name} {result.last_name}",
-                        "course_id": result.course_id
-                    }
-                    for result in results
-                ],
-                key=lambda x: x['course_id']
-            )
+            # Convert results into a list of dictionaries
+            merged_results = sorted([
+                {
+                    "id": result.id,
+                    "name": f"{result.first_name} {result.last_name}",
+                    "courses": [result.course_id]
+                }
+                for result in results
+            ], key=lambda x: x['course_id'])
 
             return merged_results
 
