@@ -5,7 +5,8 @@
 
 import os
 from typing import List
-from datetime import datetime, timezone
+from datetime import datetime
+from collections import defaultdict
 import sqlalchemy
 import sqlalchemy.orm
 import pytz
@@ -522,7 +523,7 @@ def get_students_for_course(course_id):
             raise Exception(f"Failed to fetch course participants due to a database error: {str(e)}")
 
 def fetch_students_and_courses():
-    with Session(engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         try:
             # Fetching students linked to courses
             students_query = session.query(
@@ -558,8 +559,7 @@ def fetch_students_and_courses():
             combined_query = students_query.union_all(professors_query).union_all(superadmins_query)
             results = combined_query.all()
 
-            # Grouping results by course_id and sorting within those groups
-            from collections import defaultdict
+            # Convert results into a list of dictionaries, grouping by course_id
             grouped_results = defaultdict(list)
             for result in results:
                 grouped_results[result.course_id].append({
@@ -568,20 +568,17 @@ def fetch_students_and_courses():
                     "course_id": result.course_id
                 })
 
-            # Optionally convert grouped results to a sorted list if needed
-            sorted_grouped_results = sorted(
-                (grouped_results[key] for key in grouped_results),
-                key=lambda x: x[0]['course_id']
-            )
+            # Flatten the groups into a single list sorted by course_id
+            sorted_merged_results = []
+            for course_id in sorted(grouped_results.keys()):
+                sorted_merged_results.extend(grouped_results[course_id])
 
-            # Flatten the sorted grouped results into a single list to maintain original format
-            merged_results = [item for sublist in sorted_grouped_results for item in sublist]
-
-            return merged_results
+            return sorted_merged_results
 
         except Exception as e:
             session.rollback()
-            raise Exception(f"Failed to fetch data due to: {str(e)}")
+            print(f"Failed to fetch data due to: {str(e)}")  # Enhanced error logging for better diagnostics
+            return []  # Return an empty list or appropriate error message to the frontend
         
 # Gets student info (FOR ADMIN STUDENTS PAGE)
 def get_student_info():
