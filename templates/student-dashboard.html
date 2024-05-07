@@ -74,11 +74,11 @@
                     <button type="button" class="btn btn-primary" id="startTutorial">Tutorial</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                            data-bs-toggle="dropdown" aria-expanded="false" 
+                            data-intro="Click on this dropdown on any page to view your role and/or log out!" data-step="4">
                             {{username}}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" 
-                        data-intro="Click on this dropdown on any page to view your role and/or log out!" data-step="4">
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                             {% if user_type == 'SuperAdmin' %}
                             <li class="dropdown-item disabled" aria-disabled="true"
                                 style="pointer-events: none; cursor: default;">User Role: Admin</li>
