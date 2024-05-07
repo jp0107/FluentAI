@@ -1397,9 +1397,17 @@ def get_profs_in_course(course_id):
     except Exception:
         return flask.jsonify({'error': 'Failed to fetch professors'}), 500
 #-----------------------------------------------------------------------
-@app.route('/get-students-in-course/<course_id>', methods=['POST'])
+@app.route('/get-students-in-course/<course_id>')
 def get_students_in_course(course_id):
     try:
+        username = auth.authenticate()
+
+        # get user's type to make sure they can access page and display name if correct
+        user_type = check_user_type(username)
+
+        if user_type == "Student":
+            flask.flash("Access denied: Unauthorized access.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         students = get_students_for_course(course_id)
         return flask.jsonify(students)
     except Exception as e:
