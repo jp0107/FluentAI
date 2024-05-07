@@ -12,7 +12,6 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/assignments.css') }}">
 </head>
@@ -45,8 +44,6 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary tutorial-button" id="startTutorial"
-                        style="margin-right: 5px;">Tutorial</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" href="#" id="navbarDropdownMenuLink"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,9 +72,7 @@
 
     <div class="container-fluid">
         <div class="row mt-4">
-            <div class="col offset-lg-1" 
-            data-intro="This is your assignments page! You can view your past and current assignment information, from descriptions to deadlines. Click start assignment to do any of your assignments!"
-            data-step="1">
+            <div class="col offset-lg-1">
                 <h1>{{ course_id }}</h1>
             </div>
         </div>
@@ -284,14 +279,6 @@
             // blur element
             element.blur()
         }
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#startTutorial").click(function () {
-                introJs().start();
-            });
-        });
     </script>
 </body>
 
