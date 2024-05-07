@@ -288,50 +288,52 @@ def get_professor_courses(prof_id):
 
         return course_data
 
-# Function for fetching all professors and the courses they teach
 def fetch_professors_and_courses():
-    with sqlalchemy.orm.Session(engine) as session:
+    with Session(engine) as session:
         try:
             # Fetching professors linked to courses
             profs_query = session.query(
-                Professor.prof_id,
+                Professor.prof_id.label('net_id'),
                 Professor.first_name,
                 Professor.last_name,
                 CoursesProfs.course_id
             ).join(
                 CoursesProfs, Professor.prof_id == CoursesProfs.prof_id
-            ).order_by(Professor.first_name, Professor.last_name)
+            )
 
             # Fetching superadmins linked to courses
             admins_query = session.query(
-                SuperAdmin.admin_id,
+                SuperAdmin.admin_id.label('net_id'),
                 SuperAdmin.first_name,
                 SuperAdmin.last_name,
                 CoursesProfs.course_id
             ).join(
                 CoursesProfs, SuperAdmin.admin_id == CoursesProfs.prof_id
-            ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
+            )
 
-            professors = [
-                {"net_id": prof.prof_id, 
-                "name": f"{prof.first_name} {prof.last_name}", 
-                "courses": [prof.course_id]}
-                for prof in profs_query.all()
-            ]
+            # Execute queries and collect all results
+            professors = profs_query.all()
+            superadmins = admins_query.all()
 
-            superadmins = [
-                {"net_id": admin.admin_id, 
-                "name": f"{admin.first_name} {admin.last_name}", 
-                "courses": [admin.course_id]}
-                for admin in admins_query.all()
-            ]
+            # Group results by course_id
+            grouped_results = defaultdict(list)
+            for person in professors + superadmins:
+                grouped_results[person.course_id].append({
+                    "net_id": person.net_id,
+                    "name": f"{person.first_name} {person.last_name}",
+                    "courses": person.course_id
+                })
 
-            # Combine and return results
-            return professors + superadmins
+            # Optionally sort groups by course_id and flatten the sorted groups into a single list
+            sorted_grouped_results = []
+            for course_id in sorted(grouped_results.keys()):
+                sorted_grouped_results.extend(grouped_results[course_id])
+
+            return sorted_grouped_results
 
         except Exception as e:
             session.rollback()
-            raise Exception(f"Failed to fetch data due to: {str(e)}")
+            print(f"Failed to fetch data due to: {str(e)}")  # Enhanced error logging for better diagnostics
 
 # Checks whether a professor teaches a course
 def check_prof_in_course(course_id, prof_id):
