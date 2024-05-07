@@ -1417,27 +1417,31 @@ def add_student_to_course():
         return flask.jsonify({"message": "All fields (course ID, student name, and NetID) are required."}), 400
 
     with Session() as session:
-        # Check if the student already exists by NetID
-        student = session.query(Student).filter_by(student_id=student_netid).first()
-        if not student:
-            # Splitting the name into first and last name
-            name_parts = full_name.split()
-            first_name = name_parts[0]
-            last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
-            student = Student(student_id=student_netid, first_name=first_name, last_name=last_name)
-            session.add(student)
+        # Check if the NetID belongs to a professor or superadmin
+        is_professor = session.query(Professor).filter_by(prof_id=student_netid).first() is not None
+        is_superadmin = session.query(SuperAdmin).filter_by(admin_id=student_netid).first() is not None
 
-        # Check if the student is already linked to the course
+        if not is_professor and not is_superadmin:
+            # Only add as a student if not a professor or superadmin
+            student = session.query(Student).filter_by(student_id=student_netid).first()
+            if not student:
+                name_parts = full_name.split()
+                first_name = name_parts[0]
+                last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
+                student = Student(student_id=student_netid, first_name=first_name, last_name=last_name)
+                session.add(student)
+
+        # Check if the user is already linked to the course
         existing_link = session.query(CoursesStudents).filter_by(course_id=course_id, student_id=student_netid).first()
         if existing_link:
             return flask.jsonify({"message": "Student already added to this course."}), 409
 
-        # Create a new link between the student and the course
+        # Create a new link between the user and the course
         new_course_student = CoursesStudents(course_id=course_id, student_id=student_netid)
         session.add(new_course_student)
         session.commit()
 
-    return flask.jsonify({"message": "Student added successfully to the course."})
+    return flask.jsonify({"message": "Student added successfully to the course."}), 200
 #-----------------------------------------------------------------------
 @app.route('/admin-profs')
 def get_professors_and_courses():
@@ -1473,22 +1477,26 @@ def admin_add_professor_to_course():
 
     if not course_id or not prof_name or not prof_netid:
         return flask.jsonify({"message": "All fields (course ID, professor name, and NetID) are required."}), 400
+    
+    upper_course_id = course_id.upper()
 
     with Session() as session:
         # Check if the course exists
-        course = check_if_course_exists(course_id)
+        course = session.query(Course).filter_by(course_id=upper_course_id).first()
         if not course:
             return flask.jsonify({"message": "Course does not exist."}), 404
-        
-        upper_course_id = course_id.upper()
 
-        # Check if the professor already exists
-        professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
-        if not professor:
-            # Assuming splitting name into first and last
-            first_name, last_name = (prof_name.split(maxsplit=1) + [""])[:2]
-            professor = Professor(prof_id=prof_netid, first_name=first_name, last_name=last_name)
-            session.add(professor)
+        # Check if the professor is a superadmin
+        is_superadmin = session.query(SuperAdmin).filter_by(admin_id=prof_netid).first() is not None
+
+        if not is_superadmin:
+            # Check if the professor already exists
+            professor = session.query(Professor).filter_by(prof_id=prof_netid).first()
+            if not professor:
+                # Assuming splitting name into first and last
+                first_name, last_name = (prof_name.split(maxsplit=1) + [""])[:2]
+                professor = Professor(prof_id=prof_netid, first_name=first_name, last_name=last_name)
+                session.add(professor)
 
         # Check if the professor is already linked to the course
         existing_link = session.query(CoursesProfs).filter_by(course_id=upper_course_id, prof_id=prof_netid).first()
@@ -1510,35 +1518,40 @@ def admin_add_student_to_course():
     student_id = flask.request.form.get('student_id')
 
     if not course_id or not student_name or not student_id:
-        return flask.jsonify({"message": "All fields (student first name, last name, netID, and course ID) are required."}), 400
+        return flask.jsonify({"message": "All fields (student ID, name, and course ID) are required."}), 400
 
     upper_course_id = course_id.upper()
 
     with Session() as session:
         # Check if the course exists
-        course = check_if_course_exists(course_id)
+        course = session.query(Course).filter_by(course_id=upper_course_id).first()
         if not course:
             return flask.jsonify({"message": "Course does not exist."}), 404
 
-        # Check if the student already exists
-        student = session.query(Student).filter_by(student_id=student_id).first()
-        if not student:
-            # Assuming splitting name into first and last
-            first_name, last_name = (student_name.split(maxsplit=1) + [""])[:2]
-            student = Student(student_id=student_id, first_name=first_name, last_name=last_name)
-            session.add(student)
+        # Check if the identifier belongs to a professor or a superadmin
+        professor_or_admin = session.query(Professor).filter_by(prof_id=student_id).first() or \
+                             session.query(SuperAdmin).filter_by(admin_id=student_id).first()
 
-        # Check if the student is already linked to the course
+        if not professor_or_admin:
+            # Proceed to add as a student if not professor or superadmin
+            student = session.query(Student).filter_by(student_id=student_id).first()
+            if not student:
+                # Assuming splitting name into first and last
+                first_name, last_name = (student_name.split(maxsplit=1) + [""])[:2]
+                student = Student(student_id=student_id, first_name=first_name, last_name=last_name)
+                session.add(student)
+
+        # Check if the identifier (student, professor, or admin) is already linked to the course
         existing_link = session.query(CoursesStudents).filter_by(course_id=upper_course_id, student_id=student_id).first()
         if existing_link:
-            return flask.jsonify({"message": "Student already added to this course."}), 409
+            return flask.jsonify({"message": "This user is already added to the course."}), 409
 
-        # Create a new link between the student and the course
+        # Link the identifier (student, professor, or admin) to the course
         new_course_student = CoursesStudents(course_id=upper_course_id, student_id=student_id)
         session.add(new_course_student)
         session.commit()
 
-        return flask.jsonify({"message": "Student added successfully to the course."}), 200
+        return flask.jsonify({"message": "User added successfully to the course."}), 200
 
 #-----------------------------------------------------------------------
 @app.route('/admin-admins', methods=['GET'])
