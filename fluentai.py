@@ -1505,7 +1505,7 @@ def get_professors_and_courses():
         data = fetch_professors_and_courses()
         return flask.jsonify(data)
     except Exception as e:
-        return flask.sonify({'error': str(e)}), 500
+        return flask.jsonify({'error': str(e)}), 500
 #-----------------------------------------------------------------------
 @app.route('/admin-students')
 def get_students_and_courses():
