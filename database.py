@@ -557,7 +557,7 @@ def fetch_students_and_courses():
                 CoursesStudents.course_id
             ).join(
                 CoursesStudents, Student.student_id == CoursesStudents.student_id
-            ).order_by(Student.first_name, Student.last_name)
+            )
 
             # Fetching professors linked to courses
             professors_query = session.query(
@@ -567,7 +567,7 @@ def fetch_students_and_courses():
                 CoursesStudents.course_id
             ).join(
                 CoursesStudents, Professor.prof_id == CoursesStudents.student_id
-            ).order_by(Professor.first_name, Professor.last_name)
+            )
 
             # Fetching superadmins linked to courses
             superadmins_query = session.query(
@@ -576,30 +576,32 @@ def fetch_students_and_courses():
                 SuperAdmin.last_name,
                 CoursesStudents.course_id
             ).join(
-                CoursesStudents,
-                SuperAdmin.admin_id == CoursesStudents.student_id
-            ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
+                CoursesStudents, SuperAdmin.admin_id == CoursesStudents.student_id
+            )
 
             # Combine all results using union_all
             combined_query = students_query.union_all(professors_query).union_all(superadmins_query)
             results = combined_query.all()
 
-            # Convert results into a list of dictionaries
-            merged_results = [
-                {
-                    "id": result.id,
-                    "name": f"{result.first_name} {result.last_name}",
-                    "courses": [result.course_id]
-                }
-                for result in results
-            ]
+            # Convert results into a list of dictionaries and sort by course_id
+            merged_results = sorted(
+                [
+                    {
+                        "id": result.id,
+                        "name": f"{result.first_name} {result.last_name}",
+                        "course_id": result.course_id
+                    }
+                    for result in results
+                ],
+                key=lambda x: x['course_id']
+            )
 
             return merged_results
 
         except Exception as e:
             session.rollback()
             raise Exception(f"Failed to fetch data due to: {str(e)}")
-
+        
 # Gets student info (FOR ADMIN STUDENTS PAGE)
 def get_student_info():
     with sqlalchemy.orm.Session(engine) as session:
