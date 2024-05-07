@@ -165,8 +165,8 @@ def delete_assignment(prompt_id):
 
 #-----------------------------------------------------------------------
 
-def delete_prof_from_course(prof_id, course_id, engine):
-    with Session(engine) as session:
+def delete_prof_from_course(prof_id, course_id):
+    with Session() as session:
         try:
             # Delete the association between the professor and the course
             association_deleted = session.query(CoursesProfs).filter(
