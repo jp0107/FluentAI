@@ -15,6 +15,7 @@ import sqlalchemy
 import pytz
 import auth
 from req_lib import ReqLib
+import numpy as np
 from database import *
 
 #-----------------------------------------------------------------------
@@ -307,8 +308,10 @@ def login():
         return flask.redirect(flask.url_for('admin_dashboard'))
     if user_type == "Professor":
         return flask.redirect(flask.url_for('prof_dashboard'))
-    
-    return flask.redirect(flask.url_for('student_dashboard'))
+    if user_type == "Student":
+        return flask.redirect(flask.url_for('student_dashboard'))
+
+    return "Login Required: User must be a student, professor, or admin.", 401
 
 #----------------------   STUDENT PAGES   ------------------------------
 #-----------------------------------------------------------------------
@@ -603,6 +606,45 @@ def prof_roster(course_id):
 
 #-----------------------------------------------------------------------
 
+def calculate_mean_and_median_scores(assignments):
+
+    # Initialize lists to hold titles and scores
+    assignment_names = []
+    mean_ai_scores = []
+    mean_prof_scores = []
+    median_ai_scores = []
+    median_prof_scores = []
+
+    for prompt_id, title in assignments:
+        scores = get_scores_for_assignment(prompt_id)
+        ai_scores = np.array([score[0] for score in scores if score[0] is not None])
+        professor_scores = np.array([score[1] for score in scores if score[1] is not None])
+
+        # Calculate mean and median scores
+        mean_ai_score = np.mean(ai_scores) if ai_scores.size else None
+        median_ai_score = np.median(ai_scores) if ai_scores.size else None
+        mean_prof_score = np.mean(professor_scores) if professor_scores.size else None
+        median_prof_score = np.median(professor_scores) if professor_scores.size else None
+
+        # Append values to respective lists
+        assignment_names.append(title)
+        mean_ai_scores.append(mean_ai_score)
+        mean_prof_scores.append(mean_prof_score)
+        median_ai_scores.append(median_ai_score)
+        median_prof_scores.append(median_prof_score)
+
+    scores = {
+        "assignment_names": assignment_names,
+        "mean_ai_scores": mean_ai_scores,
+        "mean_prof_scores": mean_prof_scores,
+        "median_ai_scores": median_ai_scores,
+        "median_prof_scores": median_prof_scores
+    }
+
+    return scores
+
+#-----------------------------------------------------------------------
+
 @app.route('/prof-scores/<course_id>')
 def prof_scores(course_id):
     username = auth.authenticate()
@@ -626,11 +668,18 @@ def prof_scores(course_id):
 
     assignments = get_assignments_for_prof(course_id)
 
+    scores = calculate_mean_and_median_scores(assignments)
+
     return flask.render_template('prof-scores.html',
                                  username = username,
                                  course_id = course_id,
                                  assignments = assignments,
-                                 user_type = user_type)
+                                 user_type = user_type,
+                                 assignment_names = scores["assignment_names"],
+                                 mean_ai_scores = scores["mean_ai_scores"],
+                                 mean_prof_scores = scores["mean_prof_scores"],
+                                 median_ai_scores = scores["median_ai_scores"],
+                                 median_prof_scores = scores["median_prof_scores"])
                                 
 #----------------------      ADMIN PAGES    ----------------------------
 #-----------------------------------------------------------------------
