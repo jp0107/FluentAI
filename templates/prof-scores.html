@@ -361,7 +361,16 @@
         });
       }
 
-      function renderChart() {
+      function fetchScoresAndRenderChart(courseID) {
+        fetch(`/calculate-scores/${courseID}`)
+          .then(response => response.json())
+          .then(data => {
+            renderChart(data);
+          })
+          .catch(error => console.error('Error fetching scores:', error));
+      }
+
+      function renderChart(data) {
         if (scoresChart) {
           scoresChart.destroy(); // Destroy the existing chart instance if it exists
         }
@@ -383,28 +392,28 @@
         const config = {
           type: 'bar',
           data: {
-            labels: assignment_names,
+            labels: data.assignment_names,
             datasets: [{
               label: 'AI Mean Score',
-              data: mean_ai_scores,
+              data: data.mean_ai_scores,
               borderColor: Utils.CHART_COLORS.dark,
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.5),
             },
             {
               label: 'Professor Mean Score',
-              data: mean_prof_scores,
+              data: data.mean_prof_scores,
               borderColor: Utils.CHART_COLORS.light,
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.6),
             },
             {
               label: 'AI Median Score',
-              data: median_ai_scores,
+              data: data.median_ai_scores,
               borderColor: Utils.CHART_COLORS.black,
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.dark, 0.3),
             },
             {
               label: 'Professor Median Score',
-              data: median_prof_scores,
+              data: data.median_prof_scores,
               borderColor: Utils.CHART_COLORS.light,
               backgroundColor: Utils.transparentize(Utils.CHART_COLORS.light, 0.3),
             }
@@ -455,7 +464,7 @@
           const promptId = this.getAttribute('data-assignment');
           if (promptId === 'general') {
             hideScores();
-            renderChart();
+            fetchScoresAndRenderChart(courseID);
           } else {
             hideChart();
             fetchAndDisplayScores(promptId);

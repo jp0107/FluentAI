@@ -653,6 +653,17 @@ def calculate_mean_and_median_scores(assignments):
 
 #-----------------------------------------------------------------------
 
+@app.route('/calculate-scores/<course_id>')
+def calculate_scores(course_id):
+    try:
+        assignments = get_assignments_for_prof(course_id)
+        scores = calculate_mean_and_median_scores(assignments)
+        return flask.jsonify(scores), 200
+    except Exception as e:
+        return flask.jsonify({'error': str(e)}), 500
+
+#-----------------------------------------------------------------------
+
 @app.route('/prof-scores/<course_id>')
 def prof_scores(course_id):
     username = auth.authenticate()
@@ -682,12 +693,7 @@ def prof_scores(course_id):
                                  username = username,
                                  course_id = course_id,
                                  assignments = assignments,
-                                 user_type = user_type,
-                                 assignment_names = scores["assignment_names"],
-                                 mean_ai_scores = scores["mean_ai_scores"],
-                                 mean_prof_scores = scores["mean_prof_scores"],
-                                 median_ai_scores = scores["median_ai_scores"],
-                                 median_prof_scores = scores["median_prof_scores"])
+                                 user_type = user_type)
                                 
 #----------------------      ADMIN PAGES    ----------------------------
 #-----------------------------------------------------------------------
