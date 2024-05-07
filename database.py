@@ -155,7 +155,7 @@ def get_prof_firstname(prof_id):
 
 
 # Gets prof info and the courses they teach 
-in alphabetical order by prof first name
+# in alphabetical order by prof first name
 def get_all_profs():
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Professor.prof_id,
