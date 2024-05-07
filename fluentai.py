@@ -1461,12 +1461,12 @@ def update_course_code_click():
     new_code = flask.request.form.get("new_course_code")
 
     if not new_code:
-        return flask.jsonify({"message": "Invalid course code!"}), 400
+        return flask.jsonify({"message": "Invalid course code."}), 400
 
     try:
         if edit_course_code(course_id, new_code):
             return flask.jsonify({"message": "Course code \
-                                  updated successfully!"})
+                                  updated successfully."})
         return (flask.jsonify({
             "message": "Code already exists for \
                 another course, choose a new code."}), 500,)
