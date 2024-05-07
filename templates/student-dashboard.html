@@ -30,8 +30,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="joinCourseModalLabel">Join a Course</h5>
-                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close"
-                        data-intro="You can join a course here!" data-step="2">
+                    <button type="button" class="close ms-auto" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -72,13 +71,14 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav d-flex flex-row ms-auto">
-                    <button type="button" class="btn btn-primary" id="startTutorial">Start Tour</button>
+                    <button type="button" class="btn btn-primary" id="startTutorial">Tutorial</button>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn nav-button" id="navbarDropdownMenuLink" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             {{username}}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" 
+                        data-intro="Click on this dropdown on any page to view your role and/or log out!" data-step="4">
                             {% if user_type == 'SuperAdmin' %}
                             <li class="dropdown-item disabled" aria-disabled="true"
                                 style="pointer-events: none; cursor: default;">User Role: Admin</li>
@@ -101,7 +101,7 @@
 
     <div class="container">
         <div class="row mt-4">
-            <div class="row mt-4 align-items-center" data-intro="You can see all of your courses on this page!"
+            <div class="row mt-4 align-items-center" data-intro="Welcome! You can see all of your courses on this page!"
                 data-step="1">
                 <h1>Student Dashboard</h1>
             </div>
@@ -134,7 +134,7 @@
 
                 // Function to display student courses
                 function displayStudentCourses(courses) {
-                    var courseListHtml = '<div class="col d-flex">' +
+                    var courseListHtml = '<div class="col d-flex" data-intro="Join a course using a course code provided by your professor here!" data-step="2">' +
                         '<a data-bs-toggle="modal" data-bs-target="#joinCourseModal" class="class-button" role="button">' +
                         '<h3><img src="static/img/add_course_light.png" width="35"/></h3> Join Course' +
                         '</a></div>';
