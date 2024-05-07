@@ -199,9 +199,9 @@ def delete_prof_from_course(prof_id, course_id):
                 if prof_deleted:
                     print(f"Professor ID {prof_id} deleted from the Professors table.")
                     return True
-                else:
-                    print("Failed to delete professor from the Professors table.")
-                    return False
+
+                print("Failed to delete professor from the Professors table.")
+                return False
             
             return True  # If remaining courses exist, return True for successful deletion of association
                             
@@ -244,9 +244,9 @@ def delete_student_from_course(student_id, course_id):
                 if student_deleted:
                     print(f"Student ID {student_id} deleted from the Students table.")
                     return True
-                else:
-                    print("Failed to delete student from the Students table.")
-                    return False
+                
+                print("Failed to delete student from the Students table.")
+                return False
             
             return True
            
@@ -512,13 +512,13 @@ def prof_course(course_id):
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))  
-    elif user_type == "Professor":
+    if user_type == "Professor":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
             return flask.redirect(flask.url_for('prof_dashboard'))
         first_name = get_prof_firstname(username)
-    elif user_type == "SuperAdmin":
+    if user_type == "SuperAdmin":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
@@ -547,12 +547,12 @@ def prof_assignments(course_id):
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))
-    elif user_type == "Professor":
+    if user_type == "Professor":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
             return flask.redirect(flask.url_for('prof_dashboard'))
-    elif user_type == "SuperAdmin":
+    if user_type == "SuperAdmin":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
@@ -586,12 +586,12 @@ def prof_roster(course_id):
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))
-    elif user_type == "Professor":
+    if user_type == "Professor":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
             return flask.redirect(flask.url_for('prof_dashboard'))
-    elif user_type == "SuperAdmin":
+    if user_type == "SuperAdmin":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
@@ -653,12 +653,12 @@ def prof_scores(course_id):
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))
-    elif user_type == "Professor":
+    if user_type == "Professor":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
             return flask.redirect(flask.url_for('prof_dashboard'))
-    elif user_type == "SuperAdmin":
+    if user_type == "SuperAdmin":
         if not check_prof_in_course(course_id, username):
             flask.flash("Access denied: Unauthorized access.", "error")
             # Redirect unauthorized professors to their dashboard
@@ -874,11 +874,11 @@ def conversation_history(course_id, conv_id):
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))
-    elif user_type == "Professor":
+    if user_type == "Professor":
         if not check_prof_in_course(course_id, username):
             flask.flash("You are not teaching this course.", "error")
             return flask.redirect(flask.url_for('prof_dashboard'))
-    elif user_type == "SuperAdmin":
+    if user_type == "SuperAdmin":
         if not check_prof_in_course(course_id, username):
             flask.flash("You are not teaching this course.", "error")
             return flask.redirect(flask.url_for('prof_dashboard'))
@@ -907,11 +907,11 @@ def prof_assignment_chat(course_id, prompt_id):
     if user_type == "Student":
         flask.flash("Access denied: Unauthorized access.", "error")
         return flask.redirect(flask.url_for('student_dashboard'))
-    elif user_type == "Professor":
+    if user_type == "Professor":
         if not check_prof_in_course(course_id, username):
             flask.flash("You are not teaching this course.", "error")
             return flask.redirect(flask.url_for('prof_dashboard'))
-    elif user_type == "SuperAdmin":
+    if user_type == "SuperAdmin":
         if not check_prof_in_course(course_id, username):
             flask.flash("You are not teaching this course.", "error")
             return flask.redirect(flask.url_for('prof_dashboard'))
@@ -1267,8 +1267,7 @@ def update_course_code_click():
     try:
         if edit_course_code(course_id, new_code):  
             return flask.jsonify({'message': 'Course code updated successfully!'})
-        else:
-            return flask.jsonify({'message': 'Code already exists for another course, choose a new code.'}), 500
+        return flask.jsonify({'message': 'Code already exists for another course, choose a new code.'}), 500
     except Exception as e:
         return flask.jsonify({'message': str(e)}), 500
 
