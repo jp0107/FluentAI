@@ -569,6 +569,14 @@ def prof_assignments(course_id):
 @app.route('/delete-assignment/<int:prompt_id>', methods=['POST'])
 def delete_assignment_click(prompt_id):
     try:
+        username = auth.authenticate()
+
+        # get user's type to make sure they can access page and display name if correct
+        user_type = check_user_type(username)
+
+        if user_type == "Student":
+            flask.flash("Access denied: Unauthorized access.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         if delete_assignment(prompt_id):
             return flask.jsonify({'message': 'Assignment deleted successfully'}), 200
 
@@ -1199,6 +1207,14 @@ def add_course():
 
 @app.route('/get-prof-courses')
 def get_prof_courses():
+    username = auth.authenticate()
+
+    # get user's type to make sure they can access page and display name if correct
+    user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
     id = flask.session.get('username')
     course_data = get_professor_courses(id)
     return flask.jsonify(course_data)
@@ -1207,6 +1223,14 @@ def get_prof_courses():
 
 @app.route('/get-admin-courses')
 def get_admin_courses():
+    username = auth.authenticate()
+
+    # get user's type to make sure they can access page and display name if correct
+    user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
     course_data = get_courses_and_profs()
 
     if course_data is None:
@@ -1218,6 +1242,14 @@ def get_admin_courses():
 
 @app.route('/get-stu-courses')
 def get_stu_courses():
+    username = auth.authenticate()
+
+    # get user's type to make sure they can access page and display name if correct
+    user_type = check_user_type(username)
+
+    if user_type == "Student":
+        flask.flash("Access denied: Unauthorized access.", "error")
+        return flask.redirect(flask.url_for('student_dashboard'))
     id = flask.session.get('username') 
     course_data = get_student_courses(id)
     return flask.jsonify(course_data)
@@ -1226,6 +1258,7 @@ def get_stu_courses():
 
 @app.route('/all-courses')
 def all_courses():
+    
     courses = get_courses()  
     course_data = []
     for course in courses:
@@ -1260,7 +1293,7 @@ def join_course():
 def update_course_code_click():
     course_id = flask.request.form.get('course_id')
     new_code = flask.request.form.get('new_course_code')
-
+    
     if not new_code:
         return flask.jsonify({'message': 'Invalid course code!'}), 400
     
@@ -1392,6 +1425,14 @@ def add_professor_to_course():
 @app.route('/get-profs-in-course/<course_id>')
 def get_profs_in_course(course_id):
     try:
+        username = auth.authenticate()
+
+        # get user's type to make sure they can access page and display name if correct
+        user_type = check_user_type(username)
+
+        if user_type == "Student":
+            flask.flash("Access denied: Unauthorized access.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         profs = get_profs_for_course(course_id)
         return flask.jsonify(profs)
     except Exception:
@@ -1453,6 +1494,14 @@ def add_student_to_course():
 @app.route('/admin-profs')
 def get_professors_and_courses():
     try:
+        username = auth.authenticate()
+
+        # get user's type to make sure they can access page and display name if correct
+        user_type = check_user_type(username)
+
+        if user_type == "Student":
+            flask.flash("Access denied: Unauthorized access.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         data = fetch_professors_and_courses()
         return flask.jsonify(data)
     except Exception as e:
@@ -1461,6 +1510,14 @@ def get_professors_and_courses():
 @app.route('/admin-students')
 def get_students_and_courses():
     try:
+        username = auth.authenticate()
+
+        # get user's type to make sure they can access page and display name if correct
+        user_type = check_user_type(username)
+
+        if user_type == "Student":
+            flask.flash("Access denied: Unauthorized access.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         data = fetch_students_and_courses()
         return flask.jsonify(data)
     except Exception as e:
@@ -1481,6 +1538,7 @@ def admin_add_professor_to_course():
     course_id = flask.request.form.get('course_id')
     prof_name = flask.request.form.get('prof_name')
     prof_netid = flask.request.form.get('prof_netid')
+    username = auth.authenticate()
 
     if not course_id or not prof_name or not prof_netid:
         return flask.jsonify({"message": "All fields (course ID, professor name, and NetID) are required."}), 400
@@ -1565,6 +1623,14 @@ def admin_add_student_to_course():
 def fetch_admins():
     # Call the function to get the superadmins roster
     try:
+        username = auth.authenticate()
+
+        # get user's type to make sure they can access page and display name if correct
+        user_type = check_user_type(username)
+
+        if user_type == "Student":
+            flask.flash("Access denied: Unauthorized access.", "error")
+            return flask.redirect(flask.url_for('student_dashboard'))
         admin_list = get_superadmins_roster()
         return flask.jsonify(admin_list)
     except Exception as e:
