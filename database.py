@@ -41,25 +41,26 @@ def get_superadmins() -> List[SuperAdmin]:
 # Gets super admin roster
 def get_superadmins_roster():
     with sqlalchemy.orm.Session(engine) as session:
-        # Query to select admin info from SuperAdmin table
-        query = session.query(SuperAdmin.admin_id,
-                            SuperAdmin.first_name,
-                            SuperAdmin.last_name)
+        # Query to select admin info from SuperAdmin table with ordering
+        query = session.query(
+            SuperAdmin.admin_id,
+            SuperAdmin.first_name,
+            SuperAdmin.last_name
+        ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)  # Sorting by first name and then last name
+
         results = query.all()
 
         if not results:
             return None
 
         # Format query results to match front-end expectations
-        admins = []
-
-        for admin_id, first_name, last_name in results:
-            # Concatenate first and last name into a single 'name'
-            full_name = f"{first_name} {last_name}"
-            admins.append({
-                'net_id': admin_id,  # Changed key to 'net_id'
-                'name': full_name    # Changed key to 'name'
-            })
+        admins = [
+            {
+                'net_id': admin.admin_id,
+                'name': f"{admin.first_name} {admin.last_name}"
+            }
+            for admin in results
+        ]
 
         return admins
 
