@@ -126,8 +126,7 @@ def delete_course(course_id):
                 .delete()
             )
             print(
-                f"Deleted {profs_deleted} professor \
-                    associations for course ID {course_id}"
+                f"Deleted {profs_deleted} professor associations for course ID {course_id}"
             )
 
             # Delete associated student entries, if any
@@ -137,8 +136,7 @@ def delete_course(course_id):
                 .delete()
             )
             print(
-                f"Deleted {students_deleted} student \
-                    associations for course ID {course_id}"
+                f"Deleted {students_deleted} student associations for course ID {course_id}"
             )
 
             # Try to find and delete the course itself
@@ -174,8 +172,7 @@ def delete_assignment(prompt_id):
                 .delete()
             )
             print(
-                f"Deleted {conversations_deleted} conversations \
-                    for prompt ID {prompt_id}"
+                f"Deleted {conversations_deleted} conversations for prompt ID {prompt_id}"
             )
 
             # Now try to find and delete the assignment itself
@@ -218,8 +215,7 @@ def delete_prof_from_course(prof_id, course_id):
 
             if association_deleted:
                 print(
-                    f"Deleted association for professor ID {prof_id} \
-                        from course ID {course_id}"
+                    f"Deleted association for professor ID {prof_id} from course ID {course_id}"
                 )
             else:
                 print("No association found to delete.")
@@ -243,12 +239,10 @@ def delete_prof_from_course(prof_id, course_id):
                 session.commit()  # Commit professor deletion
 
                 if prof_deleted:
-                    print(f"Professor ID {prof_id} deleted from \
-                          the Professors table.")
+                    print(f"Professor ID {prof_id} deleted from the Professors table.")
                     return True
 
-                print("Failed to delete professor from \
-                      the Professors table.")
+                print("Failed to delete professor from the Professors table.")
                 return False
 
             # If remaining courses exist,
@@ -279,8 +273,7 @@ def delete_student_from_course(student_id, course_id):
 
             if association_deleted:
                 print(
-                    f"Deleted association for student ID {student_id} \
-                        from course ID {course_id}"
+                    f"Deleted association for student ID {student_id} from course ID {course_id}"
                 )
             else:
                 print("No association found to delete.")
@@ -304,12 +297,10 @@ def delete_student_from_course(student_id, course_id):
                 session.commit()
 
                 if student_deleted:
-                    print(f"Student ID {student_id} deleted from \
-                          the Students table.")
+                    print(f"Student ID {student_id} deleted from the Students table.")
                     return True
 
-                print("Failed to delete student from \
-                    the Students table.")
+                print("Failed to delete student from the Students table.")
                 return False
 
             return True
@@ -373,8 +364,7 @@ def login():
     if user_type == "Student":
         return flask.redirect(flask.url_for("student_dashboard"))
 
-    return "Login Required: User must be a \
-        student, professor, or admin.", 401
+    return "Login Required: User must be a student, professor, or admin.", 401
 
 #----------------------   STUDENT PAGES   ------------------------------
 #-----------------------------------------------------------------------
@@ -502,8 +492,7 @@ def student_practice(course_id):
     try:
         practice_assignments = get_practice_prompts(course_id)
     except Exception as e:
-        print(f"An error occurred while getting \
-              practice assignments: {str(e)}")
+        print(f"An error occurred while getting practice assignments: {str(e)}")
         return None
 
     return flask.render_template(
@@ -918,12 +907,7 @@ def student_assignment_chat(course_id, prompt_id):
 
     # get generic instructions for course language
     language = get_language(course_id)[0][0]
-    instructions = f"Please follow the previous instructions and \
-        speak to the student in {language}. Help them practice their \
-            language skills and do not ever switch to another language, \
-                even if they switch or ask you to. Pretend like you are \
-                    having a conversation with them. \
-                        Do not break character."
+    instructions = f"Please follow the previous instructions and speak to the student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them. Do not break character."
 
     # Check if the assignment has been completed
     if has_completed_assignment(username, prompt_id):
@@ -1007,8 +991,7 @@ def conversation_history(course_id, conv_id):
     try:
         conversation = get_conversation(conv_id)
     except Exception as e:
-        print(f"An error occurred while getting conversation history: \
-              {str(e)}")
+        print(f"An error occurred while getting conversation history: {str(e)}")
         return None
 
     return flask.render_template(
@@ -1042,11 +1025,7 @@ def prof_assignment_chat(course_id, prompt_id):
 
     # get generic instructions for course language
     language = get_language(course_id)[0][0]
-    instructions = f"Please follow the previous instructions and speak \
-        to the student in {language}. Help them practice their language \
-            skills and do not ever switch to another language, even if \
-                they switch or ask you to. Pretend like you are having \
-                    a conversation with them. Do not break character."
+    instructions = f"Please follow the previous instructions and speak to the student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them. Do not break character."
 
     # Use the function from database.py to fetch the prompt
     prompt = get_prompt_by_id(prompt_id)
@@ -1277,8 +1256,7 @@ def calculate_score(conversation_text):
         score = int(re.search(r"\d+", content).group())
         return score
     except Exception as e:
-        print(f"An error occurred while getting evaluation score: \
-              {str(e)}")
+        print(f"An error occurred while getting evaluation score: {str(e)}")
         return None
 
 #-----------------------------------------------------------------------
@@ -1306,11 +1284,7 @@ def student_practice_chat(course_id):
     language = get_language(course_id)[0][0]
 
     # initialize practice prompt here based on the language of course
-    practice_prompt = f"You are conversing with a student in \
-        {language}. Help them practice their language skills and do not \
-            ever switch to another language, even if they switch or ask \
-                you to. Pretend like you are having a conversation with \
-                    them. Do not break character."
+    practice_prompt = f"You are conversing with a student in {language}. Help them practice their language skills and do not ever switch to another language, even if they switch or ask you to. Pretend like you are having a conversation with them. Do not break character."
 
     # Initialize prompt usage state
     flask.session["prompt_used"] = False
@@ -1351,8 +1325,7 @@ def add_course():
 
     if check_if_course_exists(course_id):
         return (
-            flask.jsonify({"message": "Course with this \
-                           course ID already exists."}), 400,
+            flask.jsonify({"message": "Course with this course ID already exists."}), 400,
         )
 
     # Generate a random course code
@@ -1464,11 +1437,9 @@ def update_course_code_click():
 
     try:
         if edit_course_code(course_id, new_code):
-            return flask.jsonify({"message": "Course code \
-                                  updated successfully."})
+            return flask.jsonify({"message": "Course code updated successfully."})
         return (flask.jsonify({
-            "message": "Code already exists for \
-                another course, choose a new code."}), 500,)
+            "message": "Code already exists for another course, choose a new code."}), 500,)
     except Exception as e:
         return flask.jsonify({"message": str(e)}), 500
 
@@ -1580,8 +1551,7 @@ def add_professor_to_course():
 
     if not course_id or not full_name or not prof_netid:
         return (flask.jsonify(
-            {"message": "All fields (course ID, professor name, \
-             and NetID) are required."}), 400,)
+            {"message": "All fields (course ID, professor name, and NetID) are required."}), 400,)
 
     with Session() as session:
         if user_type != "SuperAdmin":
@@ -1608,8 +1578,7 @@ def add_professor_to_course():
             .first()
         )
         if existing_link:
-            return (flask.jsonify({"message": "Professor already \
-                                   added to this course."}), 409,)
+            return (flask.jsonify({"message": "Professor already added to this course."}), 409,)
 
         # Create a new link between the professor and the course
         new_course_prof = CoursesProfs(
@@ -1664,8 +1633,7 @@ def add_student_to_course():
     if not course_id or not full_name or not student_netid:
         return (
             flask.jsonify(
-                {"message": "All fields (course ID, \
-                 student name, and NetID) are required."}), 400,)
+                {"message": "All fields (course ID, student name, and NetID) are required."}), 400,)
 
     with Session() as session:
         # Check if the NetID belongs to a professor or superadmin
@@ -1703,8 +1671,7 @@ def add_student_to_course():
             .first()
         )
         if existing_link:
-            return (flask.jsonify({"message": "Student already \
-                added to this course."}), 409,)
+            return (flask.jsonify({"message": "Student already added to this course."}), 409,)
 
         # Create a new link between the user and the course
         new_course_student = CoursesStudents(
@@ -1713,8 +1680,7 @@ def add_student_to_course():
         session.add(new_course_student)
         session.commit()
 
-    return flask.jsonify({"message": "Student \
-        added successfully to the course."}), 200
+    return flask.jsonify({"message": "Student added successfully to the course."}), 200
 
 #-----------------------------------------------------------------------
 
@@ -1768,8 +1734,7 @@ def admin_add_professor_to_course():
 
     if not course_id or not prof_name or not prof_netid:
         return (flask.jsonify(
-            {"message": "All fields (course ID, professor name, \
-             and NetID) are required."}), 400,)
+            {"message": "All fields (course ID, professor name, and NetID) are required."}), 400,)
 
     upper_course_id = course_id.upper()
 
@@ -1810,8 +1775,7 @@ def admin_add_professor_to_course():
         )
         if existing_link:
             return (flask.jsonify(
-                {"message": "Professor \
-                 already added to this course."}), 409,)
+                {"message": "Professor already added to this course."}), 409,)
 
         # Create a new link between the professor and the course
         new_course_prof = CoursesProfs(
@@ -1819,8 +1783,7 @@ def admin_add_professor_to_course():
         session.add(new_course_prof)
         session.commit()
 
-        return (flask.jsonify({"message": "Professor added \
-            successfully to the course."}), 200,)
+        return (flask.jsonify({"message": "Professor added successfully to the course."}), 200,)
 
 #-----------------------------------------------------------------------
 
@@ -1833,8 +1796,7 @@ def admin_add_student_to_course():
     if not course_id or not student_name or not student_id:
         return (
             flask.jsonify(
-                {"message": "All fields (student ID, name, \
-                 and course ID) are required."}), 400,)
+                {"message": "All fields (student ID, name, and course ID) are required."}), 400,)
 
     upper_course_id = course_id.upper()
 
@@ -1877,8 +1839,7 @@ def admin_add_student_to_course():
             .first()
         )
         if existing_link:
-            return (flask.jsonify({"message": "This student is already \
-                                   added to the course."}), 409,)
+            return (flask.jsonify({"message": "This student is already added to the course."}), 409,)
 
         # Link identifier (student, professor, or admin) to the course
         new_course_student = CoursesStudents(
@@ -1887,8 +1848,7 @@ def admin_add_student_to_course():
         session.add(new_course_student)
         session.commit()
 
-        return (flask.jsonify({"message": "Student added successfully \
-                               to the course."}), 200,)
+        return (flask.jsonify({"message": "Student added successfully to the course."}), 200,)
 
 #-----------------------------------------------------------------------
 
@@ -1916,7 +1876,7 @@ def add_admin():
 
     if admin_id is None or admin_name is None:
         return flask.jsonify(
-            {"error": "Missing data for required fields"}), 400
+            {"message": "Missing data for required fields"}), 400
 
     # Directly check if the admin already exists
     with Session() as session:
@@ -1927,7 +1887,7 @@ def add_admin():
         )
         if existing_admin is not None:
             return flask.jsonify(
-                {"error": "This user is already an admin"}), 409
+                {"message": "This user is already an admin"}), 409
 
         # If the admin does not exist, proceed to add them
         first_name, last_name = (
@@ -1948,13 +1908,13 @@ def add_admin():
 @app.route("/delete-admin/<adminid>", methods=["POST"])
 def delete_admin(adminid):
     if not adminid:
-        return flask.jsonify({"error": "Admin ID is required"}), 400
+        return flask.jsonify({"message": "Admin ID is required"}), 400
 
     with Session() as session:
         admin = session.query(
             SuperAdmin).filter_by(admin_id=adminid).first()
         if not admin:
-            return flask.jsonify({"error": "Admin not found"}), 404
+            return flask.jsonify({"message": "Admin not found"}), 404
 
         session.delete(admin)
         session.commit()
@@ -1995,8 +1955,7 @@ def score_zero():
         flask.session.pop("max_turns", None)
         flask.session.pop("conversation_text", None)
 
-        return (flask.jsonify({"message": "Conversation \
-                            recorded with a score of 0."}), 200,)
+        return (flask.jsonify({"message": "Conversation recorded with a score of 0."}), 200,)
     except Exception as e:
         return flask.jsonify({"error": str(e)}), 500
 
