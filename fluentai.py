@@ -2048,3 +2048,5 @@ def is_course_owner(course_id, prof_id):
     if check_if_owner(course_id, prof_id):
         return flask.jsonify({"isOwner": True}), 200
     return flask.jsonify({"isOwner": False}), 200
+
+#-----------------------------------------------------------------------

@@ -41,11 +41,12 @@ def get_superadmins() -> List[SuperAdmin]:
 def get_superadmins_roster():
     with sqlalchemy.orm.Session(engine) as session:
         # Query to select admin info from SuperAdmin table with ordering
+        # Sorting by first name and then last name
         query = session.query(
             SuperAdmin.admin_id,
             SuperAdmin.first_name,
             SuperAdmin.last_name
-        ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)  # Sorting by first name and then last name
+        ).order_by(SuperAdmin.first_name, SuperAdmin.last_name)
 
         results = query.all()
 
@@ -152,7 +153,9 @@ def get_prof_firstname(prof_id):
         
         return query[0]
 
-# Gets prof info and the courses they teach in alphabetical order by prof first name
+
+# Gets prof info and the courses they teach 
+in alphabetical order by prof first name
 def get_all_profs():
     with sqlalchemy.orm.Session(engine) as session:
         query = (session.query(Professor.prof_id,
@@ -169,18 +172,20 @@ def get_all_profs():
 # Creates table storing course info
 class Course(Base):
     __tablename__ = 'courses'
-    course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True) # e.g. SPA101
+    course_id = sqlalchemy.Column(sqlalchemy.VARCHAR, primary_key=True)
     course_code = sqlalchemy.Column(sqlalchemy.VARCHAR) 
     course_name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     owner = sqlalchemy.Column(sqlalchemy.VARCHAR)  
-    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, default=sqlalchemy.sql.func.now())
+    created_at = sqlalchemy.Column(sqlalchemy.TIMESTAMP, 
+                                   default=sqlalchemy.sql.func.now())
     language = sqlalchemy.Column(sqlalchemy.VARCHAR)
 
 # Checks if a course exists
 def check_if_course_exists(course_id):
     with sqlalchemy.orm.Session(engine) as session:
-        query = session.query(Course.course_id).filter(
-            sqlalchemy.func.upper(Course.course_id) == course_id.upper()).first()
+        query = (session.query(Course.course_id)
+                 .filter(sqlalchemy.func.upper(
+                    Course.course_id) == course_id.upper()).first())
         return query is not None
 
 # Checks if a professor is the course owner
@@ -215,19 +220,21 @@ def get_course_code(course_id):
 # Function for editing course code
 def edit_course_code(course_id, new_course_code):
     with sqlalchemy.orm.Session(engine) as session:
-        course = session.query(Course).filter(Course.course_id == course_id).first()
+        course = (session.query(Course)
+                  .filter(Course.course_id == course_id).first())
 
         if check_unique_code(new_course_code):
             course.course_code = new_course_code
             session.commit()
             return True
-        else:
-            return False
+        return False
 
 # Checks if course code is unique
 def check_unique_code(course_code):
     with sqlalchemy.orm.Session(engine) as session:
-        count = session.query(sqlalchemy.func.count(Course.course_code)).filter(Course.course_code == course_code).scalar()
+        count = (session.query(
+            sqlalchemy.func.count(Course.course_code))
+            .filter(Course.course_code == course_code).scalar())
         return count == 0
 
 #-----------------------------------------------------------------------
@@ -899,5 +906,3 @@ def check_user_type(user_id: str):
     return None 
 
 #-----------------------------------------------------------------------
-
-
