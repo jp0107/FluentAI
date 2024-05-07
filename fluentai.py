@@ -1131,8 +1131,7 @@ def process_input():
 
         return flask.jsonify(
             {
-                "gpt_response": f"This conversation has reached its \
-                    turn limit. Your score is {score}/100.",
+                "gpt_response": f"This conversation has reached its turn limit. Your score is {score}/100.",
                 "score": score,
                 "feedback": content,
             }
