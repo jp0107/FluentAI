@@ -289,7 +289,7 @@ def get_professor_courses(prof_id):
         return course_data
 
 def fetch_professors_and_courses():
-    with Session(engine) as session:
+    with sqlalchemy.orm.Session(engine) as session:
         try:
             # Fetching professors linked to courses
             profs_query = session.query(
@@ -333,7 +333,7 @@ def fetch_professors_and_courses():
 
         except Exception as e:
             session.rollback()
-            print(f"Failed to fetch data due to: {str(e)}")  # Enhanced error logging for better diagnostics
+            return None
 
 # Checks whether a professor teaches a course
 def check_prof_in_course(course_id, prof_id):
