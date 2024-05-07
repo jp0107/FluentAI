@@ -165,8 +165,8 @@ def delete_assignment(prompt_id):
 
 #-----------------------------------------------------------------------
 
-def delete_prof_from_course(prof_id, course_id):
-    with Session() as session:
+def delete_prof_from_course(prof_id, course_id, engine):
+    with Session(engine) as session:
         try:
             # Delete the association between the professor and the course
             association_deleted = session.query(CoursesProfs).filter(
@@ -174,26 +174,37 @@ def delete_prof_from_course(prof_id, course_id):
                 CoursesProfs.course_id == course_id
             ).delete(synchronize_session=False)
 
-            # Attempt to commit the deletion of the course-professor association
-            if association_deleted:
-                session.commit()
-                print(f"Deleted association for professor ID {prof_id} from course ID {course_id}")
+            # Commit the deletion of the course-professor association
+            session.commit()
 
-                # Now delete the professor from the professors table
+            if association_deleted:
+                print(f"Deleted association for professor ID {prof_id} from course ID {course_id}")
+            else:
+                print("No association found to delete.")
+                return False  # Exit early if no association was deleted
+
+            # Check if the professor is teaching any other courses
+            remaining_courses = session.query(CoursesProfs).filter(
+                CoursesProfs.prof_id == prof_id
+            ).first()
+
+            if not remaining_courses:
+                # Delete the professor if they do not teach any other courses
                 prof_deleted = session.query(Professor).filter(
                     Professor.prof_id == prof_id
                 ).delete(synchronize_session=False)
 
+                session.commit()  # Commit professor deletion
+
                 if prof_deleted:
-                    session.commit()
-                    print(f"Professor ID {prof_id} deleted from the Professors database.")
+                    print(f"Professor ID {prof_id} deleted from the Professors table.")
                     return True
+                else:
+                    print("Failed to delete professor from the Professors table.")
+                    return False
             
-                print("Professor not found in Professors database.")
-                return False
-            
-            print("No association found to delete.")
-            return False
+            return True  # If remaining courses exist, return True for successful deletion of association
+                            
         except Exception as e:
             session.rollback()
             print(f"An error occurred: {e}")
@@ -210,26 +221,35 @@ def delete_student_from_course(student_id, course_id):
                 CoursesStudents.course_id == course_id
             ).delete(synchronize_session=False)
 
-           # Attempt to commit the deletion of the course-student association
-            if association_deleted:
-                session.commit()
-                print(f"Deleted association for student ID {student_id} from course ID {course_id}")
+            session.commit()
 
-                # Now delete the student from the students table
+            if association_deleted:
+                print(f"Deleted association for student ID {student_id} from course ID {course_id}")
+            else:
+                print("No association found to delete.")
+                return False  # Exit early if no association was deleted
+
+            # Only delete student from students table if they aren't in any other courses
+            remaining_courses = session.query(CoursesStudents).filter(
+                CoursesStudents.student_id == student_id
+            ).first()
+
+            if not remaining_courses:
                 student_deleted = session.query(Student).filter(
                     Student.student_id == student_id
                 ).delete(synchronize_session=False)
-                
+
+                session.commit()
+
                 if student_deleted:
-                    session.commit()
-                    print(f"Student ID {student_id} deleted from the Students database.")
+                    print(f"Student ID {student_id} deleted from the Students table.")
                     return True
-                
-                print("Student not found in Students database.")
-                return False
+                else:
+                    print("Failed to delete student from the Students table.")
+                    return False
             
-            print("No association found to delete.")
-            return False
+            return True
+           
         except Exception as e:
             session.rollback()
             print(f"An error occurred: {e}")
