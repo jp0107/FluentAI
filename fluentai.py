@@ -1385,11 +1385,6 @@ def get_admin_courses():
 @app.route("/get-stu-courses")
 def get_stu_courses():
     username = auth.authenticate()
-    user_type = check_user_type(username)
-
-    if user_type == "Student":
-        flask.flash("Access denied: Unauthorized access.", "error")
-        return flask.redirect(flask.url_for("student_dashboard"))
     id = flask.session.get("username")
     course_data = get_student_courses(id)
     return flask.jsonify(course_data)
